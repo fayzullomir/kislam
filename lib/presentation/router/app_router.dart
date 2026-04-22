@@ -1,0 +1,161 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:koreaislam/domain/models/article/published_article.dart';
+import 'package:koreaislam/domain/models/chat/chat_user.dart';
+import 'package:koreaislam/domain/models/gender/gender.dart';
+import 'package:koreaislam/domain/models/media/media_file.dart';
+import 'package:koreaislam/domain/models/region/country.dart';
+import 'package:koreaislam/domain/models/region/district.dart';
+import 'package:koreaislam/domain/models/region/region.dart';
+import 'package:koreaislam/presentation/features/article/detail/article_detail_page.dart';
+import 'package:koreaislam/presentation/features/article/list/published_article_list_page.dart';
+import 'package:koreaislam/presentation/features/article/list/published_article_type.dart';
+import 'package:koreaislam/presentation/features/auth/otp_verification/otp_verification_page.dart';
+import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_launch_type.dart';
+import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_page.dart';
+import 'package:koreaislam/presentation/features/auth/sign_up/sign_up_page.dart';
+import 'package:koreaislam/presentation/features/chat/chat_page.dart';
+import 'package:koreaislam/presentation/features/gender/gender_selection_page.dart';
+import 'package:koreaislam/presentation/features/intro/intro_page.dart';
+import 'package:koreaislam/presentation/features/language/change/change_language_page.dart';
+import 'package:koreaislam/presentation/features/language/set/set_language_page.dart';
+import 'package:koreaislam/presentation/features/media/photo/image_viewer_page.dart';
+import 'package:koreaislam/presentation/features/media/photo/locale_image_viewer_page.dart';
+import 'package:koreaislam/presentation/features/notification/notification_list_page.dart';
+import 'package:koreaislam/presentation/features/permission/permissions_page.dart';
+import 'package:koreaislam/presentation/features/profile/edit/profile_edit_page.dart';
+import 'package:koreaislam/presentation/features/region/country/country_selection_page.dart';
+import 'package:koreaislam/presentation/features/region/district/district_selection_page.dart';
+import 'package:koreaislam/presentation/features/region/region/region_selection_page.dart';
+import 'package:koreaislam/presentation/features/session/list/active_session_list_page.dart';
+import 'package:koreaislam/presentation/features/theme_mode/change_theme_mode_page.dart';
+import 'package:koreaislam/presentation/features/main/features/home/home_page.dart';
+import 'package:koreaislam/presentation/features/main/features/knowledge/knowledge_page.dart';
+import 'package:koreaislam/presentation/features/main/features/learn/learn_page.dart';
+import 'package:koreaislam/presentation/features/main/features/profile/profile_page.dart';
+import 'package:koreaislam/presentation/features/main/features/quran/quran_page.dart';
+import 'package:koreaislam/presentation/features/main/main_page.dart';
+
+part 'app_router.gr.dart';
+
+@AutoRouterConfig(replaceInRouteName: 'Page,Route')
+class AppRouter extends _$AppRouter {
+  @override
+  List<AutoRoute> get routes => [
+        ///
+        /// Common routes
+        ///
+
+        /// Language
+        AutoRoute(
+          page: SetLanguageRoute.page,
+          path: "/set_language",
+          initial: false,
+        ),
+
+        /// Sign In
+        AutoRoute(
+          page: SignInRoute.page,
+          path: '/sign_in',
+        ),
+
+        /// Sign Up OTP Verification
+        AutoRoute(
+          page: OtpVerificationRoute.page,
+          path: '/otp_verification',
+        ),
+
+        /// Sign Up
+        AutoRoute(
+          page: SignUpRoute.page,
+          path: '/sign_up',
+        ),
+
+        /// Intro
+        AutoRoute(
+          page: IntroRoute.page,
+          path: '/intro',
+        ),
+
+        /// Permissions
+        AutoRoute(
+          page: PermissionsRoute.page,
+          path: '/permissions',
+        ),
+
+        /// image viewer
+        AutoRoute(
+          page: ImageViewerRoute.page,
+          path: '/image_viewer',
+        ),
+
+        /// Published Article Pages
+
+        AutoRoute(
+          page: PublishedArticleListRoute.page,
+          path: '/published_article_list',
+        ),
+
+        AutoRoute(
+          page: ArticleDetailRoute.page,
+          path: '/article_detail',
+        ),
+
+        /// Profile Pages
+
+        AutoRoute(
+          page: ProfileEditRoute.page,
+          path: '/profile_edit',
+        ),
+
+        /// Active Devices
+        AutoRoute(
+          page: ActiveSessionListRoute.page,
+          path: '/active_session_list',
+        ),
+
+        /// Notification
+        AutoRoute(
+          page: NotificationListRoute.page,
+          path: '/notification_list',
+        ),
+
+        AutoRoute(
+          page: ChatRoute.page,
+          path: '/chat',
+        ),
+
+        ///
+        /// User role routes
+        ///
+
+        ///user-home
+        AutoRoute(
+          page: MainRoute.page,
+          path: '/main',
+          initial: false,
+          children: [
+            AutoRoute(
+              page: HomeRoute.page,
+              path: 'home',
+            ),
+            AutoRoute(
+              page: QuranRoute.page,
+              path: 'quran',
+            ),
+            AutoRoute(
+              page: LearnRoute.page,
+              path: 'learn',
+            ),
+            AutoRoute(
+              page: KnowledgeRoute.page,
+              path: 'knowledge',
+            ),
+            AutoRoute(
+              page: ProfileRoute.page,
+              path: 'profile',
+            ),
+          ],
+        ),
+      ];
+}

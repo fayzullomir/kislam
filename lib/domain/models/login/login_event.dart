@@ -1,0 +1,4 @@
+enum LoginEvent {
+  onSignInWithAccount,
+  onSignUpWithAccount,
+}
