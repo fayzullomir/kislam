@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- notification tint color -->
+    <color name="notification_tint">#02183A</color>
+
+    <!-- splash screen colors -->
+    <color name="splash_background">#1A282D</color>
+
+</resources>
