@@ -1,0 +1,140 @@
+name: koreaislam
+description: A Flutter application for Korean Islam organization.
+publish_to: 'none'
+
+version: 1.0.0+1000
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  auto_route: ^8.0.0
+  badges: ^3.1.2
+  bloc: ^8.1.2
+  cached_network_image: ^3.3.0
+  carousel_slider: ^5.0.0
+  currency_text_input_formatter: ^2.1.8
+  characters: ^1.3.0
+  dashed_circular_progress_bar: ^0.0.6
+  device_info_plus: ^11.2.2
+  dio: ^5.3.2
+  dio_cache_interceptor: ^3.5.0
+  dio_cache_interceptor_hive_store: ^3.2.2
+  easy_localization: ^3.0.7
+  easy_localization_loader: ^2.0.0
+  elegant_notification: ^1.11.0
+  email_validator: ^2.1.17
+  equatable: ^2.0.5
+  external_app_launcher: ^4.0.0
+  firebase_analytics: ^11.0.1
+  firebase_core: ^3.1.0
+  firebase_crashlytics: ^4.0.1
+  firebase_remote_config: ^5.5.0
+  firebase_messaging: ^15.1.0
+  floor: ^1.4.2
+  flutter_bloc: ^8.1.3
+  flutter_cache_manager: ^3.3.1
+  flutter_image_compress: ^2.1.0
+  flutter_local_notifications: ^18.0.1
+  flutter_native_splash: ^2.3.0
+  flutter_shimmer_widget: ^1.1.0
+  flutter_speed_dial: ^7.0.0
+  flutter_svg: ^2.0.7
+  freezed_annotation: ^2.4.1
+  get_it: ^7.6.0
+  hive: ^2.2.3  # for dio_cache_interceptor_hive_store
+  image: ^4.5.3
+  image_picker: ^0.8.7+5
+  injectable_generator: ^2.4.1
+  infinite_scroll_pagination: ^4.0.0
+  json_annotation: ^4.8.1
+  jiffy: ^6.3.1
+  light_compressor: ^2.1.0
+  logger: ^2.0.1
+  mask_text_input_formatter: ^2.5.0
+  modal_bottom_sheet: ^3.0.0
+  multi_select_flutter: ^4.1.3
+  package_info_plus: ^8.3.0
+  path: ^1.8.3
+  path_provider: ^2.1.1
+  permission_handler: ^11.3.1
+  photo_view: ^0.14.0
+  pretty_dio_logger: ^1.3.1
+  rx_shared_preferences: ^4.0.0
+  smart_auth: ^2.0.0
+  smooth_page_indicator: ^1.1.0
+  sqflite: ^2.3.3+1
+  store_checker: ^1.6.0
+  share_plus: ^12.0.1
+  shimmer: ^3.0.0
+  table_calendar: ^3.1.2
+  tab_indicator_styler: ^2.0.0
+  url_launcher: ^6.2.6
+  webview_flutter: ^4.11.0
+  uuid: ^4.1.0
+  vibration: ^3.1.3
+  video_thumbnail: ^0.5.3
+  visibility_detector: ^0.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  auto_route_generator: ^8.0.0
+  chucker_flutter: ^1.9.0
+  build_runner: any
+  easy_localization_generator: ^0.3.2
+  floor_generator: ^1.5.0
+  flutter_gen_runner: ^5.3.1
+  flutter_lints: ^2.0.0
+  freezed: ^2.4.1
+  json_serializable: ^6.7.1
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  color_dark: "#FFFFFF"
+  image_android: assets/images/logo/splash_logo_android.png
+  image_ios: assets/images/logo/splash_logo_ios.png
+  branding_mode: bottom
+  branding_bottom_padding: 24
+  android_12:
+    image: assets/images/logo/splash_logo_android_12.png
+  android: true
+  ios: true
+  web: false
+
+
+dependency_overrides:
+  intl: 0.19.0
+
+flutter:
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter_bold.ttf
+        - asset: assets/fonts/inter_medium.ttf
+        - asset: assets/fonts/inter_regular.ttf
+        - asset: assets/fonts/inter_semi_bold.ttf
+  uses-material-design: true
+
+  assets:
+    - assets/localization/
+    - assets/images/
+    - assets/images/app_bar/
+    - assets/images/booking/
+    - assets/images/bottom_bar/
+    - assets/images/component/
+    - assets/images/guide/
+    - assets/images/intro/
+    - assets/images/logo/
+    - assets/images/main_action/
+    - assets/images/profile/
+    - assets/images/service/
+    - assets/images/state/
+    - assets/images/tour_package/
+
+flutter_gen:
+  output: lib/core/gen/assets/
+  integrations:
+    flutter_svg: true
