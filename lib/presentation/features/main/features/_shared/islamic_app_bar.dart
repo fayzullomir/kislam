@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'islamic_design_tokens.dart';
+import 'noor_tokens.dart';
 
 /// Top bar used by Home / Learn / Q&A screens with the wordmark title
 /// and a bell icon on the right.
@@ -24,7 +24,7 @@ class IslamicAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: IslamicDesignTokens.background,
+      backgroundColor: context.noor.neutral,
       elevation: 0,
       toolbarHeight: 64,
       titleSpacing: 0,
@@ -36,8 +36,8 @@ class IslamicAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: showTitle
                 ? Text(
                     title,
-                    style: const TextStyle(
-                      color: IslamicDesignTokens.primary,
+                    style: TextStyle(
+                      color: context.noor.primary,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.2,
@@ -74,7 +74,7 @@ class _IconButton extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Icon(
             icon,
-            color: IslamicDesignTokens.primary,
+            color: context.noor.primary,
             size: 26,
           ),
         ),

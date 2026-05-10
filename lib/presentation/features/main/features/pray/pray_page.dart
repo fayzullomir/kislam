@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
 
@@ -22,7 +23,7 @@ class PrayPage extends BasePage<PrayCubit, PrayState, PrayEvent> {
     final totalSteps = steps.length;
 
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.neutral,
+      backgroundColor: context.noor.neutral,
       body: SafeArea(
         bottom: false,
         child: Padding(
@@ -37,18 +38,18 @@ class PrayPage extends BasePage<PrayCubit, PrayState, PrayEvent> {
                   onPressed: () {
                     // TODO(phase-4): open prayer settings sheet.
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.settings_outlined,
-                    color: IslamicDesignTokens.inkMuted,
+                    color: context.noor.inkMuted,
                     size: 22,
                   ),
                 ),
               ),
               const SizedBox(height: 8),
               Text(Strings.prayGuideLabel,
-                  style: IslamicDesignTokens.tEyebrow),
+                  style: context.noor.tEyebrow),
               const SizedBox(height: 6),
-              Text(state.prayerName, style: IslamicDesignTokens.tDisplay),
+              Text(state.prayerName, style: context.noor.tDisplay),
               const SizedBox(height: 16),
               _SegmentedProgress(
                 total: totalSteps,
@@ -60,7 +61,7 @@ class PrayPage extends BasePage<PrayCubit, PrayState, PrayEvent> {
                   '${currentStep + 1}',
                   '$totalSteps',
                 ),
-                style: IslamicDesignTokens.tEyebrow,
+                style: context.noor.tEyebrow,
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -73,17 +74,17 @@ class PrayPage extends BasePage<PrayCubit, PrayState, PrayEvent> {
                       const SizedBox(height: 24),
                       Text(
                         step.eyebrow,
-                        style: IslamicDesignTokens.tEyebrow.copyWith(
-                          color: IslamicDesignTokens.secondaryInk,
+                        style: context.noor.tEyebrow.copyWith(
+                          color: context.noor.secondaryInk,
                         ),
                       ),
                       const SizedBox(height: 6),
-                      Text(step.title, style: IslamicDesignTokens.tH1),
+                      Text(step.title, style: context.noor.tH1),
                       const SizedBox(height: 14),
                       Text(
                         step.body,
-                        style: IslamicDesignTokens.tBody.copyWith(
-                          color: IslamicDesignTokens.inkMuted,
+                        style: context.noor.tBody.copyWith(
+                          color: context.noor.inkMuted,
                         ),
                       ),
                     ],
@@ -133,8 +134,8 @@ class _SegmentedProgress extends StatelessWidget {
               height: 4,
               decoration: BoxDecoration(
                 color: (isActive || isCompleted)
-                    ? IslamicDesignTokens.primary
-                    : IslamicDesignTokens.line,
+                    ? context.noor.primary
+                    : context.noor.line,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -177,7 +178,7 @@ class _PostureCard extends StatelessWidget {
     return Container(
       height: 220,
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.neutralSage,
+        color: context.noor.neutralSage,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Stack(
@@ -186,7 +187,7 @@ class _PostureCard extends StatelessWidget {
             child: Icon(
               _iconFor(posture),
               size: 96,
-              color: IslamicDesignTokens.primary,
+              color: context.noor.primary,
             ),
           ),
           Positioned(
@@ -194,8 +195,8 @@ class _PostureCard extends StatelessWidget {
             bottom: 12,
             child: Text(
               Strings.prayPostureLabel,
-              style: IslamicDesignTokens.tEyebrow.copyWith(
-                color: IslamicDesignTokens.inkSoft,
+              style: context.noor.tEyebrow.copyWith(
+                color: context.noor.inkSoft,
               ),
             ),
           ),
@@ -251,7 +252,7 @@ class _OutlinedBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     final disabled = onTap == null;
     return Material(
-      color: IslamicDesignTokens.surface,
+      color: context.noor.surface,
       borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
       child: InkWell(
         borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
@@ -262,7 +263,7 @@ class _OutlinedBtn extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
             border: Border.all(
-              color: IslamicDesignTokens.line,
+              color: context.noor.line,
               width: 1,
             ),
           ),
@@ -273,8 +274,8 @@ class _OutlinedBtn extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: disabled
-                  ? IslamicDesignTokens.inkSoft
-                  : IslamicDesignTokens.ink,
+                  ? context.noor.inkSoft
+                  : context.noor.ink,
             ),
           ),
         ),
@@ -294,8 +295,8 @@ class _FilledBtn extends StatelessWidget {
     final disabled = onTap == null;
     return Material(
       color: disabled
-          ? IslamicDesignTokens.primary.withOpacity(0.45)
-          : IslamicDesignTokens.primary,
+          ? context.noor.primary.withOpacity(0.45)
+          : context.noor.primary,
       borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
       child: InkWell(
         borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),

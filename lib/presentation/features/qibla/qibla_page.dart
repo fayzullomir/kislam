@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
 
 import 'qibla_cubit.dart';
@@ -18,7 +19,7 @@ class QiblaPage extends BasePage<QiblaCubit, QiblaState, QiblaEvent> {
   @override
   Widget onWidgetBuild(BuildContext context, QiblaState state) {
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.neutral,
+      backgroundColor: context.noor.neutral,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -29,16 +30,16 @@ class QiblaPage extends BasePage<QiblaCubit, QiblaState, QiblaEvent> {
                 onPressed: () => Navigator.of(context).maybePop(),
                 padding: EdgeInsets.zero,
                 alignment: Alignment.centerLeft,
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back_rounded,
-                  color: IslamicDesignTokens.ink,
+                  color: context.noor.ink,
                   size: 26,
                 ),
               ),
               const SizedBox(height: 16),
-              Text(Strings.qiblaEyebrow, style: IslamicDesignTokens.tEyebrow),
+              Text(Strings.qiblaEyebrow, style: context.noor.tEyebrow),
               const SizedBox(height: 6),
-              Text(Strings.qiblaTitle, style: IslamicDesignTokens.tDisplay),
+              Text(Strings.qiblaTitle, style: context.noor.tDisplay),
               Expanded(
                 child: Center(
                   child: _Compass(
@@ -49,11 +50,11 @@ class QiblaPage extends BasePage<QiblaCubit, QiblaState, QiblaEvent> {
               Center(
                 child: Text(
                   '${state.degreesFromQibla}°',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: IslamicDesignTokens.fontDisplay,
                     fontSize: 38,
                     fontWeight: FontWeight.w600,
-                    color: IslamicDesignTokens.primary,
+                    color: context.noor.primary,
                   ),
                 ),
               ),
@@ -63,7 +64,7 @@ class QiblaPage extends BasePage<QiblaCubit, QiblaState, QiblaEvent> {
                   state.isFacingMecca
                       ? Strings.qiblaFacing
                       : Strings.qiblaTurn,
-                  style: IslamicDesignTokens.tBodySm,
+                  style: context.noor.tBodySm,
                 ),
               ),
               const SizedBox(height: 18),
@@ -102,22 +103,27 @@ class _Compass extends StatelessWidget {
           // Background painter — ring + ticks + cardinal labels.
           CustomPaint(
             size: const Size.square(280),
-            painter: _CompassDialPainter(),
+            painter: _CompassDialPainter(
+              ring: context.noor.line,
+              ticks: context.noor.lineStrong,
+              cardinal: context.noor.inkMuted,
+              cardinalActive: context.noor.primary,
+            ),
           ),
           // Needle rotates around the center; positive value turns clockwise.
           Transform.rotate(
             angle: degreesFromQibla * math.pi / 180,
             child: CustomPaint(
               size: const Size.square(280),
-              painter: _NeedlePainter(),
+              painter: _NeedlePainter(color: context.noor.primary),
             ),
           ),
           // Center anchor disc.
           Container(
             width: 14,
             height: 14,
-            decoration: const BoxDecoration(
-              color: IslamicDesignTokens.ink,
+            decoration: BoxDecoration(
+              color: context.noor.ink,
               shape: BoxShape.circle,
             ),
           ),
@@ -135,6 +141,18 @@ class _Compass extends StatelessWidget {
 }
 
 class _CompassDialPainter extends CustomPainter {
+  final Color ring;
+  final Color ticks;
+  final Color cardinal;
+  final Color cardinalActive;
+
+  _CompassDialPainter({
+    required this.ring,
+    required this.ticks,
+    required this.cardinal,
+    required this.cardinalActive,
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
@@ -144,14 +162,14 @@ class _CompassDialPainter extends CustomPainter {
     final ringPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1
-      ..color = IslamicDesignTokens.line;
+      ..color = ring;
 
     canvas.drawCircle(center, outerR, ringPaint);
     canvas.drawCircle(center, innerR, ringPaint);
 
     // Tick marks every 6° around the outer ring; longer ones every 30°.
     final tickPaint = Paint()
-      ..color = IslamicDesignTokens.lineStrong
+      ..color = ticks
       ..strokeWidth = 1;
 
     for (var deg = 0; deg < 360; deg += 6) {
@@ -180,7 +198,7 @@ class _CompassDialPainter extends CustomPainter {
       fontFamily: IslamicDesignTokens.fontBody,
       fontSize: 14,
       fontWeight: FontWeight.w600,
-      color: IslamicDesignTokens.inkMuted,
+      color: cardinal,
     );
     labels.forEach((deg, label) {
       final rad = (deg - 90) * math.pi / 180;
@@ -190,7 +208,7 @@ class _CompassDialPainter extends CustomPainter {
       );
       // North uses primary green for emphasis.
       final style = deg == 0
-          ? textStyle.copyWith(color: IslamicDesignTokens.primary)
+          ? textStyle.copyWith(color: cardinalActive)
           : textStyle;
       final tp = TextPainter(
         text: TextSpan(text: label, style: style),
@@ -201,10 +219,18 @@ class _CompassDialPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _CompassDialPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _CompassDialPainter oldDelegate) =>
+      oldDelegate.ring != ring ||
+      oldDelegate.ticks != ticks ||
+      oldDelegate.cardinal != cardinal ||
+      oldDelegate.cardinalActive != cardinalActive;
 }
 
 class _NeedlePainter extends CustomPainter {
+  final Color color;
+
+  _NeedlePainter({required this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
@@ -218,14 +244,15 @@ class _NeedlePainter extends CustomPainter {
       ..close();
 
     final paint = Paint()
-      ..color = IslamicDesignTokens.primary
+      ..color = color
       ..style = PaintingStyle.fill;
 
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(covariant _NeedlePainter oldDelegate) => false;
+  bool shouldRepaint(covariant _NeedlePainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 class _KaabaMarker extends StatelessWidget {
@@ -238,17 +265,17 @@ class _KaabaMarker extends StatelessWidget {
       height: 28,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.secondaryWash,
+        color: context.noor.secondaryWash,
         shape: BoxShape.circle,
         border: Border.all(
-          color: IslamicDesignTokens.secondary,
+          color: context.noor.secondary,
           width: 2,
         ),
       ),
       child: Container(
         width: 12,
         height: 12,
-        color: IslamicDesignTokens.ink,
+        color: context.noor.ink,
       ),
     );
   }
@@ -265,7 +292,7 @@ class _DistancePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.neutralSage,
+        color: context.noor.neutralSage,
         borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusPill),
       ),
       child: Row(
@@ -273,16 +300,16 @@ class _DistancePill extends StatelessWidget {
         children: [
           Text(
             city,
-            style: IslamicDesignTokens.tBodySm.copyWith(
-              color: IslamicDesignTokens.ink,
+            style: context.noor.tBodySm.copyWith(
+              color: context.noor.ink,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(width: 16),
           Text(
             _formatKm(kmToMecca),
-            style: IslamicDesignTokens.tBodySm.copyWith(
-              color: IslamicDesignTokens.ink,
+            style: context.noor.tBodySm.copyWith(
+              color: context.noor.ink,
               fontWeight: FontWeight.w600,
             ),
           ),

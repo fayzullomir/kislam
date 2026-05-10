@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 
 /// Bottom sheet that hosts prayer-time notification toggles + the daily
@@ -23,7 +24,7 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
   Widget build(BuildContext context) {
     final prayers = IslamicMockData.prayerNotifications;
     return Material(
-      color: IslamicDesignTokens.neutral,
+      color: context.noor.neutral,
       child: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -38,18 +39,18 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(Strings.notificationsLabel,
-                        style: IslamicDesignTokens.tEyebrow),
+                        style: context.noor.tEyebrow),
                     const SizedBox(height: 6),
                     Text(
                       Strings.notificationsLeadTime,
-                      style: IslamicDesignTokens.tBodySm,
+                      style: context.noor.tBodySm,
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 8),
               Container(
-                color: IslamicDesignTokens.surface,
+                color: context.noor.surface,
                 child: Column(
                   children: [
                     for (var i = 0; i < prayers.length; i++) ...[
@@ -67,7 +68,7 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
               ),
               const SizedBox(height: 16),
               Container(
-                color: IslamicDesignTokens.surface,
+                color: context.noor.surface,
                 child: _ToggleRow(
                   title: Strings.dailyWisdom,
                   subtitle: Strings.dailyWisdomTime,
@@ -96,7 +97,7 @@ class _SheetHandle extends StatelessWidget {
           width: 36,
           height: 4,
           decoration: BoxDecoration(
-            color: IslamicDesignTokens.line,
+            color: context.noor.line,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -130,21 +131,21 @@ class _ToggleRow extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: IslamicDesignTokens.fontDisplay,
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
-                    color: IslamicDesignTokens.ink,
+                    color: context.noor.ink,
                   ),
                 ),
                 const SizedBox(height: 2),
-                Text(subtitle, style: IslamicDesignTokens.tBodySm),
+                Text(subtitle, style: context.noor.tBodySm),
               ],
             ),
           ),
           Switch.adaptive(
             value: value,
-            activeColor: IslamicDesignTokens.primary,
+            activeColor: context.noor.primary,
             onChanged: onChanged,
           ),
         ],
@@ -158,12 +159,12 @@ class _RowDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Divider(
         height: 1,
         thickness: 1,
-        color: IslamicDesignTokens.line,
+        color: context.noor.line,
       ),
     );
   }

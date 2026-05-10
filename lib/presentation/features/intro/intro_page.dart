@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
 
@@ -26,7 +27,7 @@ class IntroPage extends BasePage<IntroCubit, IntroState, IntroEvent> {
     final isLast = state.isLastPageShown;
 
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.neutral,
+      backgroundColor: context.noor.neutral,
       body: SafeArea(
         child: Stack(
           children: [
@@ -63,8 +64,8 @@ class IntroPage extends BasePage<IntroCubit, IntroState, IntroEvent> {
                   onPressed: () => _finish(context),
                   child: Text(
                     Strings.introSkip,
-                    style: IslamicDesignTokens.tBody.copyWith(
-                      color: IslamicDesignTokens.inkSoft,
+                    style: context.noor.tBody.copyWith(
+                      color: context.noor.inkSoft,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -118,9 +119,9 @@ class _StepWelcome extends StatelessWidget {
           Text(
             'نور',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: IslamicDesignTokens.fontArabic,
-              color: IslamicDesignTokens.primary,
+              color: context.noor.primary,
               fontSize: 96,
               height: 1,
             ),
@@ -129,20 +130,20 @@ class _StepWelcome extends StatelessWidget {
           Text(
             Strings.introWelcomeEyebrow,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tEyebrow,
+            style: context.noor.tEyebrow,
           ),
           const SizedBox(height: 24),
           Text(
             Strings.introWelcomeTitle,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tDisplay,
+            style: context.noor.tDisplay,
           ),
           const SizedBox(height: 16),
           Text(
             Strings.introWelcomeBody,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tBody.copyWith(
-              color: IslamicDesignTokens.inkMuted,
+            style: context.noor.tBody.copyWith(
+              color: context.noor.inkMuted,
             ),
           ),
         ],
@@ -172,27 +173,30 @@ class _StepNoRush extends StatelessWidget {
             width: 180,
             height: 80,
             child: CustomPaint(
-              painter: _CurvePainter(),
+              painter: _CurvePainter(
+                green: context.noor.primary,
+                gold: context.noor.secondary,
+              ),
             ),
           ),
           const SizedBox(height: 28),
           Text(
             Strings.introNoRushEyebrow,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tEyebrow,
+            style: context.noor.tEyebrow,
           ),
           const SizedBox(height: 6),
           Text(
             Strings.introNoRushTitle,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tDisplay,
+            style: context.noor.tDisplay,
           ),
           const SizedBox(height: 16),
           Text(
             Strings.introNoRushBody,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tBody.copyWith(
-              color: IslamicDesignTokens.inkMuted,
+            style: context.noor.tBody.copyWith(
+              color: context.noor.inkMuted,
             ),
           ),
         ],
@@ -202,10 +206,15 @@ class _StepNoRush extends StatelessWidget {
 }
 
 class _CurvePainter extends CustomPainter {
+  final Color green;
+  final Color gold;
+
+  _CurvePainter({required this.green, required this.gold});
+
   @override
   void paint(Canvas canvas, Size size) {
     final greenPaint = Paint()
-      ..color = IslamicDesignTokens.primary
+      ..color = green
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -221,13 +230,13 @@ class _CurvePainter extends CustomPainter {
     canvas.drawPath(path, greenPaint);
 
     // Endpoint dots.
-    final dotPaint = Paint()..color = IslamicDesignTokens.primary;
+    final dotPaint = Paint()..color = green;
     canvas.drawCircle(Offset(0, size.height * 0.85), 5, dotPaint);
     canvas.drawCircle(Offset(size.width, size.height * 0.1), 5, dotPaint);
 
     // Gold dashed parallel line (slightly below).
     final goldPaint = Paint()
-      ..color = IslamicDesignTokens.secondary
+      ..color = gold
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -260,7 +269,8 @@ class _CurvePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _CurvePainter oldDelegate) => false;
+  bool shouldRepaint(covariant _CurvePainter oldDelegate) =>
+      oldDelegate.green != green || oldDelegate.gold != gold;
 }
 
 // ===========================================================================
@@ -283,9 +293,9 @@ class _StepLastSettings extends StatelessWidget {
           Text(
             'بِسْمِ اللَّهِ',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: IslamicDesignTokens.fontArabic,
-              color: IslamicDesignTokens.secondary,
+              color: context.noor.secondary,
               fontSize: 38,
               height: 1.2,
             ),
@@ -294,20 +304,20 @@ class _StepLastSettings extends StatelessWidget {
           Text(
             Strings.introLastStepEyebrow,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tEyebrow,
+            style: context.noor.tEyebrow,
           ),
           const SizedBox(height: 6),
           Text(
             Strings.introLastStepTitle,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tDisplay,
+            style: context.noor.tDisplay,
           ),
           const SizedBox(height: 14),
           Text(
             Strings.introLastStepBody,
             textAlign: TextAlign.center,
-            style: IslamicDesignTokens.tBody.copyWith(
-              color: IslamicDesignTokens.inkMuted,
+            style: context.noor.tBody.copyWith(
+              color: context.noor.inkMuted,
             ),
           ),
           const SizedBox(height: 28),
@@ -351,9 +361,9 @@ class _SettingCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 14, 12, 14),
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.surface,
+        color: context.noor.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: IslamicDesignTokens.line, width: 1),
+        border: Border.all(color: context.noor.line, width: 1),
       ),
       child: Row(
         children: [
@@ -363,7 +373,7 @@ class _SettingCard extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: IslamicDesignTokens.tEyebrow.copyWith(
+                  style: context.noor.tEyebrow.copyWith(
                     fontSize: 10,
                     letterSpacing: 1.2,
                   ),
@@ -371,11 +381,11 @@ class _SettingCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: IslamicDesignTokens.fontDisplay,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: IslamicDesignTokens.ink,
+                    color: context.noor.ink,
                   ),
                 ),
               ],
@@ -385,11 +395,11 @@ class _SettingCard extends StatelessWidget {
             onPressed: onEdit,
             child: Text(
               Strings.introEdit,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: IslamicDesignTokens.fontDisplay,
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
-                color: IslamicDesignTokens.primary,
+                color: context.noor.primary,
               ),
             ),
           ),
@@ -450,7 +460,7 @@ class _PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: IslamicDesignTokens.primary,
+      color: context.noor.primary,
       borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
       child: InkWell(
         borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
@@ -482,7 +492,7 @@ class _OutlineButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: IslamicDesignTokens.surface,
+      color: context.noor.surface,
       borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
       child: InkWell(
         borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
@@ -492,15 +502,15 @@ class _OutlineButton extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
-            border: Border.all(color: IslamicDesignTokens.line, width: 1),
+            border: Border.all(color: context.noor.line, width: 1),
           ),
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: IslamicDesignTokens.fontDisplay,
               fontSize: 17,
               fontWeight: FontWeight.w600,
-              color: IslamicDesignTokens.ink,
+              color: context.noor.ink,
             ),
           ),
         ),

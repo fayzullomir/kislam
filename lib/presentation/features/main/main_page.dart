@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
 
@@ -35,7 +36,7 @@ class MainPage extends BasePage<MainCubit, MainState, MainEvent> {
             }
           },
           child: Scaffold(
-            backgroundColor: IslamicDesignTokens.neutral,
+            backgroundColor: context.noor.neutral,
             body: child,
             bottomNavigationBar: _NoorBottomNavBar(
               activeIndex: tabsRouter.activeIndex,
@@ -90,10 +91,10 @@ class _NoorBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: IslamicDesignTokens.neutral,
+      decoration: BoxDecoration(
+        color: context.noor.neutral,
         border: Border(
-          top: BorderSide(color: IslamicDesignTokens.line, width: 1),
+          top: BorderSide(color: context.noor.line, width: 1),
         ),
       ),
       child: SafeArea(
@@ -131,8 +132,8 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isActive
-        ? IslamicDesignTokens.primary
-        : IslamicDesignTokens.inkSoft;
+        ? context.noor.primary
+        : context.noor.inkSoft;
 
     // Soft outline pill around the active tab — matches the new design's
     // gentle highlight; transparent border keeps inactive tabs at the same
@@ -148,7 +149,7 @@ class _NavItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: isActive
-                  ? IslamicDesignTokens.primary.withOpacity(0.35)
+                  ? context.noor.primary.withOpacity(0.35)
                   : Colors.transparent,
               width: 1,
             ),

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
 
@@ -23,7 +24,7 @@ class LearnPage extends BasePage<LearnCubit, LearnState, LearnEvent> {
     );
 
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.neutral,
+      backgroundColor: context.noor.neutral,
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -35,10 +36,10 @@ class LearnPage extends BasePage<LearnCubit, LearnState, LearnEvent> {
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
               children: [
                 Text(Strings.learnQaLabel,
-                    style: IslamicDesignTokens.tEyebrow),
+                    style: context.noor.tEyebrow),
                 const SizedBox(height: 6),
                 Text(Strings.learnTitle,
-                    style: IslamicDesignTokens.tDisplay),
+                    style: context.noor.tDisplay),
                 const SizedBox(height: 18),
                 _SearchField(
                   initialValue: state.searchQuery,
@@ -59,10 +60,10 @@ class LearnPage extends BasePage<LearnCubit, LearnState, LearnEvent> {
                       children: [
                         _QuestionTile(question: filtered[i]),
                         if (!isLast)
-                          const Divider(
+                          Divider(
                             height: 1,
                             thickness: 1,
-                            color: IslamicDesignTokens.line,
+                            color: context.noor.line,
                           ),
                       ],
                     );
@@ -126,16 +127,16 @@ class _SearchFieldState extends State<_SearchField> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.surface,
+        color: context.noor.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: IslamicDesignTokens.line, width: 1),
+        border: Border.all(color: context.noor.line, width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.search_rounded,
-            color: IslamicDesignTokens.inkSoft,
+            color: context.noor.inkSoft,
             size: 22,
           ),
           const SizedBox(width: 10),
@@ -143,12 +144,12 @@ class _SearchFieldState extends State<_SearchField> {
             child: TextField(
               controller: _controller,
               onChanged: widget.onChanged,
-              style: IslamicDesignTokens.tBody,
+              style: context.noor.tBody,
               decoration: InputDecoration(
                 hintText: Strings.learnSearchHint,
-                hintStyle: const TextStyle(
+                hintStyle: TextStyle(
                   fontFamily: IslamicDesignTokens.fontBody,
-                  color: IslamicDesignTokens.inkSoft,
+                  color: context.noor.inkSoft,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
@@ -214,9 +215,9 @@ class _CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bg = isSelected
-        ? IslamicDesignTokens.primary
+        ? context.noor.primary
         : Colors.transparent;
-    final fg = isSelected ? Colors.white : IslamicDesignTokens.ink;
+    final fg = isSelected ? Colors.white : context.noor.ink;
     return Material(
       color: bg,
       borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusPill),
@@ -231,8 +232,8 @@ class _CategoryChip extends StatelessWidget {
                 BorderRadius.circular(IslamicDesignTokens.radiusPill),
             border: Border.all(
               color: isSelected
-                  ? IslamicDesignTokens.primary
-                  : IslamicDesignTokens.line,
+                  ? context.noor.primary
+                  : context.noor.line,
               width: 1,
             ),
           ),
@@ -282,29 +283,29 @@ class _QuestionTile extends StatelessWidget {
                 const Spacer(),
                 Text(
                   question.timestamp,
-                  style: IslamicDesignTokens.tCaption,
+                  style: context.noor.tCaption,
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Text(
               question.title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: IslamicDesignTokens.fontDisplay,
                 fontSize: 17,
                 height: 1.3,
                 fontWeight: FontWeight.w600,
-                color: IslamicDesignTokens.ink,
+                color: context.noor.ink,
               ),
             ),
             const SizedBox(height: 10),
             Text(
               '${Strings.learnAnswersCount('${question.answersCount}')} →',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: IslamicDesignTokens.fontBody,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: IslamicDesignTokens.primary,
+                color: context.noor.primary,
               ),
             ),
           ],
@@ -324,16 +325,16 @@ class _CategoryBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.neutralSage,
+        color: context.noor.neutralSage,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: IslamicDesignTokens.fontBody,
           fontSize: 11,
           fontWeight: FontWeight.w700,
-          color: IslamicDesignTokens.inkMuted,
+          color: context.noor.inkMuted,
           letterSpacing: 0.6,
         ),
       ),
@@ -349,16 +350,16 @@ class _NewAnswerBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.danger.withOpacity(0.12),
+        color: context.noor.danger.withOpacity(0.12),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         Strings.learnNewAnswerBadge,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: IslamicDesignTokens.fontBody,
           fontSize: 11,
           fontWeight: FontWeight.w700,
-          color: IslamicDesignTokens.danger,
+          color: context.noor.danger,
           letterSpacing: 0.6,
         ),
       ),
@@ -378,7 +379,7 @@ class _AskQuestionFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: IslamicDesignTokens.ink,
+      color: context.noor.ink,
       borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusPill),
       elevation: 0,
       child: InkWell(
@@ -391,7 +392,7 @@ class _AskQuestionFab extends StatelessWidget {
                 BorderRadius.circular(IslamicDesignTokens.radiusPill),
             boxShadow: [
               BoxShadow(
-                color: IslamicDesignTokens.ink.withOpacity(0.18),
+                color: context.noor.ink.withOpacity(0.18),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -428,15 +429,15 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 60),
       child: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.search_off_rounded,
-            color: IslamicDesignTokens.inkSoft,
+            color: context.noor.inkSoft,
             size: 36,
           ),
           const SizedBox(height: 12),
           Text(
             Strings.learnEmpty,
-            style: IslamicDesignTokens.tBodySm,
+            style: context.noor.tBodySm,
           ),
         ],
       ),

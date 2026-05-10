@@ -8,6 +8,7 @@ import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_launch_type.dart';
 import 'package:koreaislam/presentation/features/language/change/change_language_page.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/features/main/features/profile/notification_settings_sheet.dart';
 import 'package:koreaislam/presentation/features/theme_mode/change_theme_mode_page.dart';
@@ -24,7 +25,7 @@ class ProfilePage extends BasePage<ProfileCubit, ProfileState, ProfileEvent> {
   @override
   Widget onWidgetBuild(BuildContext context, ProfileState state) {
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.neutral,
+      backgroundColor: context.noor.neutral,
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -211,7 +212,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 10),
-      child: Text(label, style: IslamicDesignTokens.tEyebrow),
+      child: Text(label, style: context.noor.tEyebrow),
     );
   }
 }
@@ -225,7 +226,7 @@ class _SettingsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.surface,
+        color: context.noor.surface,
         borderRadius: BorderRadius.circular(14),
       ),
       clipBehavior: Clip.antiAlias,
@@ -239,12 +240,12 @@ class _CardDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18),
       child: Divider(
         height: 1,
         thickness: 1,
-        color: IslamicDesignTokens.line,
+        color: context.noor.line,
       ),
     );
   }
@@ -279,32 +280,32 @@ class _ValueRow extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: IslamicDesignTokens.fontDisplay,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: IslamicDesignTokens.ink,
+                      color: context.noor.ink,
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: IslamicDesignTokens.tCaption),
+                  Text(subtitle, style: context.noor.tCaption),
                 ],
               ),
             ),
             const SizedBox(width: 12),
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: IslamicDesignTokens.fontBody,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: IslamicDesignTokens.inkMuted,
+                color: context.noor.inkMuted,
               ),
             ),
             const SizedBox(width: 6),
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
-              color: IslamicDesignTokens.inkSoft,
+              color: context.noor.inkSoft,
               size: 20,
             ),
           ],
@@ -333,12 +334,12 @@ class _IconRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconColor =
-        danger ? IslamicDesignTokens.danger : IslamicDesignTokens.primary;
+        danger ? context.noor.danger : context.noor.primary;
     final iconBg = danger
-        ? IslamicDesignTokens.danger.withOpacity(0.10)
-        : IslamicDesignTokens.primaryWash;
+        ? context.noor.danger.withOpacity(0.10)
+        : context.noor.primaryWash;
     final textColor =
-        danger ? IslamicDesignTokens.danger : IslamicDesignTokens.ink;
+        danger ? context.noor.danger : context.noor.ink;
 
     return InkWell(
       onTap: onTap,
@@ -368,9 +369,9 @@ class _IconRow extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
-              color: IslamicDesignTokens.inkSoft,
+              color: context.noor.inkSoft,
               size: 20,
             ),
           ],
@@ -389,7 +390,7 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: IslamicDesignTokens.surface,
+      color: context.noor.surface,
       borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
       child: InkWell(
         borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
@@ -403,19 +404,19 @@ class _ProfileHeader extends StatelessWidget {
                 width: 60,
                 height: 60,
                 border: BorderSide(
-                  color: IslamicDesignTokens.line,
+                  color: context.noor.line,
                   width: 1.2,
                 ),
                 placeHolderImage:
                     Assets.images.component.placeHolderCircle.svg(
                   width: 40,
                   height: 40,
-                  color: IslamicDesignTokens.inkSoft,
+                  color: context.noor.inkSoft,
                 ),
                 errorImage: Assets.images.component.placeHolderCircle.svg(
                   width: 40,
                   height: 40,
-                  color: IslamicDesignTokens.inkSoft,
+                  color: context.noor.inkSoft,
                 ),
                 contentPadding: const EdgeInsets.all(1.5),
               ),
@@ -429,9 +430,9 @@ class _ProfileHeader extends StatelessWidget {
                       state.fullName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: IslamicDesignTokens.fontDisplay,
-                        color: IslamicDesignTokens.ink,
+                        color: context.noor.ink,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
@@ -441,7 +442,7 @@ class _ProfileHeader extends StatelessWidget {
                       state.phoneNumber.formatted,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: IslamicDesignTokens.tBodySm,
+                      style: context.noor.tBodySm,
                     ),
                   ],
                 ),
@@ -450,13 +451,13 @@ class _ProfileHeader extends StatelessWidget {
                 width: 36,
                 height: 36,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: IslamicDesignTokens.primaryWash,
+                decoration: BoxDecoration(
+                  color: context.noor.primaryWash,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_forward_ios_rounded,
-                  color: IslamicDesignTokens.primary,
+                  color: context.noor.primary,
                   size: 14,
                 ),
               ),
@@ -477,12 +478,12 @@ class _AppVersionBlock extends StatelessWidget {
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
+          return Center(
             child: SizedBox(
               width: 18,
               height: 18,
               child: CircularProgressIndicator(
-                color: IslamicDesignTokens.primary,
+                color: context.noor.primary,
                 strokeWidth: 2,
               ),
             ),
@@ -492,7 +493,7 @@ class _AppVersionBlock extends StatelessWidget {
           return Center(
             child: Text(
               '${snapshot.data?.version} (${snapshot.data?.buildNumber})',
-              style: IslamicDesignTokens.tCaption,
+              style: context.noor.tCaption,
             ),
           );
         }

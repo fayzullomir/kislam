@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
@@ -18,7 +19,7 @@ class HomePage extends BasePage<HomeCubit, HomeState, HomeEvent> {
   @override
   Widget onWidgetBuild(BuildContext context, HomeState state) {
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.neutral,
+      backgroundColor: context.noor.neutral,
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -76,7 +77,7 @@ class _NextPrayerHeroCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.neutralSand,
+        color: context.noor.neutralSand,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Stack(
@@ -93,7 +94,7 @@ class _NextPrayerHeroCard extends StatelessWidget {
                   fontSize: 96,
                   height: 1,
                   fontWeight: FontWeight.w400,
-                  color: IslamicDesignTokens.secondary.withOpacity(0.18),
+                  color: context.noor.secondary.withOpacity(0.18),
                 ),
               ),
             ),
@@ -103,8 +104,8 @@ class _NextPrayerHeroCard extends StatelessWidget {
             children: [
               Text(
                 Strings.homeNextPrayerLabel,
-                style: IslamicDesignTokens.tEyebrow.copyWith(
-                  color: IslamicDesignTokens.inkMuted,
+                style: context.noor.tEyebrow.copyWith(
+                  color: context.noor.inkMuted,
                 ),
               ),
               const SizedBox(height: 6),
@@ -113,12 +114,12 @@ class _NextPrayerHeroCard extends StatelessWidget {
                 children: [
                   Text(
                     IslamicMockData.nextPrayerName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: IslamicDesignTokens.fontDisplay,
                       fontSize: 32,
                       height: 1.1,
                       fontWeight: FontWeight.w700,
-                      color: IslamicDesignTokens.primary,
+                      color: context.noor.primary,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -130,7 +131,7 @@ class _NextPrayerHeroCard extends StatelessWidget {
                         fontFamily: IslamicDesignTokens.fontArabic,
                         fontSize: 22,
                         height: 1,
-                        color: IslamicDesignTokens.secondary,
+                        color: context.noor.secondary,
                       ),
                     ),
                   ),
@@ -139,12 +140,12 @@ class _NextPrayerHeroCard extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 IslamicMockData.nextPrayerCountdownClock,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: IslamicDesignTokens.fontDisplay,
                   fontSize: 56,
                   height: 1.05,
                   fontWeight: FontWeight.w600,
-                  color: IslamicDesignTokens.ink,
+                  color: context.noor.ink,
                   letterSpacing: -1.2,
                 ),
               ),
@@ -154,12 +155,12 @@ class _NextPrayerHeroCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       IslamicMockData.nextPrayerStartsAt,
-                      style: IslamicDesignTokens.tBodySm,
+                      style: context.noor.tBodySm,
                     ),
                   ),
                   Text(
                     IslamicMockData.currentLocationLine,
-                    style: IslamicDesignTokens.tBodySm,
+                    style: context.noor.tBodySm,
                   ),
                 ],
               ),
@@ -204,12 +205,12 @@ class _PrayerChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bg = prayer.isNext
-        ? IslamicDesignTokens.primary
-        : IslamicDesignTokens.surface;
-    final fg = prayer.isNext ? Colors.white : IslamicDesignTokens.ink;
+        ? context.noor.primary
+        : context.noor.surface;
+    final fg = prayer.isNext ? Colors.white : context.noor.ink;
     final labelFg = prayer.isNext
         ? Colors.white.withOpacity(0.85)
-        : IslamicDesignTokens.inkMuted;
+        : context.noor.inkMuted;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
@@ -218,7 +219,7 @@ class _PrayerChip extends StatelessWidget {
         border: Border.all(
           color: prayer.isNext
               ? Colors.transparent
-              : IslamicDesignTokens.line,
+              : context.noor.line,
           width: 1,
         ),
       ),
@@ -265,13 +266,13 @@ class _TodayWisdomSection extends StatelessWidget {
       children: [
         Text(
           Strings.homeTodayWisdomLabel,
-          style: IslamicDesignTokens.tEyebrow,
+          style: context.noor.tEyebrow,
         ),
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.fromLTRB(20, 22, 20, 22),
           decoration: BoxDecoration(
-            color: IslamicDesignTokens.neutralSage,
+            color: context.noor.neutralSage,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -279,18 +280,18 @@ class _TodayWisdomSection extends StatelessWidget {
             children: [
               Text(
                 IslamicMockData.todayWisdomQuote,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: IslamicDesignTokens.fontDisplay,
                   fontSize: 22,
                   height: 1.32,
                   fontWeight: FontWeight.w600,
-                  color: IslamicDesignTokens.ink,
+                  color: context.noor.ink,
                 ),
               ),
               const SizedBox(height: 14),
               Text(
                 IslamicMockData.todayWisdomSource,
-                style: IslamicDesignTokens.tBodySm,
+                style: context.noor.tBodySm,
               ),
             ],
           ),
@@ -317,7 +318,7 @@ class _QuickLinksSection extends StatelessWidget {
       children: [
         Text(
           Strings.homeQuickLinksLabel,
-          style: IslamicDesignTokens.tEyebrow,
+          style: context.noor.tEyebrow,
         ),
         const SizedBox(height: 12),
         GridView.count(
@@ -345,7 +346,7 @@ class _QuickLinkCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: IslamicDesignTokens.surface,
+      color: context.noor.surface,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -358,7 +359,7 @@ class _QuickLinkCard extends StatelessWidget {
             children: [
               Icon(
                 link.icon,
-                color: IslamicDesignTokens.primary,
+                color: context.noor.primary,
                 size: 22,
               ),
               const SizedBox(height: 8),
@@ -370,11 +371,11 @@ class _QuickLinkCard extends StatelessWidget {
                     link.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: IslamicDesignTokens.fontDisplay,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: IslamicDesignTokens.ink,
+                      color: context.noor.ink,
                       height: 1.2,
                     ),
                   ),
@@ -383,7 +384,7 @@ class _QuickLinkCard extends StatelessWidget {
                     link.subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: IslamicDesignTokens.tBodySm.copyWith(
+                    style: context.noor.tBodySm.copyWith(
                       fontSize: 13,
                     ),
                   ),
