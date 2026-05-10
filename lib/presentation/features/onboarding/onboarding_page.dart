@@ -6,23 +6,24 @@ import 'package:koreaislam/presentation/features/main/features/_shared/noor_toke
 import 'package:koreaislam/presentation/router/app_router.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
 
-import 'intro_cubit.dart';
+import 'onboarding_cubit.dart';
 
-/// Three-step Noor onboarding:
+/// Two-step Noor onboarding:
 ///   1. Welcome — نور logo + greeting
 ///   2. "At your own pace" — gentle pacing reassurance
-///   3. "Last step" — quick settings (location / madhab / language)
+///
+/// Madhab and location are picked on dedicated pages right after this flow.
 @RoutePage()
-class IntroPage extends BasePage<IntroCubit, IntroState, IntroEvent> {
-  IntroPage({super.key});
+class OnboardingPage extends BasePage<OnboardingCubit, OnboardingState, OnboardingEvent> {
+  OnboardingPage({super.key});
 
   final PageController _pageController = PageController();
 
   @override
-  void onEventEmitted(BuildContext context, IntroEvent event) {}
+  void onEventEmitted(BuildContext context, OnboardingEvent event) {}
 
   @override
-  Widget onWidgetBuild(BuildContext context, IntroState state) {
+  Widget onWidgetBuild(BuildContext context, OnboardingState state) {
     final isFirst = state.currentPageIndex == 0;
     final isLast = state.isLastPageShown;
 
@@ -40,7 +41,6 @@ class IntroPage extends BasePage<IntroCubit, IntroState, IntroEvent> {
                     children: const [
                       _StepWelcome(),
                       _StepNoRush(),
-                      _StepLastSettings(),
                     ],
                   ),
                 ),
@@ -63,7 +63,7 @@ class IntroPage extends BasePage<IntroCubit, IntroState, IntroEvent> {
                 child: TextButton(
                   onPressed: () => _finish(context),
                   child: Text(
-                    Strings.introSkip,
+                    Strings.onboardingSkip,
                     style: context.noor.tBody.copyWith(
                       color: context.noor.inkSoft,
                       fontWeight: FontWeight.w500,
@@ -96,7 +96,9 @@ class IntroPage extends BasePage<IntroCubit, IntroState, IntroEvent> {
   }
 
   void _finish(BuildContext context) {
-    context.router.replaceAll([PermissionsRoute()]);
+    // Permissions come right after onboarding so the location permission
+    // is already granted by the time the user reaches the location picker.
+    context.router.replace(PermissionsRoute());
   }
 }
 
@@ -128,19 +130,19 @@ class _StepWelcome extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           Text(
-            Strings.introWelcomeEyebrow,
+            Strings.onboardingWelcomeEyebrow,
             textAlign: TextAlign.center,
             style: context.noor.tEyebrow,
           ),
           const SizedBox(height: 24),
           Text(
-            Strings.introWelcomeTitle,
+            Strings.onboardingWelcomeTitle,
             textAlign: TextAlign.center,
             style: context.noor.tDisplay,
           ),
           const SizedBox(height: 16),
           Text(
-            Strings.introWelcomeBody,
+            Strings.onboardingWelcomeBody,
             textAlign: TextAlign.center,
             style: context.noor.tBody.copyWith(
               color: context.noor.inkMuted,
@@ -181,19 +183,19 @@ class _StepNoRush extends StatelessWidget {
           ),
           const SizedBox(height: 28),
           Text(
-            Strings.introNoRushEyebrow,
+            Strings.onboardingNoRushEyebrow,
             textAlign: TextAlign.center,
             style: context.noor.tEyebrow,
           ),
           const SizedBox(height: 6),
           Text(
-            Strings.introNoRushTitle,
+            Strings.onboardingNoRushTitle,
             textAlign: TextAlign.center,
             style: context.noor.tDisplay,
           ),
           const SizedBox(height: 16),
           Text(
-            Strings.introNoRushBody,
+            Strings.onboardingNoRushBody,
             textAlign: TextAlign.center,
             style: context.noor.tBody.copyWith(
               color: context.noor.inkMuted,
@@ -274,144 +276,7 @@ class _CurvePainter extends CustomPainter {
 }
 
 // ===========================================================================
-// Step 3 — Last quick settings
-// ===========================================================================
-
-class _StepLastSettings extends StatelessWidget {
-  const _StepLastSettings();
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 60),
-          // Bismillah calligraphy ornament — simple gold Arabic line; replace
-          // with the actual SVG ornament when assets land.
-          Text(
-            'بِسْمِ اللَّهِ',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: IslamicDesignTokens.fontArabic,
-              color: context.noor.secondary,
-              fontSize: 38,
-              height: 1.2,
-            ),
-          ),
-          const SizedBox(height: 28),
-          Text(
-            Strings.introLastStepEyebrow,
-            textAlign: TextAlign.center,
-            style: context.noor.tEyebrow,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            Strings.introLastStepTitle,
-            textAlign: TextAlign.center,
-            style: context.noor.tDisplay,
-          ),
-          const SizedBox(height: 14),
-          Text(
-            Strings.introLastStepBody,
-            textAlign: TextAlign.center,
-            style: context.noor.tBody.copyWith(
-              color: context.noor.inkMuted,
-            ),
-          ),
-          const SizedBox(height: 28),
-          _SettingCard(
-            label: Strings.introLocationLabel,
-            value: 'Seoul',
-            onEdit: () {},
-          ),
-          const SizedBox(height: 12),
-          _SettingCard(
-            label: Strings.introMadhabLabel,
-            value: 'Hanafi',
-            onEdit: () {},
-          ),
-          const SizedBox(height: 12),
-          _SettingCard(
-            label: Strings.introLanguageLabel,
-            value: 'English',
-            onEdit: () {},
-          ),
-          const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-}
-
-class _SettingCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final VoidCallback onEdit;
-
-  const _SettingCard({
-    required this.label,
-    required this.value,
-    required this.onEdit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(18, 14, 12, 14),
-      decoration: BoxDecoration(
-        color: context.noor.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: context.noor.line, width: 1),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: context.noor.tEyebrow.copyWith(
-                    fontSize: 10,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontFamily: IslamicDesignTokens.fontDisplay,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: context.noor.ink,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: onEdit,
-            child: Text(
-              Strings.introEdit,
-              style: TextStyle(
-                fontFamily: IslamicDesignTokens.fontDisplay,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: context.noor.primary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ===========================================================================
-// Bottom action bar — single Continue on step 1, Back/Continue on step 2,
-// Back/Begin on step 3.
+// Bottom action bar — single Continue on step 1, Back/Begin on step 2.
 // ===========================================================================
 
 class _BottomActions extends StatelessWidget {
@@ -430,19 +295,19 @@ class _BottomActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isFirst) {
-      return _PrimaryButton(label: Strings.introContinue, onTap: onContinue);
+      return _PrimaryButton(label: Strings.onboardingContinue, onTap: onContinue);
     }
     return Row(
       children: [
         Expanded(
           flex: 1,
-          child: _OutlineButton(label: Strings.introBack, onTap: onBack),
+          child: _OutlineButton(label: Strings.onboardingBack, onTap: onBack),
         ),
         const SizedBox(width: 12),
         Expanded(
           flex: 2,
           child: _PrimaryButton(
-            label: isLast ? Strings.introBegin : Strings.introContinue,
+            label: isLast ? Strings.onboardingBegin : Strings.onboardingContinue,
             onTap: onContinue,
           ),
         ),

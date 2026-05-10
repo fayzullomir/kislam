@@ -3,15 +3,15 @@ import 'package:injectable/injectable.dart';
 import 'package:koreaislam/data/datasource/preference/app_config_preferences.dart';
 import 'package:koreaislam/presentation/support/cubit/base_cubit.dart';
 
-part 'intro_cubit.freezed.dart';
-part 'intro_state.dart';
+part 'onboarding_cubit.freezed.dart';
+part 'onboarding_state.dart';
 
 @Injectable()
-class IntroCubit extends BaseCubit<IntroState, IntroEvent> {
+class OnboardingCubit extends BaseCubit<OnboardingState, OnboardingEvent> {
   final AppConfigPreferences _appConfigPreferences;
 
-  IntroCubit(this._appConfigPreferences) : super(IntroState()) {
-    _appConfigPreferences.setIsIntroShown(true);
+  OnboardingCubit(this._appConfigPreferences) : super(OnboardingState()) {
+    _appConfigPreferences.setIsOnboardingShown(true);
   }
 
   void setPageIndex(int pageIndex) {

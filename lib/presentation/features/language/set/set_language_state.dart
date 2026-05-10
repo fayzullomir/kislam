@@ -14,4 +14,4 @@ class SetLanguageEvent with _$SetLanguageEvent {
   const factory SetLanguageEvent(SetLanguageEventType type) = _SetLanguageEvent;
 }
 
-enum SetLanguageEventType { onOpenIntroPage, onOpenLoginPage }
+enum SetLanguageEventType { onOpenOnboardingPage, onOpenLoginPage }

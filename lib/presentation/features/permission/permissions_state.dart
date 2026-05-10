@@ -13,15 +13,17 @@ class PermissionsState with _$PermissionsState {
   List<PermissionPageData> get permissions => [
         PermissionPageData(
           permission: Permission.notification,
-          image: Assets.images.intro.permissionNotification,
+          icon: Icons.notifications_none_rounded,
+          eyebrow: Strings.permissionNotificationEyebrow,
           title: Strings.permissionNotificationTitle,
-          message: Strings.permissionNotificationMessage,
+          body: Strings.permissionNotificationBody,
         ),
         PermissionPageData(
           permission: Permission.locationWhenInUse,
-          image: Assets.images.intro.permissionLocation,
+          icon: Icons.place_outlined,
+          eyebrow: Strings.permissionLocationEyebrow,
           title: Strings.permissionLocationTitle,
-          message: Strings.permissionLocationMessage,
+          body: Strings.permissionLocationBody,
         ),
       ];
 

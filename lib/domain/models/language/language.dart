@@ -35,5 +35,20 @@ enum Language {
     );
   }
 
+  /// Resolves a [Language] from a device/system [Locale] by matching the
+  /// language code (e.g. "uz", "en", "ko"). Falls back to [defaultLanguage]
+  /// when the locale isn't one of the supported app languages.
+  static Language fromLocale(Locale? locale) {
+    if (locale == null) return defaultLanguage;
+    return Language.values.firstWhere(
+      (e) => e.locale.languageCode == locale.languageCode,
+      orElse: () => defaultLanguage,
+    );
+  }
+
+  /// Resolves the [Language] that matches the current device locale.
+  static Language fromDeviceLocale() =>
+      fromLocale(PlatformDispatcher.instance.locale);
+
   static Language get defaultLanguage => Language.uzbekLatin;
 }

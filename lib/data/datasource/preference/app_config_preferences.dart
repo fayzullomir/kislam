@@ -8,7 +8,9 @@ class AppConfigPreferences {
 
   AppConfigPreferences(this._preferences);
 
-  static const String _keyIsIntroShown = "bool_is_intro_shown";
+  static const String _keyIsOnboardingShown = "bool_is_onboarding_shown";
+
+  static const String _keyIsMadhabSelected = "bool_is_madhab_selected";
 
   static const String _keyLanguage = "string_language";
 
@@ -18,7 +20,10 @@ class AppConfigPreferences {
     return AppConfigPreferences(prefs);
   }
 
-  bool get isIntroShown => _preferences.getBool(_keyIsIntroShown) ?? false;
+  bool get isOnboardingShown =>
+      _preferences.getBool(_keyIsOnboardingShown) ?? false;
+
+  bool get isOnboardingNotShown => !isOnboardingShown;
 
   bool get isIntroNotShown => !isIntroShown;
 
@@ -29,14 +34,17 @@ class AppConfigPreferences {
   Language get language =>
       Language.valueOrDefault(_preferences.getString(_keyLanguage));
 
-  Future<void> setIsIntroShown(bool isIntroShown) async =>
-      await _preferences.setOrRemove(_keyIsIntroShown, isIntroShown);
+  Future<void> setIsOnboardingShown(bool isOnboardingShown) async =>
+      await _preferences.setOrRemove(_keyIsOnboardingShown, isOnboardingShown);
+
+  Future<void> setIsMadhabSelected(bool isMadhabSelected) async =>
+      await _preferences.setOrRemove(_keyIsMadhabSelected, isMadhabSelected);
 
   Future<void> setLanguage(Language language) async =>
       await _preferences.setOrRemove(_keyLanguage, language.name);
 
   Future<void> clear() async {
-    // await _preferences.remove(_keyIsIntroShown);
+    // await _preferences.remove(_keyIsOnboardingShown);
     // await _preferences.remove(_keyLanguage);
   }
 }

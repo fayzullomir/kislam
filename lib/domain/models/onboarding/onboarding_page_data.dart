@@ -1,11 +1,11 @@
 import 'package:koreaislam/core/gen/assets/assets.gen.dart';
 
-class IntroPageData {
+class OnboardingPageData {
   final SvgGenImage image;
   final String title;
   final String message;
 
-  IntroPageData({
+  OnboardingPageData({
     required this.image,
     required this.title,
     required this.message,

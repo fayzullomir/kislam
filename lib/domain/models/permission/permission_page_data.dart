@@ -1,16 +1,18 @@
+import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:koreaislam/core/gen/assets/assets.gen.dart';
 
 class PermissionPageData {
   final Permission permission;
-  final SvgGenImage image;
+  final IconData icon;
+  final String eyebrow;
   final String title;
-  final String message;
+  final String body;
 
   PermissionPageData({
     required this.permission,
-    required this.image,
+    required this.icon,
+    required this.eyebrow,
     required this.title,
-    required this.message,
+    required this.body,
   });
 }

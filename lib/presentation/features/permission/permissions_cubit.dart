@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:koreaislam/core/gen/assets/assets.gen.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/domain/models/permission/permission_page_data.dart';
 import 'package:koreaislam/presentation/support/cubit/base_cubit.dart';
