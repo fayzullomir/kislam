@@ -1,4 +1,0 @@
-enum QRCodeEnum {
-  empty,
-  addChild,
-}

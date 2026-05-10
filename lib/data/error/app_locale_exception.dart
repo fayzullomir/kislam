@@ -14,14 +14,3 @@ class NotIdentifiedException implements AppLocalException {
   @override
   bool get isRequiredShowError => true;
 }
-
-class StudentNotLoadException implements AppLocalException {
-  @override
-  bool get isRequiredShowError => false;
-
-}
-class GroupNotLoadException implements AppLocalException {
-  @override
-  bool get isRequiredShowError => false;
-
-}
