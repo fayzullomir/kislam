@@ -64,7 +64,7 @@ class NotificationListPage
           noItemsFoundIndicatorBuilder: (_) => DefaultEmptyWidget(
             isFullScreen: true,
             message: Strings.commonEmptyMessage,
-            icon: Assets.images.state.notificationListPageGroupEmpty
+            icon: Assets.images.notificationListPageGroupEmpty
                 .svg(width: 180, height: 170),
             onReloadClicked: () => cubit(context).reloadData(),
           ),

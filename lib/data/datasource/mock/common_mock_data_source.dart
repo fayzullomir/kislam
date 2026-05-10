@@ -7,47 +7,47 @@ class CommonMockDataSource {
         GuideCategory(
           id: '1',
           name: "Safarga tayyorgarlik",
-          icon: Assets.images.guide.guideBag,
+          icon: Assets.images.guideBag,
         ),
         GuideCategory(
           id: '2',
           name: "Samalyotda parvoz chog'ida",
-          icon: Assets.images.guide.guideAirPlane,
+          icon: Assets.images.guideAirPlane,
         ),
         GuideCategory(
           id: '3',
           name: "Mehmonxonada",
-          icon: Assets.images.guide.guideHotel,
+          icon: Assets.images.guideHotel,
         ),
         GuideCategory(
           id: '4',
           name: "Makkada",
-          icon: Assets.images.guide.guideMecca,
+          icon: Assets.images.guideMecca,
         ),
         GuideCategory(
           id: '5',
           name: "Madinada",
-          icon: Assets.images.guide.guideMedina,
+          icon: Assets.images.guideMedina,
         ),
         GuideCategory(
           id: '8',
           name: "Sog'liq va gigiyena",
-          icon: Assets.images.guide.guideMedical,
+          icon: Assets.images.guideMedical,
         ),
         GuideCategory(
           id: '10',
           name: "Favqulodda vaziyatlar",
-          icon: Assets.images.guide.guideCallMedicine,
+          icon: Assets.images.guideCallMedicine,
         ),
         GuideCategory(
           id: '11',
           name: "Qaytish safariga tayyorgarlik",
-          icon: Assets.images.guide.guideGift,
+          icon: Assets.images.guideGift,
         ),
         GuideCategory(
           id: '12',
           name: "Qo'shimcha maslahatlar",
-          icon: Assets.images.guide.guideAdditionalInfo,
+          icon: Assets.images.guideAdditionalInfo,
         ),
       ];
 

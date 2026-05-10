@@ -82,7 +82,7 @@ class PublishedArticleListPage extends BasePage<PublishedArticleListCubit,
         emptyBody: DefaultEmptyWidget(
           isFullScreen: true,
           message: Strings.commonEmptyMessage,
-          icon: Assets.images.state.publishedArticleListPageGroupEmpty
+          icon: Assets.images.publishedArticleListPageGroupEmpty
               .svg(width: 180, height: 170),
           onReloadClicked: () => cubit(context).fetchArticles(),
         ),

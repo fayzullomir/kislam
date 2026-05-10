@@ -107,8 +107,7 @@ class MaterialFilledDropdownField extends StatelessWidget {
                           Theme.of(context).colorScheme.onSecondary,
                       suffixIcon: Padding(
                         padding: const EdgeInsets.only(top: 12, bottom: 12),
-                        child: Assets
-                            .images.component.materialFilledDropdownFieldDropdown
+                        child: Assets.images.materialFilledDropdownFieldDropdown
                             .svg(),
                       ),
                       border: InputBorder.none,

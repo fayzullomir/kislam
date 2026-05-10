@@ -32,8 +32,7 @@ class AppNotificationWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child: Center(
-                      child: Assets
-                          .images.component.appNotificationWidgetNotification
+                      child: Assets.images.appNotificationWidgetNotification
                           .svg(width: 14, height: 14, color: Colors.white),
                     ),
                   ),

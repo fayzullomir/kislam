@@ -101,12 +101,12 @@ dev_dependencies:
 flutter_native_splash:
   color: "#027537"
   color_dark: "#027537"
-  image_android: assets/images/logo/splash_logo_android.png
-  image_ios: assets/images/logo/splash_logo_ios.png
+  image_android: assets/images/splash_logo_android.png
+  image_ios: assets/images/splash_logo_ios.png
   branding_mode: bottom
   branding_bottom_padding: 24
   android_12:
-    image: assets/images/logo/splash_logo_android_12.png
+    image: assets/images/splash_logo_android_12.png
   android: true
   ios: true
   web: false
@@ -156,13 +156,6 @@ flutter:
   assets:
     - assets/localization/
     - assets/images/
-    - assets/images/app_bar/
-    - assets/images/component/
-    - assets/images/guide/
-    - assets/images/logo/
-    - assets/images/profile/
-    - assets/images/service/
-    - assets/images/state/
 
 flutter_gen:
   output: lib/core/gen/assets/

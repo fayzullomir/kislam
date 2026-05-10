@@ -41,7 +41,7 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onBackPressed,
         icon: Transform.flip(
           flipX: isRtl,
-          child: Assets.images.appBar.defaultAppBarActionBack.svg(
+          child: Assets.images.defaultAppBarActionBack.svg(
             height: 20,
             width: 20,
             color: context.iconPrimary,

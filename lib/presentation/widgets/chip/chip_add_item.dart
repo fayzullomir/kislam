@@ -35,7 +35,7 @@ class ChipAddItem extends StatelessWidget {
             SizedBox(width: 14),
             InkWell(
               onTap: () => onClicked(),
-              child: Assets.images.component.chipAddItemChipAdd
+              child: Assets.images.chipAddItemChipAdd
                   .svg(height: 20, width: 20),
             ),
           ],

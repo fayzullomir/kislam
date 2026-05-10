@@ -179,7 +179,7 @@ class _LocaleImageViewerPageState extends State<LocaleImageViewerPage> {
             onPressed: () {
               context.router.pop(images);
             },
-            icon: Assets.images.appBar.localeImageViewerActionBack
+            icon: Assets.images.localeImageViewerActionBack
                 .svg(color: Colors.white),
           ),
         ),

@@ -118,8 +118,7 @@ class _ActiveSessionItem extends StatelessWidget {
                     color: context.colorAccent.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Assets
-                      .images.profile.activeSessionListPageSessionDevicePhone
+                  child: Assets.images.activeSessionListPageSessionDevicePhone
                       .svg(
                     color: context.colorAccent,
                   ),

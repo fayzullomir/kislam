@@ -117,7 +117,7 @@ class SignInPage extends BasePage<SignInCubit, SignInState, SignInEvent> {
                 uzbekPhoneMaskFormatter,
                 LengthLimitingTextInputFormatter(17)
               ],
-              rightIcon: Assets.images.component.signInPageInputLogin.svg(),
+              rightIcon: Assets.images.signInPageInputLogin.svg(),
               maxLines: 1,
               keyboardType: TextInputType.phone,
               textInputAction: state.isPhoneAlreadyRegistered

@@ -34,7 +34,7 @@ class ChipShowLessItem extends StatelessWidget {
             SizedBox(width: 14),
             InkWell(
               onTap: () => onClicked(),
-              child: Assets.images.component.chipShowLessItemChipCollapse
+              child: Assets.images.chipShowLessItemChipCollapse
                   .svg(height: 20, width: 20),
             ),
           ],
