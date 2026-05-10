@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
-import 'package:koreaislam/presentation/features/main/features/_shared/islamic_app_bar.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
@@ -18,190 +17,153 @@ class HomePage extends BasePage<HomeCubit, HomeState, HomeEvent> {
 
   @override
   Widget onWidgetBuild(BuildContext context, HomeState state) {
-    final displayName =
-        state.fullName.isEmpty ? 'Kim Cheol-su' : state.fullName;
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.background,
-      appBar: IslamicAppBar(
-        title: IslamicMockData.appTitle,
-        onNotificationTap: () => context.router.push(NotificationListRoute()),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
-        ),
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _GreetingBlock(name: displayName),
-            const SizedBox(height: 20),
-            _PrayerTimesCard(),
-            const SizedBox(height: 24),
-            _QuickActionsGrid(
-              onActionTap: (action) {
-                switch (action.id) {
-                  case HomeQuickActionId.quran:
-                    context.tabsRouter.setActiveIndex(1);
-                    break;
-                  case HomeQuickActionId.howToPray:
-                    context.tabsRouter.setActiveIndex(2);
-                    break;
-                  case HomeQuickActionId.dua:
-                  case HomeQuickActionId.findHalal:
-                    context.tabsRouter.setActiveIndex(3);
-                    break;
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _GreetingBlock extends StatelessWidget {
-  final String name;
-
-  const _GreetingBlock({required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          Strings.homeGreeting,
-          style: const TextStyle(
-            color: IslamicDesignTokens.textPrimary,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
+      backgroundColor: IslamicDesignTokens.neutral,
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
           ),
-        ),
-        const SizedBox(height: 4),
-        RichText(
-          text: TextSpan(
-            style: const TextStyle(
-              color: IslamicDesignTokens.textPrimary,
-              fontSize: 30,
-              fontWeight: FontWeight.w800,
-              height: 1.15,
-            ),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextSpan(text: '${Strings.homeGreeting}, '),
-              TextSpan(
-                text: name,
-                style: const TextStyle(
-                  color: IslamicDesignTokens.primary,
-                ),
+              const _NextPrayerHeroCard(),
+              const SizedBox(height: 16),
+              const _PrayerTimesRow(),
+              const SizedBox(height: 28),
+              const _TodayWisdomSection(),
+              const SizedBox(height: 28),
+              _QuickLinksSection(
+                onLinkTap: (link) => _handleQuickLinkTap(context, link),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            const Icon(
-              Icons.calendar_today_outlined,
-              size: 16,
-              color: IslamicDesignTokens.textSecondary,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              IslamicMockData.hijriDate,
-              style: const TextStyle(
-                color: IslamicDesignTokens.textSecondary,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Container(
-              width: 4,
-              height: 4,
-              decoration: const BoxDecoration(
-                color: IslamicDesignTokens.textMuted,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Text(
-                IslamicMockData.gregorianDate,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: IslamicDesignTokens.textSecondary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+      ),
     );
+  }
+
+  void _handleQuickLinkTap(BuildContext context, HomeQuickLink link) {
+    switch (link.id) {
+      case HomeQuickLinkId.qibla:
+        context.router.push(QiblaRoute());
+        break;
+      case HomeQuickLinkId.quran:
+        context.tabsRouter.setActiveIndex(1);
+        break;
+      case HomeQuickLinkId.dua:
+        // No dedicated route yet — surface inside Learn (Q&A) for now.
+        context.tabsRouter.setActiveIndex(3);
+        break;
+      case HomeQuickLinkId.halalMap:
+        context.tabsRouter.setActiveIndex(3);
+        break;
+    }
   }
 }
 
-class _PrayerTimesCard extends StatelessWidget {
-  const _PrayerTimesCard();
+// ---------------------------------------------------------------------------
+// Hero: large sand "NEXT PRAYER" card with countdown + Arabic decoration.
+// ---------------------------------------------------------------------------
+
+class _NextPrayerHeroCard extends StatelessWidget {
+  const _NextPrayerHeroCard();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.surfaceMuted,
-        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
+        color: IslamicDesignTokens.neutralSand,
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      IslamicMockData.nextPrayerLabel,
-                      style: TextStyle(
-                        color: IslamicDesignTokens.accent,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.1,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      IslamicMockData.nextPrayerCountdown,
-                      style: const TextStyle(
-                        color: IslamicDesignTokens.primary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
+          // Faded calligraphy "صلاة" in the top-right corner.
+          Positioned(
+            right: -10,
+            top: -6,
+            child: IgnorePointer(
+              child: Text(
+                IslamicMockData.nextPrayerArabicDecor,
+                style: TextStyle(
+                  fontFamily: IslamicDesignTokens.fontArabic,
+                  fontSize: 96,
+                  height: 1,
+                  fontWeight: FontWeight.w400,
+                  color: IslamicDesignTokens.secondary.withOpacity(0.18),
                 ),
               ),
-              _QiblaButton(),
-            ],
+            ),
           ),
-          const SizedBox(height: 20),
-          Row(
-            children: List.generate(IslamicMockData.prayerTimes.length, (i) {
-              final prayer = IslamicMockData.prayerTimes[i];
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    right: i == IslamicMockData.prayerTimes.length - 1 ? 0 : 8,
-                  ),
-                  child: _PrayerPill(prayer: prayer),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                Strings.homeNextPrayerLabel,
+                style: IslamicDesignTokens.tEyebrow.copyWith(
+                  color: IslamicDesignTokens.inkMuted,
                 ),
-              );
-            }),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    IslamicMockData.nextPrayerName,
+                    style: const TextStyle(
+                      fontFamily: IslamicDesignTokens.fontDisplay,
+                      fontSize: 32,
+                      height: 1.1,
+                      fontWeight: FontWeight.w700,
+                      color: IslamicDesignTokens.primary,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      IslamicMockData.nextPrayerNameArabic,
+                      style: TextStyle(
+                        fontFamily: IslamicDesignTokens.fontArabic,
+                        fontSize: 22,
+                        height: 1,
+                        color: IslamicDesignTokens.secondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                IslamicMockData.nextPrayerCountdownClock,
+                style: const TextStyle(
+                  fontFamily: IslamicDesignTokens.fontDisplay,
+                  fontSize: 56,
+                  height: 1.05,
+                  fontWeight: FontWeight.w600,
+                  color: IslamicDesignTokens.ink,
+                  letterSpacing: -1.2,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      IslamicMockData.nextPrayerStartsAt,
+                      style: IslamicDesignTokens.tBodySm,
+                    ),
+                  ),
+                  Text(
+                    IslamicMockData.currentLocationLine,
+                    style: IslamicDesignTokens.tBodySm,
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -209,180 +171,223 @@ class _PrayerTimesCard extends StatelessWidget {
   }
 }
 
-class _QiblaButton extends StatelessWidget {
+// ---------------------------------------------------------------------------
+// 5 prayer time chips. The "next" prayer is filled green; the rest are white
+// pills with a hairline border and dark text.
+// ---------------------------------------------------------------------------
+
+class _PrayerTimesRow extends StatelessWidget {
+  const _PrayerTimesRow();
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: IslamicDesignTokens.primary,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () {},
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.explore_rounded,
-                size: 18,
-                color: Colors.white,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                Strings.homeQibla,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
+    final prayers = IslamicMockData.prayerTimes;
+    return Row(
+      children: List.generate(prayers.length, (i) {
+        final p = prayers[i];
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(right: i == prayers.length - 1 ? 0 : 8),
+            child: _PrayerChip(prayer: p),
           ),
+        );
+      }),
+    );
+  }
+}
+
+class _PrayerChip extends StatelessWidget {
+  final PrayerTimeItem prayer;
+
+  const _PrayerChip({required this.prayer});
+
+  @override
+  Widget build(BuildContext context) {
+    final bg = prayer.isNext
+        ? IslamicDesignTokens.primary
+        : IslamicDesignTokens.surface;
+    final fg = prayer.isNext ? Colors.white : IslamicDesignTokens.ink;
+    final labelFg = prayer.isNext
+        ? Colors.white.withOpacity(0.85)
+        : IslamicDesignTokens.inkMuted;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: prayer.isNext
+              ? Colors.transparent
+              : IslamicDesignTokens.line,
+          width: 1,
         ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            prayer.name.toUpperCase(),
+            style: TextStyle(
+              fontFamily: IslamicDesignTokens.fontBody,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.6,
+              color: labelFg,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            prayer.time,
+            style: TextStyle(
+              fontFamily: IslamicDesignTokens.fontDisplay,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: fg,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _PrayerPill extends StatelessWidget {
-  final PrayerTimeItem prayer;
+// ---------------------------------------------------------------------------
+// Today's Wisdom — sage-tinted card with a Qur'anic quote.
+// ---------------------------------------------------------------------------
 
-  const _PrayerPill({required this.prayer});
+class _TodayWisdomSection extends StatelessWidget {
+  const _TodayWisdomSection();
 
   @override
   Widget build(BuildContext context) {
-    final labelStyle = TextStyle(
-      fontSize: 12,
-      fontWeight: prayer.isNext ? FontWeight.w700 : FontWeight.w500,
-      color: prayer.isNext
-          ? IslamicDesignTokens.textPrimary
-          : IslamicDesignTokens.textSecondary,
-    );
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(prayer.name, style: labelStyle),
-        const SizedBox(height: 8),
+        Text(
+          Strings.homeTodayWisdomLabel,
+          style: IslamicDesignTokens.tEyebrow,
+        ),
+        const SizedBox(height: 12),
         Container(
-          height: 54,
-          alignment: Alignment.center,
+          padding: const EdgeInsets.fromLTRB(20, 22, 20, 22),
           decoration: BoxDecoration(
-            color: prayer.isNext
-                ? IslamicDesignTokens.primary
-                : IslamicDesignTokens.surface,
-            borderRadius: BorderRadius.circular(14),
+            color: IslamicDesignTokens.neutralSage,
+            borderRadius: BorderRadius.circular(16),
           ),
-          child: Text(
-            prayer.time,
-            style: TextStyle(
-              color: prayer.isNext
-                  ? Colors.white
-                  : IslamicDesignTokens.textPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                IslamicMockData.todayWisdomQuote,
+                style: const TextStyle(
+                  fontFamily: IslamicDesignTokens.fontDisplay,
+                  fontSize: 22,
+                  height: 1.32,
+                  fontWeight: FontWeight.w600,
+                  color: IslamicDesignTokens.ink,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                IslamicMockData.todayWisdomSource,
+                style: IslamicDesignTokens.tBodySm,
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 6),
-        if (prayer.isNext)
-          Container(
-            width: 6,
-            height: 6,
-            decoration: const BoxDecoration(
-              color: IslamicDesignTokens.accent,
-              shape: BoxShape.circle,
-            ),
-          )
-        else
-          const SizedBox(height: 6),
       ],
     );
   }
 }
 
-class _QuickActionsGrid extends StatelessWidget {
-  final ValueChanged<HomeQuickAction> onActionTap;
+// ---------------------------------------------------------------------------
+// Quick Links — 2-column grid of compact white cards.
+// ---------------------------------------------------------------------------
 
-  const _QuickActionsGrid({required this.onActionTap});
+class _QuickLinksSection extends StatelessWidget {
+  final ValueChanged<HomeQuickLink> onLinkTap;
+
+  const _QuickLinksSection({required this.onLinkTap});
 
   @override
   Widget build(BuildContext context) {
-    final actions = IslamicMockData.homeQuickActions;
-    return GridView.count(
-      crossAxisCount: 2,
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      childAspectRatio: 0.9,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: actions
-          .map((a) => _QuickActionCard(
-                action: a,
-                onTap: () => onActionTap(a),
-              ))
-          .toList(),
+    final links = IslamicMockData.homeQuickLinks;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          Strings.homeQuickLinksLabel,
+          style: IslamicDesignTokens.tEyebrow,
+        ),
+        const SizedBox(height: 12),
+        GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 1.45,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: links
+              .map((l) => _QuickLinkCard(link: l, onTap: () => onLinkTap(l)))
+              .toList(),
+        ),
+      ],
     );
   }
 }
 
-class _QuickActionCard extends StatelessWidget {
-  final HomeQuickAction action;
+class _QuickLinkCard extends StatelessWidget {
+  final HomeQuickLink link;
   final VoidCallback onTap;
 
-  const _QuickActionCard({required this.action, required this.onTap});
+  const _QuickLinkCard({required this.link, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: IslamicDesignTokens.surface,
-      borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
+      borderRadius: BorderRadius.circular(14),
       child: InkWell(
-        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
+        borderRadius: BorderRadius.circular(14),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: IslamicDesignTokens.surfaceMuted,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Icon(
-                  action.icon,
-                  color: IslamicDesignTokens.primary,
-                  size: 22,
-                ),
+              Icon(
+                link.icon,
+                color: IslamicDesignTokens.primary,
+                size: 22,
               ),
-              const Spacer(),
-              Text(
-                action.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: IslamicDesignTokens.textPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  height: 1.2,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                action.subtitle,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: IslamicDesignTokens.textSecondary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  height: 1.3,
-                ),
+              const SizedBox(height: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    link.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: IslamicDesignTokens.fontDisplay,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: IslamicDesignTokens.ink,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    link.subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: IslamicDesignTokens.tBodySm.copyWith(
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

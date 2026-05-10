@@ -1,54 +1,23 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:koreaislam/core/enum/enums.dart';
-import 'package:koreaislam/core/handler/future_handler.dart';
-import 'package:koreaislam/data/repositories/guide/guide_repository.dart';
-import 'package:koreaislam/domain/models/guide/guide_category.dart';
 import 'package:koreaislam/presentation/support/cubit/base_cubit.dart';
 
 part 'learn_cubit.freezed.dart';
 part 'learn_state.dart';
 
+/// Learn tab now hosts the Q&A list (renamed from Knowledge in the new
+/// design). Backed by mock data for now — wire to a real questions
+/// repository in a follow-up.
 @injectable
 class LearnCubit extends BaseCubit<LearnState, LearnEvent> {
-  final GuideRepository _guideRepository;
+  LearnCubit() : super(const LearnState());
 
-  LearnCubit(
-    this._guideRepository,
-  ) : super(LearnState()) {
-    loadData();
+  void selectCategory(String id) {
+    if (states.selectedCategoryId == id) return;
+    updateState((s) => s.copyWith(selectedCategoryId: id));
   }
 
-  loadData() {
-    fetchGuideCategories();
-  }
-
-  reloadData() {
-    fetchGuideCategories();
-  }
-
-  fetchGuideCategories() {
-    _guideRepository
-        .fetchGuideCategories()
-        .initFuture()
-        .onStart(() {
-          updateState((state) => state.copyWith(
-                guideCategoriesState: LoadingState.loading,
-              ));
-        })
-        .onSuccess((data) {
-          updateState((state) => state.copyWith(
-                guideCategories: data,
-                guideCategoriesState:
-                    data.isEmpty ? LoadingState.empty : LoadingState.success,
-              ));
-        })
-        .onError((error) {
-          updateState((state) => state.copyWith(
-                guideCategoriesState: LoadingState.error,
-              ));
-        })
-        .onFinished(() {})
-        .executeFuture();
+  void updateSearchQuery(String query) {
+    updateState((s) => s.copyWith(searchQuery: query));
   }
 }

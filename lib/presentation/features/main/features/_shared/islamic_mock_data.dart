@@ -13,15 +13,126 @@ class IslamicMockData {
   static String get gregorianDate => Strings.homeGregorianDate;
 
   static List<PrayerTimeItem> get prayerTimes => [
-        PrayerTimeItem(name: Strings.prayerFajr, time: '04:12'),
-        PrayerTimeItem(name: Strings.prayerDhuhr, time: '12:34'),
-        PrayerTimeItem(name: Strings.prayerAsr, time: '16:21', isNext: true),
-        PrayerTimeItem(name: Strings.prayerMaghrib, time: '19:42'),
-        PrayerTimeItem(name: Strings.prayerIsha, time: '21:05'),
+        PrayerTimeItem(name: Strings.prayerFajr, time: '5:12'),
+        PrayerTimeItem(name: Strings.prayerDhuhr, time: '12:28'),
+        PrayerTimeItem(name: Strings.prayerAsr, time: '15:44'),
+        PrayerTimeItem(
+          name: Strings.prayerMaghrib,
+          time: '18:42',
+          isNext: true,
+        ),
+        PrayerTimeItem(name: Strings.prayerIsha, time: '20:14'),
       ];
 
+  // Legacy fields — kept so existing screens that still reference them keep
+  // compiling. The new Home hero uses the next-prayer block below.
   static String get nextPrayerLabel => Strings.homeNextPrayerLabel;
   static String get nextPrayerCountdown => Strings.homeNextPrayerCountdown;
+
+  // ----- New Home hero -----
+  /// English label for the upcoming prayer (e.g. "Maghrib").
+  static const String nextPrayerName = 'Maghrib';
+
+  /// Arabic label for the upcoming prayer.
+  static const String nextPrayerNameArabic = 'المغرب';
+
+  /// Countdown until the upcoming prayer, hh:mm:ss.
+  static const String nextPrayerCountdownClock = '2:11:42';
+
+  /// Wall-clock time the upcoming prayer starts.
+  static const String nextPrayerStartsAt = 'Until 6:42 PM';
+
+  /// Rough device location — shown on the hero card.
+  static const String currentLocationLine = 'Seoul · 37.5°N';
+
+  /// Decorative Arabic word ("salah") displayed faded behind the hero text.
+  static const String nextPrayerArabicDecor = 'صلاة';
+
+  // ----- Today's Wisdom -----
+  static const String todayWisdomQuote =
+      '"Indeed, Allah is with those who are patient."';
+  static const String todayWisdomSource = "Qur'an 2:153 · Al-Baqarah";
+
+  // ----- Prayer Guide (Pray tab) -----
+  static List<PrayerGuideStep> get dhuhrGuide => const [
+        PrayerGuideStep(
+          posture: PrayerPosture.standing,
+          eyebrow: 'INTENTION',
+          title: 'Niyyah',
+          body:
+              'Set the intention in your heart for which prayer you are about to perform. It is not spoken aloud.',
+        ),
+        PrayerGuideStep(
+          posture: PrayerPosture.handsRaised,
+          eyebrow: 'OPENING',
+          title: 'Takbir al-Ihram',
+          body:
+              'Raise your hands to your ears and say "Allahu Akbar" to begin the prayer.',
+        ),
+        PrayerGuideStep(
+          posture: PrayerPosture.standing,
+          eyebrow: 'RECITATION',
+          title: 'Qiyam',
+          body:
+              'Standing with hands folded, recite Surah Al-Fatiha followed by another short surah.',
+        ),
+        PrayerGuideStep(
+          posture: PrayerPosture.bowed,
+          eyebrow: 'BOWING',
+          title: "Ruku'",
+          body:
+              'Bow with your back parallel to the ground and say "Subhana Rabbiyal Adheem" three times.',
+        ),
+        PrayerGuideStep(
+          posture: PrayerPosture.prostrated,
+          eyebrow: 'PROSTRATION',
+          title: 'Sujud',
+          body:
+              'Prostrate with forehead, nose, palms, knees and toes touching the ground. Say "Subhana Rabbiyal A\'la" three times.',
+        ),
+        PrayerGuideStep(
+          posture: PrayerPosture.sitting,
+          eyebrow: 'SITTING',
+          title: 'Tashahhud',
+          body:
+              'Sit between the prostrations and after the second rakah recite the Tashahhud.',
+        ),
+        PrayerGuideStep(
+          posture: PrayerPosture.salam,
+          eyebrow: 'CLOSING',
+          title: 'Salam',
+          body:
+              'Turn your head right and left saying "Assalamu Alaikum wa Rahmatullah" to complete the prayer.',
+        ),
+      ];
+
+  // ----- Home quick links -----
+  static List<HomeQuickLink> get homeQuickLinks => [
+        HomeQuickLink(
+          id: HomeQuickLinkId.qibla,
+          title: Strings.homeQuickLinkQiblaTitle,
+          subtitle: Strings.homeQuickLinkQiblaSubtitle,
+          icon: Icons.explore_outlined,
+        ),
+        HomeQuickLink(
+          id: HomeQuickLinkId.quran,
+          title: Strings.homeQuickLinkQuranTitle,
+          subtitle: Strings.homeQuickLinkQuranSubtitle,
+          icon: Icons.menu_book_outlined,
+        ),
+        HomeQuickLink(
+          id: HomeQuickLinkId.dua,
+          title: Strings.homeQuickLinkDuaTitle,
+          subtitle: Strings.homeQuickLinkDuaSubtitle,
+          icon: Icons.auto_awesome_outlined,
+        ),
+        HomeQuickLink(
+          id: HomeQuickLinkId.halalMap,
+          title: Strings.homeQuickLinkHalalTitle,
+          subtitle: Strings.homeQuickLinkHalalSubtitle,
+          icon: Icons.map_outlined,
+        ),
+      ];
 
   static List<HomeQuickAction> get homeQuickActions => [
         HomeQuickAction(
@@ -189,6 +300,94 @@ class IslamicMockData {
         ),
       ];
 
+  // ----- Profile / Settings -----
+  static const String profileLanguageValue = 'English';
+  static const String profileQuranTranslationValue = 'Saheeh International';
+  static const String profileLocationValue = 'Seoul';
+  static const String profileNotificationsLeadTime =
+      '10 minutes before each prayer';
+
+  /// Default toggle values for the prayer notification sheet. Subtitles
+  /// resolve via Strings so the sheet localizes correctly.
+  static List<PrayerNotificationItem> get prayerNotifications => [
+        PrayerNotificationItem(
+          label: Strings.prayerFajr,
+          subtitle: Strings.prayerFajrSubtitle,
+          isOn: true,
+        ),
+        PrayerNotificationItem(
+          label: Strings.prayerDhuhr,
+          subtitle: Strings.prayerDhuhrSubtitle,
+          isOn: true,
+        ),
+        PrayerNotificationItem(
+          label: Strings.prayerAsr,
+          subtitle: Strings.prayerAsrSubtitle,
+          isOn: true,
+        ),
+        PrayerNotificationItem(
+          label: Strings.prayerMaghrib,
+          subtitle: Strings.prayerMaghribSubtitle,
+          isOn: true,
+        ),
+        PrayerNotificationItem(
+          label: Strings.prayerIsha,
+          subtitle: Strings.prayerIshaSubtitle,
+          isOn: true,
+        ),
+      ];
+
+  // ----- Learn (Q&A) -----
+  static List<LearnCategoryMock> get learnCategories => [
+        LearnCategoryMock(id: 'all', label: Strings.learnCategoryAll),
+        LearnCategoryMock(id: 'prayer', label: Strings.learnCategoryPrayer),
+        LearnCategoryMock(id: 'quran', label: Strings.learnCategoryQuran),
+        LearnCategoryMock(id: 'family', label: Strings.learnCategoryFamily),
+        LearnCategoryMock(id: 'work', label: Strings.learnCategoryWork),
+        LearnCategoryMock(id: 'food', label: Strings.learnCategoryFood),
+      ];
+
+  static const List<LearnQuestionMock> learnQuestions = [
+    LearnQuestionMock(
+      categoryId: 'work',
+      categoryLabel: 'WORK',
+      title:
+          "How do I pray at work when there's no quiet space during lunch?",
+      answersCount: 3,
+      timestamp: '2 days ago',
+      isNewAnswer: true,
+    ),
+    LearnQuestionMock(
+      categoryId: 'family',
+      categoryLabel: 'FAMILY',
+      title:
+          "How should I tell my parents about converting to Islam if they don't accept it?",
+      answersCount: 7,
+      timestamp: '1 week ago',
+    ),
+    LearnQuestionMock(
+      categoryId: 'food',
+      categoryLabel: 'FOOD',
+      title: 'Is there a way to check whether store food is halal?',
+      answersCount: 4,
+      timestamp: '3 days ago',
+    ),
+    LearnQuestionMock(
+      categoryId: 'prayer',
+      categoryLabel: 'PRAYER',
+      title: 'What should I do if I forget which rakah I am on?',
+      answersCount: 5,
+      timestamp: '1 week ago',
+    ),
+    LearnQuestionMock(
+      categoryId: 'quran',
+      categoryLabel: "QUR'AN",
+      title: 'Is it okay to read the Qur\'an translation without Arabic?',
+      answersCount: 9,
+      timestamp: '2 weeks ago',
+    ),
+  ];
+
   static List<KnowledgeArticleMock> get knowledgeArticles => [
         KnowledgeArticleMock(
           categoryId: 'workplace',
@@ -246,6 +445,22 @@ class HomeQuickAction {
   final IconData icon;
 
   const HomeQuickAction({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+}
+
+enum HomeQuickLinkId { qibla, quran, dua, halalMap }
+
+class HomeQuickLink {
+  final HomeQuickLinkId id;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  const HomeQuickLink({
     required this.id,
     required this.title,
     required this.subtitle,
@@ -322,6 +537,66 @@ class KnowledgeCategoryMock {
   final String label;
 
   const KnowledgeCategoryMock({required this.id, required this.label});
+}
+
+class PrayerNotificationItem {
+  final String label;
+  final String subtitle;
+  final bool isOn;
+
+  const PrayerNotificationItem({
+    required this.label,
+    required this.subtitle,
+    required this.isOn,
+  });
+}
+
+class LearnCategoryMock {
+  final String id;
+  final String label;
+
+  const LearnCategoryMock({required this.id, required this.label});
+}
+
+class LearnQuestionMock {
+  final String categoryId;
+  final String categoryLabel;
+  final String title;
+  final int answersCount;
+  final String timestamp;
+  final bool isNewAnswer;
+
+  const LearnQuestionMock({
+    required this.categoryId,
+    required this.categoryLabel,
+    required this.title,
+    required this.answersCount,
+    required this.timestamp,
+    this.isNewAnswer = false,
+  });
+}
+
+enum PrayerPosture {
+  standing,
+  handsRaised,
+  bowed,
+  prostrated,
+  sitting,
+  salam,
+}
+
+class PrayerGuideStep {
+  final PrayerPosture posture;
+  final String eyebrow;
+  final String title;
+  final String body;
+
+  const PrayerGuideStep({
+    required this.posture,
+    required this.eyebrow,
+    required this.title,
+    required this.body,
+  });
 }
 
 class KnowledgeArticleMock {

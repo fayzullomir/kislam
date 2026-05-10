@@ -24,14 +24,15 @@ import 'package:koreaislam/presentation/features/media/photo/locale_image_viewer
 import 'package:koreaislam/presentation/features/notification/notification_list_page.dart';
 import 'package:koreaislam/presentation/features/permission/permissions_page.dart';
 import 'package:koreaislam/presentation/features/profile/edit/profile_edit_page.dart';
+import 'package:koreaislam/presentation/features/qibla/qibla_page.dart';
 import 'package:koreaislam/presentation/features/region/country/country_selection_page.dart';
 import 'package:koreaislam/presentation/features/region/district/district_selection_page.dart';
 import 'package:koreaislam/presentation/features/region/region/region_selection_page.dart';
 import 'package:koreaislam/presentation/features/session/list/active_session_list_page.dart';
 import 'package:koreaislam/presentation/features/theme_mode/change_theme_mode_page.dart';
 import 'package:koreaislam/presentation/features/main/features/home/home_page.dart';
-import 'package:koreaislam/presentation/features/main/features/knowledge/knowledge_page.dart';
 import 'package:koreaislam/presentation/features/main/features/learn/learn_page.dart';
+import 'package:koreaislam/presentation/features/main/features/pray/pray_page.dart';
 import 'package:koreaislam/presentation/features/main/features/profile/profile_page.dart';
 import 'package:koreaislam/presentation/features/main/features/quran/quran_page.dart';
 import 'package:koreaislam/presentation/features/main/main_page.dart';
@@ -125,6 +126,12 @@ class AppRouter extends _$AppRouter {
           path: '/chat',
         ),
 
+        /// Qibla compass — full-screen, opened from Home quick links.
+        AutoRoute(
+          page: QiblaRoute.page,
+          path: '/qibla',
+        ),
+
         ///
         /// User role routes
         ///
@@ -144,12 +151,12 @@ class AppRouter extends _$AppRouter {
               path: 'quran',
             ),
             AutoRoute(
-              page: LearnRoute.page,
-              path: 'learn',
+              page: PrayRoute.page,
+              path: 'pray',
             ),
             AutoRoute(
-              page: KnowledgeRoute.page,
-              path: 'knowledge',
+              page: LearnRoute.page,
+              path: 'learn',
             ),
             AutoRoute(
               page: ProfileRoute.page,

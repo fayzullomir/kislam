@@ -20,8 +20,8 @@ class MainPage extends BasePage<MainCubit, MainState, MainEvent> {
       routes: const [
         HomeRoute(),
         QuranRoute(),
+        PrayRoute(),
         LearnRoute(),
-        KnowledgeRoute(),
         ProfileRoute(),
       ],
       transitionBuilder: (context, child, animation) => child,
@@ -35,9 +35,9 @@ class MainPage extends BasePage<MainCubit, MainState, MainEvent> {
             }
           },
           child: Scaffold(
-            backgroundColor: IslamicDesignTokens.background,
+            backgroundColor: IslamicDesignTokens.neutral,
             body: child,
-            bottomNavigationBar: _IslamicBottomNavBar(
+            bottomNavigationBar: _NoorBottomNavBar(
               activeIndex: tabsRouter.activeIndex,
               onTap: tabsRouter.setActiveIndex,
             ),
@@ -48,52 +48,66 @@ class MainPage extends BasePage<MainCubit, MainState, MainEvent> {
   }
 }
 
-class _IslamicBottomNavBar extends StatelessWidget {
+/// Noor bottom navigation — minimal, no rounded shell, with a soft pill
+/// outline around the active tab to mirror the K-Islam UI Kit.
+class _NoorBottomNavBar extends StatelessWidget {
   final int activeIndex;
   final ValueChanged<int> onTap;
 
-  const _IslamicBottomNavBar({
+  const _NoorBottomNavBar({
     required this.activeIndex,
     required this.onTap,
   });
 
   List<_NavItemConfig> get _items => [
-    _NavItemConfig(label: Strings.bottomNavigationHome, icon: Icons.home_outlined, activeIcon: Icons.home_rounded),
-    _NavItemConfig(label: Strings.bottomNavigationQuran, icon: Icons.menu_book_outlined, activeIcon: Icons.menu_book_rounded),
-    _NavItemConfig(label: Strings.bottomNavigationLearn, icon: Icons.school_outlined, activeIcon: Icons.school_rounded),
-    _NavItemConfig(label: Strings.bottomNavigationKnowledge, icon: Icons.quiz_outlined, activeIcon: Icons.quiz_rounded),
-    _NavItemConfig(label: Strings.bottomNavigationProfile, icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded),
-  ];
+        _NavItemConfig(
+          label: Strings.bottomNavigationHome,
+          icon: Icons.home_outlined,
+          activeIcon: Icons.home_rounded,
+        ),
+        _NavItemConfig(
+          label: Strings.bottomNavigationQuran,
+          icon: Icons.menu_book_outlined,
+          activeIcon: Icons.menu_book_rounded,
+        ),
+        _NavItemConfig(
+          label: Strings.bottomNavigationPray,
+          icon: Icons.mosque_outlined,
+          activeIcon: Icons.mosque,
+        ),
+        _NavItemConfig(
+          label: Strings.bottomNavigationLearn,
+          icon: Icons.search_outlined,
+          activeIcon: Icons.search_rounded,
+        ),
+        _NavItemConfig(
+          label: Strings.bottomNavigationProfile,
+          icon: Icons.person_outline_rounded,
+          activeIcon: Icons.person_rounded,
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Container(
-        color: IslamicDesignTokens.background,
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: IslamicDesignTokens.surface,
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 18,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+    return Container(
+      decoration: const BoxDecoration(
+        color: IslamicDesignTokens.neutral,
+        border: Border(
+          top: BorderSide(color: IslamicDesignTokens.line, width: 1),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 6),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(_items.length, (index) {
-              final item = _items[index];
-              final isActive = index == activeIndex;
-              return _NavItem(
-                config: item,
-                isActive: isActive,
-                onTap: () => onTap(index),
+              return Expanded(
+                child: _NavItem(
+                  config: _items[index],
+                  isActive: index == activeIndex,
+                  onTap: () => onTap(index),
+                ),
               );
             }),
           ),
@@ -118,35 +132,48 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = isActive
         ? IslamicDesignTokens.primary
-        : IslamicDesignTokens.textMuted;
+        : IslamicDesignTokens.inkSoft;
 
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  isActive ? config.activeIcon : config.icon,
-                  color: color,
-                  size: 24,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  config.label,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                  ),
-                ),
-              ],
+    // Soft outline pill around the active tab — matches the new design's
+    // gentle highlight; transparent border keeps inactive tabs at the same
+    // height so labels never jump.
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: isActive
+                  ? IslamicDesignTokens.primary.withOpacity(0.35)
+                  : Colors.transparent,
+              width: 1,
             ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isActive ? config.activeIcon : config.icon,
+                color: color,
+                size: 22,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                config.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: IslamicDesignTokens.fontBody,
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       ),

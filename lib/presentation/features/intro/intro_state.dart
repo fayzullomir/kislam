@@ -8,25 +8,10 @@ class IntroState with _$IntroState {
     @Default(0) int currentPageIndex,
   }) = _IntroState;
 
-  List<IntroPageData> get introPages => [
-        IntroPageData(
-          image: Assets.images.intro.stepFirst,
-          title: Strings.introStepFirstTitle,
-          message: Strings.introStepFirstMessage,
-        ),
-        IntroPageData(
-          image: Assets.images.intro.stepSecond,
-          title: Strings.introStepSecondTitle,
-          message: Strings.introStepSecondMessage,
-        ),
-        IntroPageData(
-          image: Assets.images.intro.stepThird,
-          title: Strings.introStepThirdTitle,
-          message: Strings.introStepThirdMessage,
-        ),
-      ];
+  /// 3-step Noor onboarding flow.
+  static const int totalSteps = 3;
 
-  bool get isLastPageShown => currentPageIndex == introPages.length - 1;
+  bool get isLastPageShown => currentPageIndex == totalSteps - 1;
 }
 
 @freezed

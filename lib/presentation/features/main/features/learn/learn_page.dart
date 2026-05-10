@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
-import 'package:koreaislam/presentation/features/main/features/_shared/islamic_app_bar.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
@@ -17,188 +16,146 @@ class LearnPage extends BasePage<LearnCubit, LearnState, LearnEvent> {
 
   @override
   Widget onWidgetBuild(BuildContext context, LearnState state) {
-    final course = IslamicMockData.learnCourse;
+    final filtered = _filterQuestions(
+      IslamicMockData.learnQuestions,
+      state.selectedCategoryId,
+      state.searchQuery,
+    );
+
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.background,
-      appBar: const IslamicAppBar(title: IslamicMockData.appTitle),
-      body: ListView(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
+      backgroundColor: IslamicDesignTokens.neutral,
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            ListView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+              children: [
+                Text(Strings.learnQaLabel,
+                    style: IslamicDesignTokens.tEyebrow),
+                const SizedBox(height: 6),
+                Text(Strings.learnTitle,
+                    style: IslamicDesignTokens.tDisplay),
+                const SizedBox(height: 18),
+                _SearchField(
+                  initialValue: state.searchQuery,
+                  onChanged: (v) => cubit(context).updateSearchQuery(v),
+                ),
+                const SizedBox(height: 16),
+                _CategoryChipsRow(
+                  selectedId: state.selectedCategoryId,
+                  onSelected: (id) => cubit(context).selectCategory(id),
+                ),
+                const SizedBox(height: 8),
+                if (filtered.isEmpty)
+                  const _EmptyState()
+                else
+                  ...List.generate(filtered.length, (i) {
+                    final isLast = i == filtered.length - 1;
+                    return Column(
+                      children: [
+                        _QuestionTile(question: filtered[i]),
+                        if (!isLast)
+                          const Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: IslamicDesignTokens.line,
+                          ),
+                      ],
+                    );
+                  }),
+              ],
+            ),
+            // Floating "Ask a question" pill — bottom-right.
+            Positioned(
+              right: 20,
+              bottom: 20,
+              child: _AskQuestionFab(onTap: () {
+                // TODO(phase-5): open Ask a question composer.
+              }),
+            ),
+          ],
         ),
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-        children: [
-          _CourseIntro(course: course),
-          const SizedBox(height: 20),
-          _ProgressCard(course: course),
-          const SizedBox(height: 28),
-          _DaysTimeline(days: course.days),
-        ],
       ),
     );
   }
-}
 
-class _CourseIntro extends StatelessWidget {
-  final LearnCourseMock course;
-
-  const _CourseIntro({required this.course});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          course.title,
-          style: const TextStyle(
-            color: IslamicDesignTokens.textPrimary,
-            fontSize: 30,
-            fontWeight: FontWeight.w800,
-            height: 1.15,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          course.description,
-          style: const TextStyle(
-            color: IslamicDesignTokens.textSecondary,
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            height: 1.4,
-          ),
-        ),
-      ],
-    );
+  List<LearnQuestionMock> _filterQuestions(
+    List<LearnQuestionMock> source,
+    String categoryId,
+    String query,
+  ) {
+    final q = query.trim().toLowerCase();
+    return source.where((item) {
+      final byCategory =
+          categoryId == 'all' || item.categoryId == categoryId;
+      final bySearch = q.isEmpty || item.title.toLowerCase().contains(q);
+      return byCategory && bySearch;
+    }).toList();
   }
 }
 
-class _ProgressCard extends StatelessWidget {
-  final LearnCourseMock course;
+// ---------------------------------------------------------------------------
+// Search field — white background, hairline border, leading magnifying glass.
+// ---------------------------------------------------------------------------
 
-  const _ProgressCard({required this.course});
+class _SearchField extends StatefulWidget {
+  final String initialValue;
+  final ValueChanged<String> onChanged;
+
+  const _SearchField({required this.initialValue, required this.onChanged});
+
+  @override
+  State<_SearchField> createState() => _SearchFieldState();
+}
+
+class _SearchFieldState extends State<_SearchField> {
+  late final TextEditingController _controller =
+      TextEditingController(text: widget.initialValue);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final percent = (course.progress * 100).round();
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
       decoration: BoxDecoration(
         color: IslamicDesignTokens.surface,
-        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: IslamicDesignTokens.line, width: 1),
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -10,
-            top: -10,
-            child: Opacity(
-              opacity: 0.3,
-              child: Icon(
-                Icons.auto_awesome_rounded,
-                size: 110,
-                color: IslamicDesignTokens.accentSoft,
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                Strings.learnCurrentProgress,
-                style: const TextStyle(
-                  color: IslamicDesignTokens.accent,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.1,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    Strings.learnDaysCompleted(
-                      course.completedDays.toString(),
-                      course.totalDays.toString(),
-                    ),
-                    style: const TextStyle(
-                      color: IslamicDesignTokens.primary,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 3),
-                    child: Text(
-                      '$percent%',
-                      style: const TextStyle(
-                        color: IslamicDesignTokens.primary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: LinearProgressIndicator(
-                  value: course.progress,
-                  minHeight: 10,
-                  backgroundColor: IslamicDesignTokens.surfaceMuted,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    IslamicDesignTokens.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DaysTimeline extends StatelessWidget {
-  final List<LearnDayMock> days;
-
-  const _DaysTimeline({required this.days});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(days.length, (i) {
-        final day = days[i];
-        final isLast = i == days.length - 1;
-        return _DayTimelineTile(
-          day: day,
-          isLast: isLast,
-        );
-      }),
-    );
-  }
-}
-
-class _DayTimelineTile extends StatelessWidget {
-  final LearnDayMock day;
-  final bool isLast;
-
-  const _DayTimelineTile({required this.day, required this.isLast});
-
-  @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TimelineColumn(isCompleted: day.isCompleted, isLast: isLast),
-          const SizedBox(width: 16),
+          const Icon(
+            Icons.search_rounded,
+            color: IslamicDesignTokens.inkSoft,
+            size: 22,
+          ),
+          const SizedBox(width: 10),
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
-              child: _DayCard(day: day),
+            child: TextField(
+              controller: _controller,
+              onChanged: widget.onChanged,
+              style: IslamicDesignTokens.tBody,
+              decoration: InputDecoration(
+                hintText: Strings.learnSearchHint,
+                hintStyle: const TextStyle(
+                  fontFamily: IslamicDesignTokens.fontBody,
+                  color: IslamicDesignTokens.inkSoft,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                isCollapsed: true,
+              ),
             ),
           ),
         ],
@@ -207,136 +164,281 @@ class _DayTimelineTile extends StatelessWidget {
   }
 }
 
-class _TimelineColumn extends StatelessWidget {
-  final bool isCompleted;
-  final bool isLast;
+// ---------------------------------------------------------------------------
+// Horizontal scrolling category chips. Selected one is filled green.
+// ---------------------------------------------------------------------------
 
-  const _TimelineColumn({required this.isCompleted, required this.isLast});
+class _CategoryChipsRow extends StatelessWidget {
+  final String selectedId;
+  final ValueChanged<String> onSelected;
+
+  const _CategoryChipsRow({
+    required this.selectedId,
+    required this.onSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 36,
-          height: 36,
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: IslamicMockData.learnCategories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, i) {
+          final cat = IslamicMockData.learnCategories[i];
+          final isSelected = cat.id == selectedId;
+          return _CategoryChip(
+            label: cat.label,
+            isSelected: isSelected,
+            onTap: () => onSelected(cat.id),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CategoryChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _CategoryChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bg = isSelected
+        ? IslamicDesignTokens.primary
+        : Colors.transparent;
+    final fg = isSelected ? Colors.white : IslamicDesignTokens.ink;
+    return Material(
+      color: bg,
+      borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusPill),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusPill),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isCompleted
-                ? IslamicDesignTokens.primary
-                : IslamicDesignTokens.surface,
-            shape: BoxShape.circle,
+            borderRadius:
+                BorderRadius.circular(IslamicDesignTokens.radiusPill),
             border: Border.all(
-              color: isCompleted
+              color: isSelected
                   ? IslamicDesignTokens.primary
-                  : IslamicDesignTokens.divider,
-              width: 2,
+                  : IslamicDesignTokens.line,
+              width: 1,
             ),
           ),
-          child: Icon(
-            isCompleted ? Icons.check_rounded : Icons.lock_outline_rounded,
-            color: isCompleted
-                ? Colors.white
-                : IslamicDesignTokens.textMuted,
-            size: 18,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: IslamicDesignTokens.fontBody,
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              color: fg,
+            ),
           ),
         ),
-        if (!isLast)
-          Expanded(
-            child: Container(
-              width: 2,
-              color: IslamicDesignTokens.divider,
-            ),
-          ),
-      ],
+      ),
     );
   }
 }
 
-class _DayCard extends StatelessWidget {
-  final LearnDayMock day;
+// ---------------------------------------------------------------------------
+// Question tile — divider-separated rows with category chip + optional
+// "NEW ANSWER" pill, the question itself, and an "answers →" link.
+// ---------------------------------------------------------------------------
 
-  const _DayCard({required this.day});
+class _QuestionTile extends StatelessWidget {
+  final LearnQuestionMock question;
+
+  const _QuestionTile({required this.question});
 
   @override
   Widget build(BuildContext context) {
-    final label = Strings.learnDayLabel(day.day.toString().padLeft(2, '0'));
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: IslamicDesignTokens.surfaceMuted,
-        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusMd),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  color: IslamicDesignTokens.textSecondary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.1,
+    return InkWell(
+      onTap: () {
+        // TODO(phase-5): push question detail.
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                _CategoryBadge(label: question.categoryLabel),
+                if (question.isNewAnswer) ...[
+                  const SizedBox(width: 8),
+                  const _NewAnswerBadge(),
+                ],
+                const Spacer(),
+                Text(
+                  question.timestamp,
+                  style: IslamicDesignTokens.tCaption,
                 ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              question.title,
+              style: const TextStyle(
+                fontFamily: IslamicDesignTokens.fontDisplay,
+                fontSize: 17,
+                height: 1.3,
+                fontWeight: FontWeight.w600,
+                color: IslamicDesignTokens.ink,
               ),
-              const Spacer(),
-              _StatusPill(isCompleted: day.isCompleted),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            day.title,
-            style: const TextStyle(
-              color: IslamicDesignTokens.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            day.description,
-            style: const TextStyle(
-              color: IslamicDesignTokens.textSecondary,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              height: 1.45,
+            const SizedBox(height: 10),
+            Text(
+              '${Strings.learnAnswersCount('${question.answersCount}')} →',
+              style: const TextStyle(
+                fontFamily: IslamicDesignTokens.fontBody,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: IslamicDesignTokens.primary,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _StatusPill extends StatelessWidget {
-  final bool isCompleted;
+class _CategoryBadge extends StatelessWidget {
+  final String label;
 
-  const _StatusPill({required this.isCompleted});
+  const _CategoryBadge({required this.label});
 
   @override
   Widget build(BuildContext context) {
-    final label = isCompleted ? Strings.learnStatusCompleted : Strings.learnStatusLocked;
-    final bg = isCompleted
-        ? IslamicDesignTokens.surface
-        : IslamicDesignTokens.divider;
-    final fg = isCompleted
-        ? IslamicDesignTokens.primary
-        : IslamicDesignTokens.textMuted;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(16),
+        color: IslamicDesignTokens.neutralSage,
+        borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         label,
-        style: TextStyle(
-          color: fg,
-          fontSize: 12,
+        style: const TextStyle(
+          fontFamily: IslamicDesignTokens.fontBody,
+          fontSize: 11,
           fontWeight: FontWeight.w700,
+          color: IslamicDesignTokens.inkMuted,
+          letterSpacing: 0.6,
         ),
+      ),
+    );
+  }
+}
+
+class _NewAnswerBadge extends StatelessWidget {
+  const _NewAnswerBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: IslamicDesignTokens.danger.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        Strings.learnNewAnswerBadge,
+        style: const TextStyle(
+          fontFamily: IslamicDesignTokens.fontBody,
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: IslamicDesignTokens.danger,
+          letterSpacing: 0.6,
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Floating "+ Ask a question" pill.
+// ---------------------------------------------------------------------------
+
+class _AskQuestionFab extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _AskQuestionFab({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: IslamicDesignTokens.ink,
+      borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusPill),
+      elevation: 0,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusPill),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius:
+                BorderRadius.circular(IslamicDesignTokens.radiusPill),
+            boxShadow: [
+              BoxShadow(
+                color: IslamicDesignTokens.ink.withOpacity(0.18),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.add_rounded, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                Strings.learnAskQuestion,
+                style: const TextStyle(
+                  fontFamily: IslamicDesignTokens.fontDisplay,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 60),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.search_off_rounded,
+            color: IslamicDesignTokens.inkSoft,
+            size: 36,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            Strings.learnEmpty,
+            style: IslamicDesignTokens.tBodySm,
+          ),
+        ],
       ),
     );
   }

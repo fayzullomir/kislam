@@ -4,12 +4,9 @@ part of 'learn_cubit.dart';
 class LearnState with _$LearnState {
   const LearnState._();
 
-  @freezed
   const factory LearnState({
-    //
-    @Default(LoadingState.loading) LoadingState guideCategoriesState,
-    @Default([]) List<GuideCategory> guideCategories,
-    //
+    @Default('all') String selectedCategoryId,
+    @Default('') String searchQuery,
   }) = _LearnState;
 }
 

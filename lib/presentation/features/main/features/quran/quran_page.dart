@@ -17,7 +17,7 @@ class QuranPage extends BasePage<QuranCubit, QuranState, QuranEvent> {
   Widget onWidgetBuild(BuildContext context, QuranState state) {
     final surah = IslamicMockData.currentSurah;
     return Scaffold(
-      backgroundColor: IslamicDesignTokens.background,
+      backgroundColor: IslamicDesignTokens.neutral,
       appBar: _SurahAppBar(surah: surah),
       body: Stack(
         children: [
@@ -57,7 +57,7 @@ class _SurahAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: IslamicDesignTokens.background,
+      backgroundColor: IslamicDesignTokens.neutral,
       elevation: 0,
       toolbarHeight: 64,
       titleSpacing: 0,
@@ -73,19 +73,16 @@ class _SurahAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Text(
                   surah.name,
                   style: const TextStyle(
+                    fontFamily: IslamicDesignTokens.fontDisplay,
                     color: IslamicDesignTokens.primary,
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
-                  surah.subtitle,
-                  style: const TextStyle(
-                    color: IslamicDesignTokens.textMuted,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.1,
-                  ),
+                  surah.subtitle.toUpperCase(),
+                  style: IslamicDesignTokens.tEyebrow,
                 ),
               ],
             ),
@@ -118,7 +115,7 @@ class _RoundIcon extends StatelessWidget {
           child: Icon(
             icon,
             color: IslamicDesignTokens.primary,
-            size: 24,
+            size: 22,
           ),
         ),
       ),
@@ -134,21 +131,22 @@ class _SurahHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(22, 22, 22, 26),
       decoration: BoxDecoration(
         color: IslamicDesignTokens.primary,
-        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Stack(
         children: [
+          // Faded book illustration in the bottom-right.
           Positioned(
             right: -20,
-            bottom: -20,
+            bottom: -30,
             child: Opacity(
-              opacity: 0.12,
+              opacity: 0.14,
               child: Icon(
                 Icons.menu_book_rounded,
-                size: 180,
+                size: 200,
                 color: Colors.white,
               ),
             ),
@@ -164,13 +162,15 @@ class _SurahHeaderCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: IslamicDesignTokens.accentSoft,
-                      borderRadius: BorderRadius.circular(16),
+                      color: IslamicDesignTokens.secondaryWash,
+                      borderRadius:
+                          BorderRadius.circular(IslamicDesignTokens.radiusPill),
                     ),
                     child: Text(
                       surah.revelation,
                       style: const TextStyle(
-                        color: IslamicDesignTokens.primaryDark,
+                        fontFamily: IslamicDesignTokens.fontBody,
+                        color: IslamicDesignTokens.primaryInk,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                       ),
@@ -180,30 +180,34 @@ class _SurahHeaderCard extends StatelessWidget {
                   Text(
                     surah.arabicName,
                     style: const TextStyle(
+                      fontFamily: IslamicDesignTokens.fontArabic,
                       color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 30),
               Text(
                 surah.name,
                 style: const TextStyle(
+                  fontFamily: IslamicDesignTokens.fontDisplay,
                   color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 34,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.4,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
                 surah.description,
                 style: TextStyle(
+                  fontFamily: IslamicDesignTokens.fontBody,
                   color: Colors.white.withOpacity(0.85),
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
-                  height: 1.35,
+                  height: 1.4,
                 ),
               ),
             ],
@@ -224,8 +228,8 @@ class _VerseCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 18),
       decoration: BoxDecoration(
-        color: IslamicDesignTokens.surfaceMuted,
-        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusLg),
+        color: IslamicDesignTokens.neutralSand,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +239,7 @@ class _VerseCard extends StatelessWidget {
             children: [
               _VerseNumber(number: verse.number),
               const SizedBox(width: 8),
-              _VersePlayButton(),
+              const _VersePlayButton(),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -243,10 +247,11 @@ class _VerseCard extends StatelessWidget {
                   textAlign: TextAlign.right,
                   textDirection: TextDirection.rtl,
                   style: const TextStyle(
-                    color: IslamicDesignTokens.textPrimary,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    height: 1.8,
+                    fontFamily: IslamicDesignTokens.fontArabic,
+                    color: IslamicDesignTokens.ink,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    height: 1.9,
                   ),
                 ),
               ),
@@ -254,11 +259,11 @@ class _VerseCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Container(
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 12),
             decoration: const BoxDecoration(
               border: Border(
                 left: BorderSide(
-                  color: IslamicDesignTokens.accentSoft,
+                  color: IslamicDesignTokens.secondary,
                   width: 2,
                 ),
               ),
@@ -269,7 +274,8 @@ class _VerseCard extends StatelessWidget {
                 Text(
                   verse.transliteration,
                   style: const TextStyle(
-                    color: IslamicDesignTokens.textSecondary,
+                    fontFamily: IslamicDesignTokens.fontBody,
+                    color: IslamicDesignTokens.inkMuted,
                     fontSize: 14,
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w500,
@@ -279,7 +285,8 @@ class _VerseCard extends StatelessWidget {
                 Text(
                   verse.translation,
                   style: const TextStyle(
-                    color: IslamicDesignTokens.textPrimary,
+                    fontFamily: IslamicDesignTokens.fontBody,
+                    color: IslamicDesignTokens.ink,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     height: 1.45,
@@ -302,17 +309,22 @@ class _VerseNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 32,
-      height: 32,
+      width: 34,
+      height: 34,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: IslamicDesignTokens.accentSoft,
+      decoration: BoxDecoration(
+        color: IslamicDesignTokens.secondaryWash,
         shape: BoxShape.circle,
+        border: Border.all(
+          color: IslamicDesignTokens.secondary.withOpacity(0.4),
+          width: 1,
+        ),
       ),
       child: Text(
         '$number',
         style: const TextStyle(
-          color: IslamicDesignTokens.primaryDark,
+          fontFamily: IslamicDesignTokens.fontDisplay,
+          color: IslamicDesignTokens.secondaryInk,
           fontSize: 13,
           fontWeight: FontWeight.w700,
         ),
@@ -322,14 +334,16 @@ class _VerseNumber extends StatelessWidget {
 }
 
 class _VersePlayButton extends StatelessWidget {
+  const _VersePlayButton();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 32,
-      height: 32,
+      width: 34,
+      height: 34,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
-        color: IslamicDesignTokens.accent,
+        color: IslamicDesignTokens.secondary,
         shape: BoxShape.circle,
       ),
       child: const Icon(
@@ -341,6 +355,7 @@ class _VersePlayButton extends StatelessWidget {
   }
 }
 
+// FAB stack: white search circle on top, big green play circle on bottom.
 class _QuranActionButtons extends StatelessWidget {
   const _QuranActionButtons();
 
@@ -374,7 +389,7 @@ class _QuranActionButtons extends StatelessWidget {
           color: IslamicDesignTokens.primary,
           shape: const CircleBorder(),
           elevation: 3,
-          shadowColor: Colors.black.withOpacity(0.15),
+          shadowColor: Colors.black.withOpacity(0.18),
           child: InkWell(
             customBorder: const CircleBorder(),
             onTap: () {},
@@ -384,7 +399,7 @@ class _QuranActionButtons extends StatelessWidget {
               child: Icon(
                 Icons.play_arrow_rounded,
                 color: Colors.white,
-                size: 28,
+                size: 30,
               ),
             ),
           ),

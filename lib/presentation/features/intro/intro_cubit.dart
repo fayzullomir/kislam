@@ -1,9 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:koreaislam/core/gen/assets/assets.gen.dart';
-import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/data/datasource/preference/app_config_preferences.dart';
-import 'package:koreaislam/domain/models/intro/intro_page_data.dart';
 import 'package:koreaislam/presentation/support/cubit/base_cubit.dart';
 
 part 'intro_cubit.freezed.dart';

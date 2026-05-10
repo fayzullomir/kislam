@@ -12,14 +12,15 @@ import 'package:koreaislam/presentation/features/language/set/set_language_cubit
 import 'package:koreaislam/presentation/features/notification/notification_list_cubit.dart';
 import 'package:koreaislam/presentation/features/permission/permissions_cubit.dart';
 import 'package:koreaislam/presentation/features/profile/edit/profile_edit_cubit.dart';
+import 'package:koreaislam/presentation/features/qibla/qibla_cubit.dart';
 import 'package:koreaislam/presentation/features/region/country/country_selection_cubit.dart';
 import 'package:koreaislam/presentation/features/region/district/district_selection_cubit.dart';
 import 'package:koreaislam/presentation/features/region/region/region_selection_cubit.dart';
 import 'package:koreaislam/presentation/features/session/list/active_session_list_cubit.dart';
 import 'package:koreaislam/presentation/features/theme_mode/change_theme_mode_cubit.dart';
 import 'package:koreaislam/presentation/features/main/features/home/home_cubit.dart';
-import 'package:koreaislam/presentation/features/main/features/knowledge/knowledge_cubit.dart';
 import 'package:koreaislam/presentation/features/main/features/learn/learn_cubit.dart';
+import 'package:koreaislam/presentation/features/main/features/pray/pray_cubit.dart';
 import 'package:koreaislam/presentation/features/main/features/profile/profile_cubit.dart';
 import 'package:koreaislam/presentation/features/main/features/quran/quran_cubit.dart';
 import 'package:koreaislam/presentation/features/main/main_cubit.dart';
@@ -52,6 +53,7 @@ extension GetItModuleApp on GetIt {
     registerFactory(() => PermissionsCubit());
     registerFactory(() => PublishedArticleListCubit(get()));
     registerFactory(() => ProfileEditCubit(get(), get()));
+    registerFactory(() => QiblaCubit());
 
     registerFactory(() => RegionSelectionCubit(get(), get()));
 
@@ -63,8 +65,8 @@ extension GetItModuleApp on GetIt {
     registerFactory(() => MainCubit());
     registerFactory(() => HomeCubit(get(), get(), get()));
     registerFactory(() => QuranCubit(get()));
-    registerFactory(() => LearnCubit(get()));
-    registerFactory(() => KnowledgeCubit());
+    registerFactory(() => PrayCubit());
+    registerFactory(() => LearnCubit());
     registerFactory(() => ProfileCubit(get(), get(), get()));
 
     await allReady();

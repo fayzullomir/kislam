@@ -116,6 +116,34 @@ flutter:
         - asset: assets/fonts/inter_medium.ttf
         - asset: assets/fonts/inter_regular.ttf
         - asset: assets/fonts/inter_semi_bold.ttf
+    # Noor design system fonts. Uncomment each block once the matching
+    # .ttf files are placed in assets/fonts/ — until then the engine falls
+    # back to the system font for these families.
+    #
+    # - family: Manrope
+    #   fonts:
+    #     - asset: assets/fonts/manrope_regular.ttf
+    #       weight: 400
+    #     - asset: assets/fonts/manrope_medium.ttf
+    #       weight: 500
+    #     - asset: assets/fonts/manrope_semi_bold.ttf
+    #       weight: 600
+    #     - asset: assets/fonts/manrope_bold.ttf
+    #       weight: 700
+    # - family: Plus Jakarta Sans
+    #   fonts:
+    #     - asset: assets/fonts/plus_jakarta_sans_regular.ttf
+    #       weight: 400
+    #     - asset: assets/fonts/plus_jakarta_sans_medium.ttf
+    #       weight: 500
+    #     - asset: assets/fonts/plus_jakarta_sans_semi_bold.ttf
+    #       weight: 600
+    #     - asset: assets/fonts/plus_jakarta_sans_bold.ttf
+    #       weight: 700
+    # - family: Amiri Quran
+    #   fonts:
+    #     - asset: assets/fonts/amiri_quran_regular.ttf
+    #       weight: 400
   uses-material-design: true
 
   assets:
