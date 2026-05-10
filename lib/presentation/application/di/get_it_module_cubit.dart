@@ -63,7 +63,7 @@ extension GetItModuleApp on GetIt {
 
     // Main
     registerFactory(() => MainCubit());
-    registerFactory(() => HomeCubit(get(), get(), get(), get(), get(), get(), get()));
+    registerFactory(() => HomeCubit(get(), get(), get(), get(), get(), get()));
     registerFactory(() => QuranCubit(get()));
     registerFactory(() => PrayCubit());
     registerFactory(() => LearnCubit());

@@ -24,8 +24,8 @@ import 'article_detail_cubit.dart';
 @RoutePage()
 class ArticleDetailPage extends BasePage<ArticleDetailCubit,
     ArticleDetailState, ArticleDetailEvent> {
-  int articleId;
-  PublishedArticle? article;
+  final int articleId;
+  final PublishedArticle? article;
 
   ArticleDetailPage({
     super.key,

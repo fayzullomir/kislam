@@ -9,11 +9,9 @@ import 'package:koreaislam/core/handler/stream_subscriptions.dart';
 import 'package:koreaislam/data/datasource/preference/calculation_method_preferences.dart';
 import 'package:koreaislam/data/datasource/preference/location_preferences.dart';
 import 'package:koreaislam/data/datasource/preference/madhab_preferences.dart';
-import 'package:koreaislam/data/repositories/ad/ad_repository.dart';
 import 'package:koreaislam/data/repositories/banner/banner_repository.dart';
 import 'package:koreaislam/data/repositories/prayer_times/prayer_times_repository.dart';
 import 'package:koreaislam/data/repositories/profile/profile_repository.dart';
-import 'package:koreaislam/domain/models/ad/partner_ad/partner_ads.dart';
 import 'package:koreaislam/domain/models/banner/banner_image.dart';
 import 'package:koreaislam/domain/models/location/user_location.dart';
 import 'package:koreaislam/domain/models/prayer/daily_prayer_times.dart';
@@ -26,7 +24,6 @@ part 'home_state.dart';
 
 @injectable
 class HomeCubit extends BaseCubit<HomeState, HomeEvent> {
-  final AdRepository _adRepository;
   final BannerRepository _bannerRepository;
   final ProfileRepository _profileRepository;
   final PrayerTimesRepository _prayerTimesRepository;
@@ -35,7 +32,6 @@ class HomeCubit extends BaseCubit<HomeState, HomeEvent> {
   final CalculationMethodPreferences _calculationMethodPreferences;
 
   HomeCubit(
-    this._adRepository,
     this._bannerRepository,
     this._profileRepository,
     this._prayerTimesRepository,
@@ -68,14 +64,12 @@ class HomeCubit extends BaseCubit<HomeState, HomeEvent> {
 
   void loadData() {
     fetchBanners();
-    fetchPartnerAds();
   }
 
   void reloadData() {
     _readSavedUser();
     _refreshPrayerTimes();
     fetchBanners();
-    fetchPartnerAds();
   }
 
   // -------------------------------------------------------------------------
@@ -165,7 +159,7 @@ class HomeCubit extends BaseCubit<HomeState, HomeEvent> {
   }
 
   // -------------------------------------------------------------------------
-  // Profile + ads (existing)
+  // Profile (existing)
   // -------------------------------------------------------------------------
 
   void _readSavedUser() {
@@ -226,31 +220,6 @@ class HomeCubit extends BaseCubit<HomeState, HomeEvent> {
         .onError((error) {
           updateState((state) => state.copyWith(
                 bannersState: LoadingState.error,
-              ));
-        })
-        .onFinished(() {})
-        .executeFuture();
-  }
-
-  void fetchPartnerAds() {
-    _adRepository
-        .fetchPartnerAds()
-        .initFuture()
-        .onStart(() {
-          updateState((state) => state.copyWith(
-                partnerAdsState: LoadingState.loading,
-              ));
-        })
-        .onSuccess((ads) {
-          updateState((state) => state.copyWith(
-                partnerAds: ads,
-                partnerAdsState:
-                    ads.isEmpty ? LoadingState.empty : LoadingState.success,
-              ));
-        })
-        .onError((error) {
-          updateState((state) => state.copyWith(
-                partnerAdsState: LoadingState.error,
               ));
         })
         .onFinished(() {})

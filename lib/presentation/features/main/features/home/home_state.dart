@@ -15,9 +15,6 @@ class HomeState with _$HomeState {
     @Default([]) List<BannerImage> banners,
     @Default(LoadingState.loading) LoadingState bannersState,
 //
-    @Default([]) List<PartnerAd> partnerAds,
-    @Default(LoadingState.loading) LoadingState partnerAdsState,
-//
     /// Prayer times computed for `DateTime.now()` and the next day. Both
     /// are null when no GPS coordinates are saved (manual-only setup).
     DailyPrayerTimes? todayPrayers,

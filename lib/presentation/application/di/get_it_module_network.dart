@@ -109,7 +109,6 @@ extension GetItModuleNetwork on GetIt {
     InterceptorsWrapper headerInterceptor = get();
     PrettyDioLogger loggerInterceptor = get();
     UserRolePathInterceptor userRolePathInterceptor = get();
-    ApiCacheInterceptor apiCacheInterceptor = get();
 
     ///
     /// Refresh token interceptor

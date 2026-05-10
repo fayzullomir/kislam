@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:koreaislam/core/gen/assets/assets.gen.dart';
-import 'package:koreaislam/data/datasource/network/constants/constants.dart';
 import 'package:koreaislam/domain/models/media/media_file.dart';
 import 'package:koreaislam/presentation/support/extensions/color_extension.dart';
 import 'package:koreaislam/presentation/support/extensions/platform_sizes.dart';
@@ -91,37 +90,6 @@ class _LocaleImageViewerPageState extends State<LocaleImageViewerPage> {
               _buildActionButtons(context, pageController),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPreviewBody(BuildContext context) {
-    return PhotoViewGallery.builder(
-      reverse: false,
-      onPageChanged: onPageChanged,
-      pageController: PageController(initialPage: currentIndex),
-      scrollPhysics: const BouncingScrollPhysics(),
-      builder: (BuildContext context, int index) {
-        final imageUrl = widget.images[index].uploadedFileUrl!;
-        var actualUrl =
-            imageUrl.contains("https://") || imageUrl.contains("http://")
-                ? imageUrl
-                : "${Constants.baseUrlForImage}$imageUrl";
-        return PhotoViewGalleryPageOptions(
-          imageProvider: NetworkImage(actualUrl),
-          initialScale: PhotoViewComputedScale.contained * 1,
-          heroAttributes: PhotoViewHeroAttributes(
-            tag: widget.images[index],
-          ),
-        );
-      },
-      itemCount: widget.images.length,
-      loadingBuilder: (context, event) => Center(
-        child: SizedBox(
-          width: double.infinity,
-          // height: height / 2,
-          child: Center(child: CircularProgressIndicator(color: context.colorAccent)),
         ),
       ),
     );

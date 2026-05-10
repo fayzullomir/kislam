@@ -17,7 +17,5 @@ class OnboardingState with _$OnboardingState {
 
 @freezed
 class OnboardingEvent with _$OnboardingEvent {
-  const factory OnboardingEvent(OnboardingEventType type) = _OnboardingEvent;
+  const factory OnboardingEvent() = _OnboardingEvent;
 }
-
-enum OnboardingEventType { _ }

@@ -27,7 +27,7 @@ import 'sign_in_cubit.dart';
 
 @RoutePage()
 class SignInPage extends BasePage<SignInCubit, SignInState, SignInEvent> {
-  SignInLaunchType launchType;
+  final SignInLaunchType launchType;
 
   SignInPage({
     super.key,
