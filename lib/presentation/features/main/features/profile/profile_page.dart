@@ -5,6 +5,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:koreaislam/core/extensions/string_extensions.dart';
 import 'package:koreaislam/core/gen/assets/assets.gen.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
+import 'package:koreaislam/data/datasource/preference/theme_mode_preferences.dart';
+import 'package:koreaislam/domain/models/theme/app_theme_mode.dart';
+import 'package:koreaislam/presentation/application/di/get_it_injection.dart';
 import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_launch_type.dart';
 import 'package:koreaislam/presentation/features/language/change/change_language_page.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
@@ -61,19 +64,6 @@ class ProfilePage extends BasePage<ProfileCubit, ProfileState, ProfileEvent> {
               _SectionLabel(label: Strings.profileSectionLanguageLocation),
               _SettingsCard(rows: [
                 _ValueRow(
-                  title: Strings.profileAppLanguage,
-                  subtitle: Strings.profileAppLanguageSubtitle,
-                  value: IslamicMockData.profileLanguageValue,
-                  onTap: () {
-                    showCupertinoModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (_) => ChangeLanguagePage(),
-                    );
-                  },
-                ),
-                const _CardDivider(),
-                _ValueRow(
                   title: Strings.profileQuranTranslation,
                   subtitle: Strings.profileQuranTranslationSubtitle,
                   value: IslamicMockData.profileQuranTranslationValue,
@@ -94,12 +84,26 @@ class ProfilePage extends BasePage<ProfileCubit, ProfileState, ProfileEvent> {
 
               const SizedBox(height: 24),
 
-              // ----- Personalization (themes) -----
+              // ----- Personalization (app language + themes) -----
               _SectionLabel(label: Strings.profileSectionPersonalization),
               _SettingsCard(rows: [
-                _IconRow(
-                  icon: Icons.dark_mode_outlined,
-                  label: Strings.profileThemes,
+                _ValueRow(
+                  title: Strings.profileAppLanguage,
+                  subtitle: Strings.profileAppLanguageSubtitle,
+                  value: IslamicMockData.profileLanguageValue,
+                  onTap: () {
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => ChangeLanguagePage(),
+                    );
+                  },
+                ),
+                const _CardDivider(),
+                _ValueRow(
+                  title: Strings.profileThemes,
+                  subtitle: Strings.profileThemesSubtitle,
+                  value: _currentThemeLabel(),
                   onTap: () {
                     showCupertinoModalBottomSheet(
                       context: context,
@@ -136,6 +140,22 @@ class ProfilePage extends BasePage<ProfileCubit, ProfileState, ProfileEvent> {
       expand: false,
       builder: (_) => const NotificationSettingsSheet(),
     );
+  }
+
+  /// Reads the saved app theme mode and returns its localized label —
+  /// "Light mode", "Dark mode", or "Same as system". Re-evaluated on
+  /// every rebuild, so flipping the theme inside ChangeThemeModePage
+  /// refreshes the row label as soon as the bottom sheet closes.
+  String _currentThemeLabel() {
+    final mode = getIt<ThemeModePreferences>().appThemeMode;
+    switch (mode) {
+      case AppThemeMode.darkMode:
+        return Strings.themeModeDarkMode;
+      case AppThemeMode.lightMode:
+        return Strings.themeModeLightMode;
+      case AppThemeMode.followSystem:
+        return Strings.themeModeFollowSystem;
+    }
   }
 
   List<Widget> _authorizedAccountRows(BuildContext context) {

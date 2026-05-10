@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
-import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_sheet.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 
 /// Bottom sheet that hosts prayer-time notification toggles + the daily
 /// wisdom reminder. Local state only — wire to a preferences repository
@@ -23,85 +24,41 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
   @override
   Widget build(BuildContext context) {
     final prayers = IslamicMockData.prayerNotifications;
-    return Material(
-      color: context.noor.neutral,
-      child: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
+    return NoorSheetScaffold(
+      children: [
+        NoorSheetHeader(
+          eyebrow: Strings.notificationsLabel,
+          subtitle: Strings.notificationsLeadTime,
+        ),
+        const SizedBox(height: 8),
+        Container(
+          color: context.noor.surface,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const _SheetHandle(),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(Strings.notificationsLabel,
-                        style: context.noor.tEyebrow),
-                    const SizedBox(height: 6),
-                    Text(
-                      Strings.notificationsLeadTime,
-                      style: context.noor.tBodySm,
-                    ),
-                  ],
+              for (var i = 0; i < prayers.length; i++) ...[
+                _ToggleRow(
+                  title: prayers[i].label,
+                  subtitle: prayers[i].subtitle,
+                  value: _prayerToggles[i],
+                  onChanged: (v) =>
+                      setState(() => _prayerToggles[i] = v),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                color: context.noor.surface,
-                child: Column(
-                  children: [
-                    for (var i = 0; i < prayers.length; i++) ...[
-                      _ToggleRow(
-                        title: prayers[i].label,
-                        subtitle: prayers[i].subtitle,
-                        value: _prayerToggles[i],
-                        onChanged: (v) =>
-                            setState(() => _prayerToggles[i] = v),
-                      ),
-                      if (i != prayers.length - 1) const _RowDivider(),
-                    ],
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                color: context.noor.surface,
-                child: _ToggleRow(
-                  title: Strings.dailyWisdom,
-                  subtitle: Strings.dailyWisdomTime,
-                  value: _dailyWisdomOn,
-                  onChanged: (v) => setState(() => _dailyWisdomOn = v),
-                ),
-              ),
-              const SizedBox(height: 24),
+                if (i != prayers.length - 1) const NoorSheetRowDivider(),
+              ],
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SheetHandle extends StatelessWidget {
-  const _SheetHandle();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Center(
-        child: Container(
-          width: 36,
-          height: 4,
-          decoration: BoxDecoration(
-            color: context.noor.line,
-            borderRadius: BorderRadius.circular(2),
+        const SizedBox(height: 16),
+        Container(
+          color: context.noor.surface,
+          child: _ToggleRow(
+            title: Strings.dailyWisdom,
+            subtitle: Strings.dailyWisdomTime,
+            value: _dailyWisdomOn,
+            onChanged: (v) => setState(() => _dailyWisdomOn = v),
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -149,22 +106,6 @@ class _ToggleRow extends StatelessWidget {
             onChanged: onChanged,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _RowDivider extends StatelessWidget {
-  const _RowDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Divider(
-        height: 1,
-        thickness: 1,
-        color: context.noor.line,
       ),
     );
   }
