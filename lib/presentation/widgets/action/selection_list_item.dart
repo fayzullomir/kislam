@@ -107,10 +107,10 @@ class SelectionListItem extends StatelessWidget {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 200),
       child: selected
-          ? Assets.images.component.radioButtonSelected
-          .svg(height: 20, width: 20, key: ValueKey(true))
-          : Assets.images.component.radioButtonUnSelected
-          .svg(height: 20, width: 20, key: ValueKey(false)),
+          ? Assets.images.component.selectionListItemRadioButtonSelected
+              .svg(height: 20, width: 20, key: ValueKey(true))
+          : Assets.images.component.selectionListItemRadioButtonUnSelected
+              .svg(height: 20, width: 20, key: ValueKey(false)),
     );
   }
 

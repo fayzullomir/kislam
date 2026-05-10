@@ -112,8 +112,8 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
                   onPressed: () {
                     context.router.pop(widget.images);
                   },
-                  icon:
-                      Assets.images.appBar.actionBack.svg(color: Colors.white),
+                  icon: Assets.images.appBar.imageViewerActionBack
+                      .svg(color: Colors.white),
                 ),
               ),
             ),

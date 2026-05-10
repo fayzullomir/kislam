@@ -142,14 +142,14 @@ class PublishedArticleHorizontalWidget extends StatelessWidget {
         MaterialIconButton(
           size: 36,
           icon: (article.isLiked
-                  ? Assets.images.component.likeFilled
-                  : Assets.images.component.likeUnfilled)
+                  ? Assets.images.component.publishedArticleWidgetLikeFilled
+                  : Assets.images.component.publishedArticleWidgetLikeUnfilled)
               .svg(color: context.iconPrimary),
           onPressed: () => onLikeClicked(article),
         ),
         MaterialIconButton(
           size: 36,
-          icon: Assets.images.component.share.svg(
+          icon: Assets.images.component.publishedArticleWidgetShare.svg(
             color: context.iconPrimary,
           ),
           onPressed: () => onShareClicked(article),
@@ -158,8 +158,8 @@ class PublishedArticleHorizontalWidget extends StatelessWidget {
         MaterialIconButton(
           size: 36,
           icon: (article.isBookmarked
-                  ? Assets.images.component.bookmarkFilled
-                  : Assets.images.component.bookmarkUnfilled)
+                  ? Assets.images.component.publishedArticleWidgetBookmarkFilled
+                  : Assets.images.component.publishedArticleWidgetBookmarkUnfilled)
               .svg(color: context.iconPrimary),
           onPressed: () => onBookmarkClicked(article),
         ),
@@ -249,14 +249,14 @@ class PublishedArticleVerticalWidget extends StatelessWidget {
         MaterialIconButton(
           size: 36,
           icon: (article.isLiked
-                  ? Assets.images.component.likeFilled
-                  : Assets.images.component.likeUnfilled)
+                  ? Assets.images.component.publishedArticleWidgetLikeFilled
+                  : Assets.images.component.publishedArticleWidgetLikeUnfilled)
               .svg(color: context.iconPrimary),
           onPressed: () => onLikeClicked(article),
         ),
         MaterialIconButton(
           size: 36,
-          icon: Assets.images.component.share.svg(
+          icon: Assets.images.component.publishedArticleWidgetShare.svg(
             color: context.iconPrimary,
           ),
           onPressed: () => onShareClicked(article),
@@ -265,8 +265,8 @@ class PublishedArticleVerticalWidget extends StatelessWidget {
         MaterialIconButton(
           size: 36,
           icon: (article.isBookmarked
-                  ? Assets.images.component.bookmarkFilled
-                  : Assets.images.component.bookmarkUnfilled)
+                  ? Assets.images.component.publishedArticleWidgetBookmarkFilled
+                  : Assets.images.component.publishedArticleWidgetBookmarkUnfilled)
               .svg(color: context.iconPrimary),
           onPressed: () => onBookmarkClicked(article),
         ),

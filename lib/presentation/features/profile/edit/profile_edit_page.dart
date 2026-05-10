@@ -158,7 +158,7 @@ class ProfileEditPage
                 ActionListItem(
                   item: "",
                   title: Strings.addImageActionPickImage,
-                  icon: Assets.images.component.photoPick,
+                  icon: Assets.images.component.profileEditPagePhotoPick,
                   iconTintColor: context.iconPrimary,
                   onClicked: (item) {
                     Navigator.pop(context);
@@ -252,7 +252,8 @@ class _ProfileEditUserImage extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: Assets.images.component.placeHolderCircle.svg(
+                child: Assets.images.component.profileEditPagePlaceHolderCircle
+                    .svg(
                   height: 120,
                   width: 120,
                   color: Color(0xFFA3A3A3),
@@ -278,7 +279,7 @@ class _ProfileEditUserImage extends StatelessWidget {
                 child: SizedBox(
                   width: 24,
                   height: 24,
-                  child: Assets.images.component.photoAdd.svg(
+                  child: Assets.images.component.profileEditPagePhotoAdd.svg(
                     width: 24,
                     height: 24,
                     color: Colors.white.withOpacity(.5),

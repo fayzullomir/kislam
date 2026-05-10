@@ -506,12 +506,13 @@ class _ProfileHeader extends StatelessWidget {
                   width: 1.2,
                 ),
                 placeHolderImage:
-                    Assets.images.component.placeHolderCircle.svg(
+                    Assets.images.component.profilePagePlaceHolderCircle.svg(
                   width: 40,
                   height: 40,
                   color: context.noor.inkSoft,
                 ),
-                errorImage: Assets.images.component.placeHolderCircle.svg(
+                errorImage:
+                    Assets.images.component.profilePagePlaceHolderCircle.svg(
                   width: 40,
                   height: 40,
                   color: context.noor.inkSoft,

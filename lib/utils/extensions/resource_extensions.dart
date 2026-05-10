@@ -175,17 +175,17 @@ extension ServiceTypeResExts on ServiceType {
   SvgGenImage get serviceIcon {
     switch (this) {
       case ServiceType.AIR_TICKET:
-        return Assets.images.service.airTicket;
+        return Assets.images.service.serviceAirTicket;
       case ServiceType.E_SIM_CONNECT:
-        return Assets.images.service.esim;
+        return Assets.images.service.serviceEsim;
       case ServiceType.HOTEL_BOOKING:
-        return Assets.images.service.hotelBooking;
+        return Assets.images.service.serviceHotelBooking;
       case ServiceType.CURRENCY_EXCHANGE:
-        return Assets.images.service.currencyExchange;
+        return Assets.images.service.serviceCurrencyExchange;
       case ServiceType.CAR_RENTAL_TRANSPORTATION:
-        return Assets.images.service.carRentalTransportation;
+        return Assets.images.service.serviceCarRentalTransportation;
       case ServiceType.RESTAURANT_DISCOVERY:
-        return Assets.images.service.restaurantDiscovery;
+        return Assets.images.service.serviceRestaurantDiscovery;
     }
   }
 }

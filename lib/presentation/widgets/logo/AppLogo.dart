@@ -11,7 +11,9 @@ class AppLogo extends StatelessWidget {
     var isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return ClipOval(
-      child: (isDarkMode ? Assets.images.logo.logo : Assets.images.logo.logo)
+      child: (isDarkMode
+              ? Assets.images.logo.appLogoLogo
+              : Assets.images.logo.appLogoLogo)
           .image(height: size, width: size, fit: BoxFit.cover),
     );
   }
