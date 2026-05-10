@@ -3,8 +3,12 @@ import 'dart:ui';
 import 'package:koreaislam/core/gen/assets/assets.gen.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/domain/models/article/agency_article_status.dart';
+import 'package:koreaislam/domain/models/calculation_method/calculation_method.dart';
 import 'package:koreaislam/domain/models/gender/gender.dart';
 import 'package:koreaislam/domain/models/language/language.dart';
+import 'package:koreaislam/domain/models/madhab/madhab.dart';
+import 'package:koreaislam/domain/models/prayer/prayer_name.dart';
+import 'package:koreaislam/domain/models/prayer_notification/prayer_notification_lead_time.dart';
 import 'package:koreaislam/domain/models/service/service_type.dart';
 import 'package:koreaislam/domain/models/theme/app_theme_mode.dart';
 import 'package:koreaislam/presentation/support/colors/static_colors.dart';
@@ -18,6 +22,89 @@ extension AppThemeModeResourceExtension on AppThemeMode {
         return Strings.themeModeDarkMode;
       case AppThemeMode.followSystem:
         return Strings.themeModeFollowSystem;
+    }
+  }
+}
+
+extension CalculationMethodResourceExtension on CalculationMethod {
+  String get localizedName {
+    switch (this) {
+      case CalculationMethod.muslimWorldLeague:
+        return Strings.calculationMethodMuslimWorldLeague;
+      case CalculationMethod.egyptian:
+        return Strings.calculationMethodEgyptian;
+      case CalculationMethod.karachi:
+        return Strings.calculationMethodKarachi;
+      case CalculationMethod.ummAlQura:
+        return Strings.calculationMethodUmmAlQura;
+      case CalculationMethod.dubai:
+        return Strings.calculationMethodDubai;
+      case CalculationMethod.qatar:
+        return Strings.calculationMethodQatar;
+      case CalculationMethod.kuwait:
+        return Strings.calculationMethodKuwait;
+      case CalculationMethod.moonsightingCommittee:
+        return Strings.calculationMethodMoonsightingCommittee;
+      case CalculationMethod.northAmerica:
+        return Strings.calculationMethodNorthAmerica;
+      case CalculationMethod.turkiye:
+        return Strings.calculationMethodTurkiye;
+      case CalculationMethod.tehran:
+        return Strings.calculationMethodTehran;
+      case CalculationMethod.singapore:
+        return Strings.calculationMethodSingapore;
+      case CalculationMethod.morocco:
+        return Strings.calculationMethodMorocco;
+    }
+  }
+}
+
+extension PrayerNameResourceExtension on PrayerName {
+  /// Localized display name — only the five obligatory prayers are
+  /// rendered in UI. [PrayerName.sunrise] falls back to Fajr's label
+  /// since it never reaches the home/notification surface.
+  String get localizedName {
+    switch (this) {
+      case PrayerName.fajr:
+      case PrayerName.sunrise:
+        return Strings.prayerFajr;
+      case PrayerName.dhuhr:
+        return Strings.prayerDhuhr;
+      case PrayerName.asr:
+        return Strings.prayerAsr;
+      case PrayerName.maghrib:
+        return Strings.prayerMaghrib;
+      case PrayerName.isha:
+        return Strings.prayerIsha;
+    }
+  }
+}
+
+extension PrayerNotificationLeadTimeResourceExtension
+    on PrayerNotificationLeadTime {
+  String get localizedName {
+    switch (this) {
+      case PrayerNotificationLeadTime.instantly:
+        return Strings.notificationLeadTimeInstantly;
+      case PrayerNotificationLeadTime.fiveMinutesBefore:
+        return Strings.notificationLeadTime5Min;
+      case PrayerNotificationLeadTime.tenMinutesBefore:
+        return Strings.notificationLeadTime10Min;
+    }
+  }
+}
+
+extension MadhabResourceExtension on Madhab {
+  String get localizedName {
+    switch (this) {
+      case Madhab.hanafi:
+        return Strings.madhabHanafi;
+      case Madhab.shafii:
+        return Strings.madhabShafii;
+      case Madhab.maliki:
+        return Strings.madhabMaliki;
+      case Madhab.hanbali:
+        return Strings.madhabHanbali;
     }
   }
 }

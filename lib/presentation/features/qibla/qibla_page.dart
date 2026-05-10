@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
@@ -40,40 +41,7 @@ class QiblaPage extends BasePage<QiblaCubit, QiblaState, QiblaEvent> {
               Text(Strings.qiblaEyebrow, style: context.noor.tEyebrow),
               const SizedBox(height: 6),
               Text(Strings.qiblaTitle, style: context.noor.tDisplay),
-              Expanded(
-                child: Center(
-                  child: _Compass(
-                    degreesFromQibla: state.degreesFromQibla,
-                  ),
-                ),
-              ),
-              Center(
-                child: Text(
-                  '${state.degreesFromQibla}°',
-                  style: TextStyle(
-                    fontFamily: IslamicDesignTokens.fontDisplay,
-                    fontSize: 38,
-                    fontWeight: FontWeight.w600,
-                    color: context.noor.primary,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Center(
-                child: Text(
-                  state.isFacingMecca
-                      ? Strings.qiblaFacing
-                      : Strings.qiblaTurn,
-                  style: context.noor.tBodySm,
-                ),
-              ),
-              const SizedBox(height: 18),
-              Center(
-                child: _DistancePill(
-                  city: state.city,
-                  kmToMecca: state.kmToMecca,
-                ),
-              ),
+              Expanded(child: _Body(state: state, page: this)),
             ],
           ),
         ),
@@ -83,40 +51,295 @@ class QiblaPage extends BasePage<QiblaCubit, QiblaState, QiblaEvent> {
 }
 
 // ---------------------------------------------------------------------------
-// Compass — outer ring with tick marks, N/E/S/W labels, green needle, and
-// a gold-ringed Kaaba marker that floats at the Qibla bearing.
+// Body — switches between the live compass and a status placeholder
+// (loading / permission / no-sensor) based on [QiblaState.status].
 // ---------------------------------------------------------------------------
 
-class _Compass extends StatelessWidget {
-  final int degreesFromQibla;
+class _Body extends StatelessWidget {
+  final QiblaState state;
+  final QiblaPage page;
 
-  const _Compass({required this.degreesFromQibla});
+  const _Body({required this.state, required this.page});
 
   @override
   Widget build(BuildContext context) {
+    switch (state.status) {
+      case QiblaStatus.initial:
+      case QiblaStatus.loading:
+        return _StatusView(
+          icon: Icons.location_searching_rounded,
+          message: Strings.qiblaLocating,
+          showProgress: true,
+        );
+      case QiblaStatus.permissionDenied:
+        return _StatusView(
+          icon: Icons.location_off_rounded,
+          message: Strings.qiblaPermissionDenied,
+          actionLabel: Strings.qiblaRetry,
+          onAction: () => page.cubit(context).retry(),
+        );
+      case QiblaStatus.permissionPermanentlyDenied:
+        return _StatusView(
+          icon: Icons.location_off_rounded,
+          message: Strings.qiblaPermissionDenied,
+          actionLabel: Strings.qiblaEnableLocation,
+          onAction: () => page.cubit(context).openAppSettings(),
+        );
+      case QiblaStatus.serviceDisabled:
+        return _StatusView(
+          icon: Icons.gps_off_rounded,
+          message: Strings.qiblaServiceDisabled,
+          actionLabel: Strings.qiblaEnableLocation,
+          onAction: () => page.cubit(context).openLocationSettings(),
+        );
+      case QiblaStatus.noCompass:
+        return _StatusView(
+          icon: Icons.explore_off_rounded,
+          message: Strings.qiblaNoCompass,
+        );
+      case QiblaStatus.ready:
+        return _CompassView(state: state);
+    }
+  }
+}
+
+class _CompassView extends StatefulWidget {
+  final QiblaState state;
+  const _CompassView({required this.state});
+
+  @override
+  State<_CompassView> createState() => _CompassViewState();
+}
+
+class _CompassViewState extends State<_CompassView> {
+  /// Minimum heading change between rotation "ticks" (degrees).
+  static const double _rotationTickStep = 15.0;
+
+  /// Last heading at which a tick haptic fired — anchor for the next tick.
+  double? _lastTickHeading;
+
+  /// Was the dial inside the alignment zone on the previous frame?
+  /// We only want one heavy haptic on the false → true transition,
+  /// not a continuous buzz while the user holds the phone steady.
+  bool _wasFacing = false;
+
+  @override
+  void didUpdateWidget(covariant _CompassView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _maybeFireHaptics(oldWidget.state, widget.state);
+  }
+
+  void _maybeFireHaptics(QiblaState prev, QiblaState curr) {
+    // Lock-on signal: fire once when entering the "facing Mecca" zone.
+    if (curr.isFacingMecca && !_wasFacing) {
+      HapticFeedback.heavyImpact();
+      // Re-anchor the tick heading so we don't immediately fire again
+      // from accumulated rotation while approaching alignment.
+      _lastTickHeading = curr.deviceHeading;
+    }
+    _wasFacing = curr.isFacingMecca;
+
+    // Rotation ticks: subtle compass-like clicks while turning.
+    // Skipped while inside the alignment zone — the lock-on haptic above
+    // is the dominant signal there.
+    if (curr.isFacingMecca) return;
+
+    final last = _lastTickHeading;
+    if (last == null) {
+      _lastTickHeading = curr.deviceHeading;
+      return;
+    }
+
+    final raw = (curr.deviceHeading - last).abs();
+    // Shortest angular distance, accounting for the 0/360 seam.
+    final delta = math.min(raw, 360 - raw);
+    if (delta >= _rotationTickStep) {
+      HapticFeedback.selectionClick();
+      _lastTickHeading = curr.deviceHeading;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = widget.state;
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: _Compass(
+              deviceHeading: state.deviceHeading,
+              qiblaBearing: state.qiblaBearing,
+            ),
+          ),
+        ),
+        Center(
+          child: Text(
+            '${state.degreesFromQiblaRounded}°',
+            style: TextStyle(
+              fontFamily: IslamicDesignTokens.fontDisplay,
+              fontSize: 38,
+              fontWeight: FontWeight.w600,
+              color: context.noor.primary,
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Center(
+          child: Text(
+            state.isFacingMecca ? Strings.qiblaFacing : Strings.qiblaTurn,
+            style: context.noor.tBodySm,
+          ),
+        ),
+        const SizedBox(height: 18),
+        Center(
+          child: _DistancePill(
+            city: state.city,
+            kmToMecca: state.kmToMecca,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatusView extends StatelessWidget {
+  final IconData icon;
+  final String message;
+  final bool showProgress;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  const _StatusView({
+    required this.icon,
+    required this.message,
+    this.showProgress = false,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 56, color: context.noor.inkSoft),
+            const SizedBox(height: 16),
+            if (showProgress) ...[
+              SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.4,
+                  color: context.noor.primary,
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: context.noor.tBodySm,
+            ),
+            if (actionLabel != null) ...[
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: onAction,
+                style: TextButton.styleFrom(
+                  foregroundColor: context.noor.primary,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(IslamicDesignTokens.radiusPill),
+                    side: BorderSide(color: context.noor.primary, width: 1.4),
+                  ),
+                ),
+                child: Text(
+                  actionLabel!,
+                  style: context.noor.tLabel.copyWith(
+                    color: context.noor.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Compass — outer ring with tick marks, N/E/S/W labels rotating with the
+// device heading (so N always points to true north), a fixed forward-facing
+// indicator at the top, and a Kaaba marker pinned to the absolute Qibla
+// bearing on the dial. User aligns the phone with the Kaaba marker to face
+// Mecca.
+// ---------------------------------------------------------------------------
+
+class _Compass extends StatelessWidget {
+  final double deviceHeading;
+  final double qiblaBearing;
+
+  const _Compass({
+    required this.deviceHeading,
+    required this.qiblaBearing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Rotate the dial counter to the device heading so N stays at true north.
+    final dialRotation = -deviceHeading * math.pi / 180.0;
+
     return SizedBox(
       width: 280,
       height: 280,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Background painter — ring + ticks + cardinal labels.
-          CustomPaint(
-            size: const Size.square(280),
-            painter: _CompassDialPainter(
-              ring: context.noor.line,
-              ticks: context.noor.lineStrong,
-              cardinal: context.noor.inkMuted,
-              cardinalActive: context.noor.primary,
+          // Rotating dial — ring + ticks + cardinal labels + Kaaba marker.
+          Transform.rotate(
+            angle: dialRotation,
+            child: SizedBox(
+              width: 280,
+              height: 280,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CustomPaint(
+                    size: const Size.square(280),
+                    painter: _CompassDialPainter(
+                      ring: context.noor.line,
+                      ticks: context.noor.lineStrong,
+                      cardinal: context.noor.inkMuted,
+                      cardinalActive: context.noor.primary,
+                    ),
+                  ),
+                  // Kaaba marker sits on the ring at the absolute qibla
+                  // bearing (measured clockwise from N). Rotates together
+                  // with the dial.
+                  Transform.rotate(
+                    angle: qiblaBearing * math.pi / 180.0,
+                    child: const Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: _KaabaMarker(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          // Needle rotates around the center; positive value turns clockwise.
-          Transform.rotate(
-            angle: degreesFromQibla * math.pi / 180,
-            child: CustomPaint(
-              size: const Size.square(280),
-              painter: _NeedlePainter(color: context.noor.primary),
-            ),
+          // Fixed forward-facing needle — points where the phone is aimed.
+          CustomPaint(
+            size: const Size.square(280),
+            painter: _NeedlePainter(color: context.noor.primary),
           ),
           // Center anchor disc.
           Container(
@@ -126,13 +349,6 @@ class _Compass extends StatelessWidget {
               color: context.noor.ink,
               shape: BoxShape.circle,
             ),
-          ),
-          // Kaaba marker pinned to the top of the dial (= Qibla direction
-          // when offset is zero). Real implementation would rotate this
-          // by the device heading so it always points at Mecca.
-          const Positioned(
-            top: 4,
-            child: _KaabaMarker(),
           ),
         ],
       ),
@@ -298,14 +514,16 @@ class _DistancePill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            city,
-            style: context.noor.tBodySm.copyWith(
-              color: context.noor.ink,
-              fontWeight: FontWeight.w600,
+          if (city.isNotEmpty) ...[
+            Text(
+              city,
+              style: context.noor.tBodySm.copyWith(
+                color: context.noor.ink,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          const SizedBox(width: 16),
+            const SizedBox(width: 16),
+          ],
           Text(
             _formatKm(kmToMecca),
             style: context.noor.tBodySm.copyWith(

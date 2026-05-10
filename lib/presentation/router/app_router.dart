@@ -16,7 +16,8 @@ import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_page.dart'
 import 'package:koreaislam/presentation/features/auth/sign_up/sign_up_page.dart';
 import 'package:koreaislam/presentation/features/chat/chat_page.dart';
 import 'package:koreaislam/presentation/features/gender/gender_selection_page.dart';
-import 'package:koreaislam/presentation/features/intro/intro_page.dart';
+import 'package:koreaislam/presentation/features/location/location_selection_page.dart';
+import 'package:koreaislam/presentation/features/madhab/madhab_selection_page.dart';
 import 'package:koreaislam/presentation/features/onboarding/onboarding_page.dart';
 import 'package:koreaislam/presentation/features/language/change/change_language_page.dart';
 import 'package:koreaislam/presentation/features/language/set/set_language_page.dart';
@@ -81,8 +82,14 @@ class AppRouter extends _$AppRouter {
 
         /// Madhab selection (first-run, between onboarding and location)
         AutoRoute(
-          page: IntroRoute.page,
-          path: '/intro',
+          page: MadhabSelectionRoute.page,
+          path: '/madhab_selection',
+        ),
+
+        /// Location selection (first-run, before permissions)
+        AutoRoute(
+          page: LocationSelectionRoute.page,
+          path: '/location_selection',
         ),
 
         /// Permissions

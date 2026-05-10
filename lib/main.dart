@@ -14,6 +14,7 @@ import 'package:store_checker/store_checker.dart';
 import 'package:koreaislam/core/extensions/string_extensions.dart';
 import 'package:koreaislam/core/log/logger/app_log.dart';
 import 'package:koreaislam/data/datasource/device/device_info.dart';
+import 'package:koreaislam/data/datasource/preference/app_config_preferences.dart';
 import 'package:koreaislam/domain/models/language/language.dart';
 import 'package:koreaislam/firebase_options.dart';
 import 'package:koreaislam/presentation/application/di/get_it_injection.dart';
@@ -63,12 +64,25 @@ Future<void> main() async {
     // Get device and app info
     await _getDeviceAndAppInfo();
 
+    // Resolve the saved language so EasyLocalization starts in the
+    // user-selected locale on every launch. AppConfigPreferences is the
+    // single source of truth — saveLocale is disabled to avoid a parallel
+    // copy inside EasyLocalization's own storage. On first launch (no
+    // language saved yet) fall back to the device locale when supported
+    // so the language picker opens already in the user's system language.
+    final appConfigPreferences = getIt<AppConfigPreferences>();
+    final startLocale = appConfigPreferences.isLanguageSelected
+        ? appConfigPreferences.language.locale
+        : Language.fromDeviceLocale().locale;
+
     // Run the app
     runApp(
       EasyLocalization(
         supportedLocales: Language.values.map((e) => e.locale).toList(),
         path: 'assets/localization',
         fallbackLocale: Language.defaultLanguage.locale,
+        startLocale: startLocale,
+        saveLocale: false,
         child: Application(),
       ),
     );

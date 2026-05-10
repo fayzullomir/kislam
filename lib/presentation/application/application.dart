@@ -16,6 +16,7 @@ import 'package:koreaislam/core/log/logger/app_log.dart';
 import 'package:koreaislam/data/datasource/preference/app_config_preferences.dart';
 import 'package:koreaislam/data/datasource/preference/auth_preferences.dart';
 import 'package:koreaislam/data/datasource/preference/fcm_token_preferences.dart';
+import 'package:koreaislam/data/datasource/preference/location_preferences.dart';
 import 'package:koreaislam/data/datasource/preference/profile_preferences.dart';
 import 'package:koreaislam/data/datasource/preference/temporarily_data_holder.dart';
 import 'package:koreaislam/data/datasource/preference/theme_mode_preferences.dart';
@@ -28,6 +29,7 @@ import 'package:koreaislam/domain/models/logout_event/logout_event_type.dart';
 import 'package:koreaislam/presentation/application/di/get_it_injection.dart';
 import 'package:koreaislam/presentation/application/services/fcm/firebase_notification_handler.dart';
 import 'package:koreaislam/presentation/application/services/fcm/firebase_notification_service.dart';
+import 'package:koreaislam/presentation/application/services/prayer/prayer_notification_scheduler.dart';
 import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_launch_type.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
 import 'package:koreaislam/presentation/router/auto_router_extensions.dart';
@@ -60,6 +62,7 @@ class _ApplicationState extends State<Application> {
 
   // Preferences
   final AppConfigPreferences _appConfigPreferences = getIt.get();
+  final LocationPreferences _locationPreferences = getIt.get();
   final FcmTokenPreferences _fcmTokenPreferences = getIt.get();
   final AuthPreferences _authPreferences = getIt.get();
   final ProfilePreferences _profilePreferences = getIt.get();
@@ -68,6 +71,8 @@ class _ApplicationState extends State<Application> {
   // Notification services
   final _notificationService = FirebaseNotificationService();
   final _navigationHandler = FirebaseNotificationHandler();
+  final PrayerNotificationScheduler _prayerScheduler =
+      getIt<PrayerNotificationScheduler>();
 
   // State
   late ThemeMode _themeMode;
@@ -186,24 +191,45 @@ class _ApplicationState extends State<Application> {
           _navigationHandler.handleNotification(message);
         },
       );
+      // Initialize the prayer-time scheduler after FCM so the local
+      // notifications plugin is already set up. The scheduler internally
+      // listens to preference changes and reschedules itself, so we only
+      // need to fire the initial reschedule here.
+      await _prayerScheduler.init();
+      await _prayerScheduler.rescheduleAll();
       AppLog.i("✅ Notifications initialized successfully");
     } catch (e, s) {
       AppLog.e("❌ Error initializing notifications: $e", stackTrace: s);
     }
   }
 
+  /// First-run flow:
+  /// Language → Onboarding (2-step) → Madhab → Location → Permissions → Main.
+  /// Each step writes its own "done" flag so the user resumes where they left
+  /// off if they kill the app mid-setup.
+  List<PageRouteInfo> _buildInitialRoute() {
+    if (_appConfigPreferences.isLanguageNotSelected) {
+      return [SetLanguageRoute()];
+    }
+    if (_appConfigPreferences.isOnboardingNotShown) {
+      return [OnboardingRoute()];
+    }
+    if (_appConfigPreferences.isMadhabNotSelected) {
+      return [MadhabSelectionRoute()];
+    }
+    if (_locationPreferences.isLocationNotSet) {
+      return [LocationSelectionRoute()];
+    }
+    if (_authPreferences.isNotAuthorized) {
+      return [MainRoute()];
+    }
+    return [_profilePreferences.userRole.homePage];
+  }
+
   /// Configure router
   RouterConfig<Object> _configureRouterConfig() {
     return _appRouter.config(
-      deepLinkBuilder: (_) => DeepLink(
-        _appConfigPreferences.isLanguageNotSelected
-            ? [SetLanguageRoute()]
-            : _appConfigPreferences.isIntroNotShown
-                ? [IntroRoute()]
-                : _authPreferences.isNotAuthorized
-                    ? [MainRoute()]
-                    : [_profilePreferences.userRole.homePage],
-      ),
+      deepLinkBuilder: (_) => DeepLink(_buildInitialRoute()),
       navigatorObservers: () => [if (kDebugMode) ChuckerFlutter.navigatorObserver],
     );
   }

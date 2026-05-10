@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
+import 'package:koreaislam/domain/models/prayer/prayer_name.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
 import 'package:koreaislam/presentation/support/cubit/base_page.dart';
+import 'package:koreaislam/utils/extensions/resource_extensions.dart';
 
 import 'home_cubit.dart';
 
@@ -30,9 +33,9 @@ class HomePage extends BasePage<HomeCubit, HomeState, HomeEvent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const _NextPrayerHeroCard(),
+              _NextPrayerHeroCard(state: state),
               const SizedBox(height: 16),
-              const _PrayerTimesRow(),
+              _PrayerTimesRow(state: state),
               const SizedBox(height: 28),
               const _TodayWisdomSection(),
               const SizedBox(height: 28),
@@ -66,14 +69,49 @@ class HomePage extends BasePage<HomeCubit, HomeState, HomeEvent> {
 }
 
 // ---------------------------------------------------------------------------
+// Time formatters — kept at top-level so they are constructed once per
+// build pass and shared by every widget below.
+// ---------------------------------------------------------------------------
+
+final DateFormat _timeFormatter = DateFormat('HH:mm');
+
+/// hh:mm:ss countdown — drops the leading "0:" once under one hour so
+/// the hero text doesn't look top-heavy in the home zone.
+String _formatCountdown(Duration d) {
+  final h = d.inHours;
+  final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+  final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+  if (h > 0) return '$h:$m:$s';
+  return '$m:$s';
+}
+
+// ---------------------------------------------------------------------------
 // Hero: large sand "NEXT PRAYER" card with countdown + Arabic decoration.
 // ---------------------------------------------------------------------------
 
 class _NextPrayerHeroCard extends StatelessWidget {
-  const _NextPrayerHeroCard();
+  final HomeState state;
+
+  const _NextPrayerHeroCard({required this.state});
 
   @override
   Widget build(BuildContext context) {
+    final hasPrayer =
+        state.nextPrayerName != null && state.nextPrayerTime != null;
+    final prayerLabel =
+        hasPrayer ? state.nextPrayerName!.localizedName : '—';
+    final prayerArabic =
+        hasPrayer ? _arabicNameFor(state.nextPrayerName!) : '';
+    final countdownText = state.countdown != null
+        ? _formatCountdown(state.countdown!)
+        : '--:--';
+    final startsAt = hasPrayer
+        ? Strings.homeUntilFormat(_timeFormatter.format(state.nextPrayerTime!))
+        : '';
+    final locationText = state.locationLabel.isNotEmpty
+        ? state.locationLabel
+        : Strings.homeLocationUnknown;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
       decoration: BoxDecoration(
@@ -113,7 +151,7 @@ class _NextPrayerHeroCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    IslamicMockData.nextPrayerName,
+                    prayerLabel,
                     style: TextStyle(
                       fontFamily: IslamicDesignTokens.fontDisplay,
                       fontSize: 32,
@@ -122,24 +160,26 @@ class _NextPrayerHeroCard extends StatelessWidget {
                       color: context.noor.primary,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      IslamicMockData.nextPrayerNameArabic,
-                      style: TextStyle(
-                        fontFamily: IslamicDesignTokens.fontArabic,
-                        fontSize: 22,
-                        height: 1,
-                        color: context.noor.secondary,
+                  if (prayerArabic.isNotEmpty) ...[
+                    const SizedBox(width: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        prayerArabic,
+                        style: TextStyle(
+                          fontFamily: IslamicDesignTokens.fontArabic,
+                          fontSize: 22,
+                          height: 1,
+                          color: context.noor.secondary,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
               const SizedBox(height: 10),
               Text(
-                IslamicMockData.nextPrayerCountdownClock,
+                countdownText,
                 style: TextStyle(
                   fontFamily: IslamicDesignTokens.fontDisplay,
                   fontSize: 56,
@@ -154,12 +194,12 @@ class _NextPrayerHeroCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      IslamicMockData.nextPrayerStartsAt,
+                      startsAt,
                       style: context.noor.tBodySm,
                     ),
                   ),
                   Text(
-                    IslamicMockData.currentLocationLine,
+                    locationText,
                     style: context.noor.tBodySm,
                   ),
                 ],
@@ -170,6 +210,26 @@ class _NextPrayerHeroCard extends StatelessWidget {
       ),
     );
   }
+
+  /// Arabic glyph for each obligatory prayer — used as decorative label
+  /// next to the localized name. Hard-coded since the script doesn't
+  /// vary by user language.
+  String _arabicNameFor(PrayerName prayer) {
+    switch (prayer) {
+      case PrayerName.fajr:
+        return 'الفجر';
+      case PrayerName.sunrise:
+        return 'الشروق';
+      case PrayerName.dhuhr:
+        return 'الظهر';
+      case PrayerName.asr:
+        return 'العصر';
+      case PrayerName.maghrib:
+        return 'المغرب';
+      case PrayerName.isha:
+        return 'العشاء';
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -178,37 +238,71 @@ class _NextPrayerHeroCard extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _PrayerTimesRow extends StatelessWidget {
-  const _PrayerTimesRow();
+  final HomeState state;
+
+  const _PrayerTimesRow({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    final prayers = IslamicMockData.prayerTimes;
+    final today = state.todayPrayers;
+    final entries = today != null
+        ? today.obligatoryPrayers
+            .map((p) => _RowEntry(
+                  name: p.name,
+                  time: _timeFormatter.format(p.time),
+                  isNext: p.name == state.nextPrayerName,
+                ))
+            .toList()
+        : _placeholderEntries();
+
     return Row(
-      children: List.generate(prayers.length, (i) {
-        final p = prayers[i];
+      children: List.generate(entries.length, (i) {
+        final p = entries[i];
         return Expanded(
           child: Padding(
-            padding: EdgeInsets.only(right: i == prayers.length - 1 ? 0 : 8),
-            child: _PrayerChip(prayer: p),
+            padding: EdgeInsets.only(right: i == entries.length - 1 ? 0 : 8),
+            child: _PrayerChip(entry: p),
           ),
         );
       }),
     );
   }
+
+  /// Used while [todayPrayers] is null (no GPS yet) so the row layout
+  /// stays stable — same five labels, dashes for time.
+  List<_RowEntry> _placeholderEntries() {
+    return const [
+      _RowEntry(name: PrayerName.fajr, time: '--:--', isNext: false),
+      _RowEntry(name: PrayerName.dhuhr, time: '--:--', isNext: false),
+      _RowEntry(name: PrayerName.asr, time: '--:--', isNext: false),
+      _RowEntry(name: PrayerName.maghrib, time: '--:--', isNext: false),
+      _RowEntry(name: PrayerName.isha, time: '--:--', isNext: false),
+    ];
+  }
+}
+
+class _RowEntry {
+  final PrayerName name;
+  final String time;
+  final bool isNext;
+
+  const _RowEntry({
+    required this.name,
+    required this.time,
+    required this.isNext,
+  });
 }
 
 class _PrayerChip extends StatelessWidget {
-  final PrayerTimeItem prayer;
+  final _RowEntry entry;
 
-  const _PrayerChip({required this.prayer});
+  const _PrayerChip({required this.entry});
 
   @override
   Widget build(BuildContext context) {
-    final bg = prayer.isNext
-        ? context.noor.primary
-        : context.noor.surface;
-    final fg = prayer.isNext ? Colors.white : context.noor.ink;
-    final labelFg = prayer.isNext
+    final bg = entry.isNext ? context.noor.primary : context.noor.surface;
+    final fg = entry.isNext ? Colors.white : context.noor.ink;
+    final labelFg = entry.isNext
         ? Colors.white.withOpacity(0.85)
         : context.noor.inkMuted;
     return Container(
@@ -217,9 +311,7 @@ class _PrayerChip extends StatelessWidget {
         color: bg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: prayer.isNext
-              ? Colors.transparent
-              : context.noor.line,
+          color: entry.isNext ? Colors.transparent : context.noor.line,
           width: 1,
         ),
       ),
@@ -227,7 +319,7 @@ class _PrayerChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            prayer.name.toUpperCase(),
+            entry.name.localizedName.toUpperCase(),
             style: TextStyle(
               fontFamily: IslamicDesignTokens.fontBody,
               fontSize: 10,
@@ -238,7 +330,7 @@ class _PrayerChip extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            prayer.time,
+            entry.time,
             style: TextStyle(
               fontFamily: IslamicDesignTokens.fontDisplay,
               fontSize: 15,
@@ -397,3 +489,4 @@ class _QuickLinkCard extends StatelessWidget {
     );
   }
 }
+

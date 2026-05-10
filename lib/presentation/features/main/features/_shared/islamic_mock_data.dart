@@ -30,79 +30,72 @@ class IslamicMockData {
   static String get nextPrayerCountdown => Strings.homeNextPrayerCountdown;
 
   // ----- New Home hero -----
-  /// English label for the upcoming prayer (e.g. "Maghrib").
-  static const String nextPrayerName = 'Maghrib';
+  /// Localized label for the upcoming prayer (e.g. "Maghrib" / "Шом").
+  /// Reuses the prayer-name string used in the prayer-time chips.
+  static String get nextPrayerName => Strings.prayerMaghrib;
 
-  /// Arabic label for the upcoming prayer.
+  /// Arabic label for the upcoming prayer — script literal, not localized.
   static const String nextPrayerNameArabic = 'المغرب';
 
-  /// Countdown until the upcoming prayer, hh:mm:ss.
+  /// Countdown until the upcoming prayer, hh:mm:ss — pure numeric format.
   static const String nextPrayerCountdownClock = '2:11:42';
 
-  /// Wall-clock time the upcoming prayer starts.
-  static const String nextPrayerStartsAt = 'Until 6:42 PM';
+  /// Wall-clock time the upcoming prayer starts (mock string per locale).
+  static String get nextPrayerStartsAt => Strings.homeNextPrayerStartsAt;
 
-  /// Rough device location — shown on the hero card.
-  static const String currentLocationLine = 'Seoul · 37.5°N';
+  /// Rough device location — shown on the hero card (mock string per locale).
+  static String get currentLocationLine => Strings.homeCurrentLocationLine;
 
   /// Decorative Arabic word ("salah") displayed faded behind the hero text.
   static const String nextPrayerArabicDecor = 'صلاة';
 
   // ----- Today's Wisdom -----
-  static const String todayWisdomQuote =
-      '"Indeed, Allah is with those who are patient."';
-  static const String todayWisdomSource = "Qur'an 2:153 · Al-Baqarah";
+  static String get todayWisdomQuote => Strings.homeTodayWisdomQuote;
+  static String get todayWisdomSource => Strings.homeTodayWisdomSource;
 
   // ----- Prayer Guide (Pray tab) -----
-  static List<PrayerGuideStep> get dhuhrGuide => const [
+  static List<PrayerGuideStep> get dhuhrGuide => [
         PrayerGuideStep(
           posture: PrayerPosture.standing,
-          eyebrow: 'INTENTION',
-          title: 'Niyyah',
-          body:
-              'Set the intention in your heart for which prayer you are about to perform. It is not spoken aloud.',
+          eyebrow: Strings.prayStepIntentionEyebrow,
+          title: Strings.prayStepNiyyahTitle,
+          body: Strings.prayStepNiyyahBody,
         ),
         PrayerGuideStep(
           posture: PrayerPosture.handsRaised,
-          eyebrow: 'OPENING',
-          title: 'Takbir al-Ihram',
-          body:
-              'Raise your hands to your ears and say "Allahu Akbar" to begin the prayer.',
+          eyebrow: Strings.prayStepOpeningEyebrow,
+          title: Strings.prayStepTakbirTitle,
+          body: Strings.prayStepTakbirBody,
         ),
         PrayerGuideStep(
           posture: PrayerPosture.standing,
-          eyebrow: 'RECITATION',
-          title: 'Qiyam',
-          body:
-              'Standing with hands folded, recite Surah Al-Fatiha followed by another short surah.',
+          eyebrow: Strings.prayStepRecitationEyebrow,
+          title: Strings.prayStepQiyamTitle,
+          body: Strings.prayStepQiyamBody,
         ),
         PrayerGuideStep(
           posture: PrayerPosture.bowed,
-          eyebrow: 'BOWING',
-          title: "Ruku'",
-          body:
-              'Bow with your back parallel to the ground and say "Subhana Rabbiyal Adheem" three times.',
+          eyebrow: Strings.prayStepBowingEyebrow,
+          title: Strings.prayStepRukuTitle,
+          body: Strings.prayStepRukuBody,
         ),
         PrayerGuideStep(
           posture: PrayerPosture.prostrated,
-          eyebrow: 'PROSTRATION',
-          title: 'Sujud',
-          body:
-              'Prostrate with forehead, nose, palms, knees and toes touching the ground. Say "Subhana Rabbiyal A\'la" three times.',
+          eyebrow: Strings.prayStepProstrationEyebrow,
+          title: Strings.prayStepSujudTitle,
+          body: Strings.prayStepSujudBody,
         ),
         PrayerGuideStep(
           posture: PrayerPosture.sitting,
-          eyebrow: 'SITTING',
-          title: 'Tashahhud',
-          body:
-              'Sit between the prostrations and after the second rakah recite the Tashahhud.',
+          eyebrow: Strings.prayStepSittingEyebrow,
+          title: Strings.prayStepTashahhudTitle,
+          body: Strings.prayStepTashahhudBody,
         ),
         PrayerGuideStep(
           posture: PrayerPosture.salam,
-          eyebrow: 'CLOSING',
-          title: 'Salam',
-          body:
-              'Turn your head right and left saying "Assalamu Alaikum wa Rahmatullah" to complete the prayer.',
+          eyebrow: Strings.prayStepClosingEyebrow,
+          title: Strings.prayStepSalamTitle,
+          body: Strings.prayStepSalamBody,
         ),
       ];
 
@@ -301,11 +294,9 @@ class IslamicMockData {
       ];
 
   // ----- Profile / Settings -----
-  static const String profileLanguageValue = 'English';
-  static const String profileQuranTranslationValue = 'Saheeh International';
-  static const String profileLocationValue = 'Seoul';
-  static const String profileNotificationsLeadTime =
-      '10 minutes before each prayer';
+  /// Fallback shown in the profile location row when the user has not
+  /// picked a location yet.
+  static String get profileLocationValue => Strings.profileLocationNotSet;
 
   /// Default toggle values for the prayer notification sheet. Subtitles
   /// resolve via Strings so the sheet localizes correctly.
@@ -347,46 +338,47 @@ class IslamicMockData {
         LearnCategoryMock(id: 'food', label: Strings.learnCategoryFood),
       ];
 
-  static const List<LearnQuestionMock> learnQuestions = [
-    LearnQuestionMock(
-      categoryId: 'work',
-      categoryLabel: 'WORK',
-      title:
-          "How do I pray at work when there's no quiet space during lunch?",
-      answersCount: 3,
-      timestamp: '2 days ago',
-      isNewAnswer: true,
-    ),
-    LearnQuestionMock(
-      categoryId: 'family',
-      categoryLabel: 'FAMILY',
-      title:
-          "How should I tell my parents about converting to Islam if they don't accept it?",
-      answersCount: 7,
-      timestamp: '1 week ago',
-    ),
-    LearnQuestionMock(
-      categoryId: 'food',
-      categoryLabel: 'FOOD',
-      title: 'Is there a way to check whether store food is halal?',
-      answersCount: 4,
-      timestamp: '3 days ago',
-    ),
-    LearnQuestionMock(
-      categoryId: 'prayer',
-      categoryLabel: 'PRAYER',
-      title: 'What should I do if I forget which rakah I am on?',
-      answersCount: 5,
-      timestamp: '1 week ago',
-    ),
-    LearnQuestionMock(
-      categoryId: 'quran',
-      categoryLabel: "QUR'AN",
-      title: 'Is it okay to read the Qur\'an translation without Arabic?',
-      answersCount: 9,
-      timestamp: '2 weeks ago',
-    ),
-  ];
+  /// Mock list of recently asked questions. Strings.* are not const so the
+  /// list cannot be const either — it's recomputed on each access, which
+  /// also makes it react to a locale change without app restart.
+  static List<LearnQuestionMock> get learnQuestions => [
+        LearnQuestionMock(
+          categoryId: 'work',
+          categoryLabel: Strings.learnCategoryWork,
+          title: Strings.learnQuestion01Title,
+          answersCount: 3,
+          timestamp: Strings.learnQuestion01Timestamp,
+          isNewAnswer: true,
+        ),
+        LearnQuestionMock(
+          categoryId: 'family',
+          categoryLabel: Strings.learnCategoryFamily,
+          title: Strings.learnQuestion02Title,
+          answersCount: 7,
+          timestamp: Strings.learnQuestion02Timestamp,
+        ),
+        LearnQuestionMock(
+          categoryId: 'food',
+          categoryLabel: Strings.learnCategoryFood,
+          title: Strings.learnQuestion03Title,
+          answersCount: 4,
+          timestamp: Strings.learnQuestion03Timestamp,
+        ),
+        LearnQuestionMock(
+          categoryId: 'prayer',
+          categoryLabel: Strings.learnCategoryPrayer,
+          title: Strings.learnQuestion04Title,
+          answersCount: 5,
+          timestamp: Strings.learnQuestion04Timestamp,
+        ),
+        LearnQuestionMock(
+          categoryId: 'quran',
+          categoryLabel: Strings.learnCategoryQuran,
+          title: Strings.learnQuestion05Title,
+          answersCount: 9,
+          timestamp: Strings.learnQuestion05Timestamp,
+        ),
+      ];
 
   static List<KnowledgeArticleMock> get knowledgeArticles => [
         KnowledgeArticleMock(

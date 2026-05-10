@@ -160,6 +160,72 @@ class NoorSheetSelectableRow extends StatelessWidget {
 
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+
+/// Pill-shaped toggle that mirrors the new design — primary green when ON,
+/// muted sand (or charcoal in dark mode) when OFF, white thumb with a soft
+/// drop shadow. Replaces `Switch.adaptive` so the look stays consistent
+/// across iOS / Android.
+class NoorSwitch extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const NoorSwitch({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
+
+  static const double _width = 50;
+  static const double _height = 30;
+  static const double _padding = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    final n = context.noor;
+    final trackColor = value ? n.primary : n.lineStrong;
+    final thumbDiameter = _height - _padding * 2;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => onChanged(!value),
+      child: AnimatedContainer(
+        duration: IslamicDesignTokens.durFast,
+        curve: IslamicDesignTokens.easeNoor,
+        width: _width,
+        height: _height,
+        padding: const EdgeInsets.all(_padding),
+        decoration: BoxDecoration(
+          color: trackColor,
+          borderRadius: BorderRadius.circular(_height / 2),
+        ),
+        child: AnimatedAlign(
+          duration: IslamicDesignTokens.durFast,
+          curve: IslamicDesignTokens.easeNoor,
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            width: thumbDiameter,
+            height: thumbDiameter,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.18),
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+
 /// Convenience scaffold for a Noor-styled bottom sheet — wraps the
 /// children in [Material], a SafeArea, and a scroll view so individual
 /// sheets only declare their content.

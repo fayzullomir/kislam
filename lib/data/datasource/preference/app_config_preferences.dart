@@ -25,7 +25,10 @@ class AppConfigPreferences {
 
   bool get isOnboardingNotShown => !isOnboardingShown;
 
-  bool get isIntroNotShown => !isIntroShown;
+  bool get isMadhabSelected =>
+      _preferences.getBool(_keyIsMadhabSelected) ?? false;
+
+  bool get isMadhabNotSelected => !isMadhabSelected;
 
   bool get isLanguageSelected => _preferences.containsKey(_keyLanguage);
 

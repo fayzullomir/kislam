@@ -49,7 +49,7 @@ class PrayPage extends BasePage<PrayCubit, PrayState, PrayEvent> {
               Text(Strings.prayGuideLabel,
                   style: context.noor.tEyebrow),
               const SizedBox(height: 6),
-              Text(state.prayerName, style: context.noor.tDisplay),
+              Text(Strings.prayerDhuhr, style: context.noor.tDisplay),
               const SizedBox(height: 16),
               _SegmentedProgress(
                 total: totalSteps,
