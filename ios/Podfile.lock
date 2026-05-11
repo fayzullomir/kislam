@@ -1,11 +1,7 @@
 PODS:
   - auto_start_flutter (0.0.1):
     - Flutter
-  - connectivity_plus (0.0.1):
-    - Flutter
   - device_info_plus (0.0.1):
-    - Flutter
-  - external_app_launcher (0.0.1):
     - Flutter
   - Firebase/Analytics (11.15.0):
     - Firebase/Core
@@ -241,20 +237,10 @@ PODS:
     - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
-  - vibration (3.0.0):
-    - Flutter
-  - video_thumbnail (0.0.1):
-    - Flutter
-    - libwebp
-  - webview_flutter_wkwebview (0.0.1):
-    - Flutter
-    - FlutterMacOS
 
 DEPENDENCIES:
   - auto_start_flutter (from `.symlinks/plugins/auto_start_flutter/ios`)
-  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
-  - external_app_launcher (from `.symlinks/plugins/external_app_launcher/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -279,9 +265,6 @@ DEPENDENCIES:
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - store_checker (from `.symlinks/plugins/store_checker/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - vibration (from `.symlinks/plugins/vibration/ios`)
-  - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -313,12 +296,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   auto_start_flutter:
     :path: ".symlinks/plugins/auto_start_flutter/ios"
-  connectivity_plus:
-    :path: ".symlinks/plugins/connectivity_plus/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
-  external_app_launcher:
-    :path: ".symlinks/plugins/external_app_launcher/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -367,18 +346,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/store_checker/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
-  vibration:
-    :path: ".symlinks/plugins/vibration/ios"
-  video_thumbnail:
-    :path: ".symlinks/plugins/video_thumbnail/ios"
-  webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   auto_start_flutter: 68efca6fcf56550d9ea9a2a26c75bd770bda421c
-  connectivity_plus: 2a701ffec2c0ae28a48cf7540e279787e77c447d
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
-  external_app_launcher: ad55ac844aa21f2d2197d7cec58ff0d0dc40bbc0
   Firebase: d99ac19b909cd2c548339c2241ecd0d1599ab02e
   firebase_analytics: bf93e20703c95030404d6ddbb1adf05bf5c3885b
   firebase_core: 99a37263b3c27536063a7b601d9e2a49400a433c
@@ -427,9 +398,6 @@ SPEC CHECKSUMS:
   sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
   store_checker: a7be624ac44a4ba88e7917e71afe8433f197161e
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
-  vibration: 8e4d81c3e73ab229a9fb5ab2692f789c4a46d74d
-  video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
-  webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
 
 PODFILE CHECKSUM: 67b889872ca49ada43f8726063fd4bd49b1035bf
 
