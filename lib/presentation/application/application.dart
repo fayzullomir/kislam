@@ -23,6 +23,7 @@ import 'package:koreaislam/data/datasource/preference/theme_mode_preferences.dar
 import 'package:koreaislam/data/repositories/auth/session_repository.dart';
 import 'package:koreaislam/data/repositories/notification/notification_repository.dart';
 import 'package:koreaislam/domain/channels/app_theme_mode_channel.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
 import 'package:koreaislam/domain/channels/login_event_channel.dart';
 import 'package:koreaislam/domain/channels/logout_event_channel.dart';
 import 'package:koreaislam/domain/models/logout_event/logout_event_type.dart';
@@ -237,7 +238,7 @@ class _ApplicationState extends State<Application> {
   /// Configure light theme
   ThemeData _configureLightTheme() {
     return ThemeData(
-      fontFamily: 'Inter',
+      fontFamily: IslamicDesignTokens.fontBody,
       useMaterial3: false,
       colorScheme: _getLightModeColorScheme(),
     );
@@ -246,7 +247,7 @@ class _ApplicationState extends State<Application> {
   /// Configure dark theme
   ThemeData _configureDarkTheme() {
     return ThemeData(
-      fontFamily: 'Inter',
+      fontFamily: IslamicDesignTokens.fontBody,
       useMaterial3: false,
       brightness: Brightness.dark,
       colorScheme: _getDarkModeColorScheme(),

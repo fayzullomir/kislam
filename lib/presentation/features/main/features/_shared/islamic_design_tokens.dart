@@ -32,13 +32,9 @@ class IslamicDesignTokens {
   static const double s11 = 96;
 
   // ----- Type families -----
-  // App ships Inter today; Manrope / Plus Jakarta / Amiri Quran load from
-  // assets/fonts/ once the user drops the .ttf files in. Until then the
-  // engine falls back to the system font for these families.
   static const String fontDisplay = 'Manrope';
   static const String fontBody = 'Plus Jakarta Sans';
   static const String fontArabic = 'Amiri Quran';
-  static const String fontKorean = 'Pretendard Variable';
 
   // ----- Motion -----
   static const Curve easeNoor = Cubic(0.2, 0.7, 0.2, 1);
