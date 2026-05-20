@@ -2,7 +2,7 @@ name: koreaislam
 description: A Flutter application for Korean Islam organization.
 publish_to: 'none'
 
-version: 1.0.1+1001
+version: 1.0.2+1002
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
