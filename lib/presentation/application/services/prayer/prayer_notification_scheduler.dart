@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
@@ -53,33 +56,138 @@ class PrayerNotificationScheduler {
   final CalculationMethodPreferences _calculationMethodPreferences;
 
   bool _initialized = false;
+  bool _listenersWired = false;
 
-  /// One-shot setup: load the timezone database and tell
-  /// `tz` which zone the device is in. Must run before any
-  /// `zonedSchedule` call.
+  /// One-shot setup: load the timezone database, tell `tz` which zone
+  /// the device is in, pre-create the Android channel, and request the
+  /// runtime permissions zonedSchedule needs (POST_NOTIFICATIONS on
+  /// Android 13+, SCHEDULE_EXACT_ALARM on Android 14+). Must run before
+  /// any `zonedSchedule` call.
+  ///
+  /// Safe to call repeatedly — partial failures are isolated so a
+  /// timezone hiccup doesn't block channel creation, and the listener
+  /// wiring runs even when init has to fall back to UTC.
   Future<void> init() async {
     if (_initialized) return;
     try {
-      tz_data.initializeTimeZones();
-      final localName = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(localName));
+      await _initializeTimezone();
+      await _ensureAndroidChannel();
+      await _requestAndroidPermissions();
       _initialized = true;
-      AppLog.i('✅ Prayer scheduler initialized (tz=$localName)');
+      AppLog.i('✅ Prayer scheduler initialized (tz=${tz.local.name})');
+    } catch (e, s) {
+      AppLog.e('❌ Prayer scheduler init failed', error: e, stackTrace: s);
+      _recordToCrashlytics(e, s, reason: 'PrayerScheduler.init');
+      // Mark initialized anyway — the fallback UTC zone keeps tz.local
+      // usable and we don't want to permanently block scheduling because
+      // a single sub-step threw.
+      _initialized = true;
+    } finally {
+      _wireListenersOnce();
+    }
+  }
 
-      _wireListeners();
+  /// Best-effort timezone setup. `flutter_timezone` usually returns an
+  /// IANA name like `Asia/Seoul`, but some Samsung/Xiaomi ROMs return
+  /// short forms (`KST`, `MSK`) that the bundled IANA database doesn't
+  /// know about. In that case we fall back to UTC so `tz.local` stays
+  /// usable — `TZDateTime.from(dt, tz.local)` preserves the absolute
+  /// instant either way, so the user still gets a notification at the
+  /// correct wall-clock minute.
+  Future<void> _initializeTimezone() async {
+    tz_data.initializeTimeZones();
+    // Seed a known-good default first so any failure below still leaves
+    // tz.local pointing somewhere valid.
+    tz.setLocalLocation(tz.UTC);
+    String? localName;
+    try {
+      localName = await FlutterTimezone.getLocalTimezone();
     } catch (e, s) {
       AppLog.e(
-        '❌ Prayer scheduler init failed',
+        '❌ FlutterTimezone.getLocalTimezone failed — staying on UTC',
         error: e,
         stackTrace: s,
       );
+      _recordToCrashlytics(e, s,
+          reason: 'PrayerScheduler.FlutterTimezone.getLocalTimezone');
+      return;
+    }
+    try {
+      tz.setLocalLocation(tz.getLocation(localName));
+    } catch (e, s) {
+      AppLog.e(
+        '❌ tz.getLocation failed for "$localName" — staying on UTC',
+        error: e,
+        stackTrace: s,
+      );
+      _recordToCrashlytics(e, s,
+          reason: 'PrayerScheduler.tz.getLocation("$localName")');
+    }
+  }
+
+  /// Pre-create the Android notification channel so the very first
+  /// scheduled notification has somewhere to land. Without this, on
+  /// Android 8+ a malformed schedule can drop the notification silently
+  /// because the OS rejects channels that don't exist yet.
+  Future<void> _ensureAndroidChannel() async {
+    if (!Platform.isAndroid) return;
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) return;
+    try {
+      await android.createNotificationChannel(
+        const AndroidNotificationChannel(
+          _channelId,
+          _channelName,
+          description: _channelDescription,
+          importance: Importance.high,
+          enableVibration: true,
+          playSound: true,
+        ),
+      );
+    } catch (e, s) {
+      AppLog.e('❌ createNotificationChannel failed',
+          error: e, stackTrace: s);
+      _recordToCrashlytics(e, s,
+          reason: 'PrayerScheduler.createNotificationChannel');
+    }
+  }
+
+  /// Belt-and-braces permission request — the onboarding `PermissionsPage`
+  /// already asks for `Permission.notification`, but on Android 14+
+  /// `SCHEDULE_EXACT_ALARM` needs a separate runtime grant, and an
+  /// upgrade from an older app version may bypass the onboarding flow
+  /// entirely (so POST_NOTIFICATIONS is still ungranted). Asking again
+  /// here is a no-op when permission already exists.
+  Future<void> _requestAndroidPermissions() async {
+    if (!Platform.isAndroid) return;
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) return;
+    try {
+      await android.requestNotificationsPermission();
+    } catch (e, s) {
+      AppLog.e('❌ requestNotificationsPermission failed',
+          error: e, stackTrace: s);
+      _recordToCrashlytics(e, s,
+          reason: 'PrayerScheduler.requestNotificationsPermission');
+    }
+    try {
+      await android.requestExactAlarmsPermission();
+    } catch (e, s) {
+      AppLog.e('❌ requestExactAlarmsPermission failed',
+          error: e, stackTrace: s);
+      _recordToCrashlytics(e, s,
+          reason: 'PrayerScheduler.requestExactAlarmsPermission');
     }
   }
 
   /// Listens to every preference that affects the schedule. Any change
   /// triggers a reschedule so the next reminder always reflects the
   /// latest user choice.
-  void _wireListeners() {
+  void _wireListenersOnce() {
+    if (_listenersWired) return;
+    _listenersWired = true;
     _prayerNotificationPreferences.notifier.addListener(rescheduleAll);
     _locationPreferences.notifier.addListener(rescheduleAll);
     _madhabPreferences.notifier.addListener(rescheduleAll);
@@ -91,8 +199,8 @@ class PrayerNotificationScheduler {
   /// repeatedly — no duplicate IDs ever land.
   Future<void> rescheduleAll() async {
     if (!_initialized) {
-      AppLog.w('⚠️ rescheduleAll() called before init()');
-      return;
+      AppLog.w('⚠️ rescheduleAll() before init() — running init first');
+      await init();
     }
     try {
       await _cancelAll();
@@ -134,6 +242,7 @@ class PrayerNotificationScheduler {
       AppLog.i('✅ Prayer notifications scheduled: ${scheduled.join(', ')}');
     } catch (e, s) {
       AppLog.e('❌ rescheduleAll failed', error: e, stackTrace: s);
+      _recordToCrashlytics(e, s, reason: 'PrayerScheduler.rescheduleAll');
     }
   }
 
@@ -156,17 +265,40 @@ class PrayerNotificationScheduler {
         ? Strings.prayerNotificationBodyNow(name)
         : Strings.prayerNotificationBody(name);
 
-    await _plugin.zonedSchedule(
-      id,
-      Strings.prayerNotificationTitle,
-      body,
-      tzFireAt,
-      _platformDetails(),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      payload: 'prayer:${prayer.name}',
-    );
+    // Try the exact-allow-while-idle mode first (most reliable). If the
+    // OS denies it (Android 14+ without SCHEDULE_EXACT_ALARM grant),
+    // fall back to the inexact mode so the user still gets a reminder
+    // — even if it's a few minutes off.
+    try {
+      await _plugin.zonedSchedule(
+        id,
+        Strings.prayerNotificationTitle,
+        body,
+        tzFireAt,
+        _platformDetails(),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: 'prayer:${prayer.name}',
+      );
+    } catch (e, s) {
+      AppLog.w(
+        '⚠️ exactAllowWhileIdle denied — retrying with inexact mode',
+        error: e,
+        stackTrace: s,
+      );
+      await _plugin.zonedSchedule(
+        id,
+        Strings.prayerNotificationTitle,
+        body,
+        tzFireAt,
+        _platformDetails(),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: 'prayer:${prayer.name}',
+      );
+    }
     scheduled.add('${prayer.name}+$dayOffset@${tzFireAt.toIso8601String()}');
   }
 
@@ -201,5 +333,24 @@ class PrayerNotificationScheduler {
       presentSound: true,
     );
     return const NotificationDetails(android: android, iOS: ios);
+  }
+
+  /// AppLog is silenced in release (Level.off), which hid the real
+  /// cause of "notifications don't fire" on shipped APKs. Forwarding
+  /// the same error to Crashlytics gives us a release-visible trail
+  /// without changing the dev-time log output.
+  void _recordToCrashlytics(Object error, StackTrace stack,
+      {required String reason}) {
+    try {
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stack,
+        reason: reason,
+        fatal: false,
+      );
+    } catch (_) {
+      // Crashlytics may not be initialized yet during very early app
+      // startup — swallow because the AppLog above already captured it.
+    }
   }
 }
