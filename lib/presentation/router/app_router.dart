@@ -14,6 +14,7 @@ import 'package:koreaislam/presentation/features/auth/otp_verification/otp_verif
 import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_launch_type.dart';
 import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_page.dart';
 import 'package:koreaislam/presentation/features/auth/sign_up/sign_up_page.dart';
+import 'package:koreaislam/presentation/features/book_reader/book_reader_page.dart';
 import 'package:koreaislam/presentation/features/chat/chat_page.dart';
 import 'package:koreaislam/presentation/features/gender/gender_selection_page.dart';
 import 'package:koreaislam/presentation/features/location/location_selection_page.dart';
@@ -38,6 +39,7 @@ import 'package:koreaislam/presentation/features/main/features/pray/pray_page.da
 import 'package:koreaislam/presentation/features/main/features/profile/profile_page.dart';
 import 'package:koreaislam/presentation/features/main/features/quran/quran_page.dart';
 import 'package:koreaislam/presentation/features/main/main_page.dart';
+import 'package:koreaislam/presentation/features/namaz_detail/namaz_detail_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -144,6 +146,19 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: QiblaRoute.page,
           path: '/qibla',
+        ),
+
+        /// Book reader — full-screen, opened from a Kitoblar list card.
+        AutoRoute(
+          page: BookReaderRoute.page,
+          path: '/book_reader',
+        ),
+
+        /// Namoz step-by-step detail — opened from a variant chip on the
+        /// Namoz tab. Carries `namazId` + `variantId` query params.
+        AutoRoute(
+          page: NamazDetailRoute.page,
+          path: '/namaz_detail',
         ),
 
         ///
