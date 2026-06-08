@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -58,6 +59,33 @@ class PrayerNotificationScheduler {
   bool _initialized = false;
   bool _listenersWired = false;
 
+  // TEMP diagnostics — release-visible trail surfaced in the notification sheet.
+  final ValueNotifier<List<String>> diagnostics =
+      ValueNotifier<List<String>>(<String>[]);
+
+  void _trace(String line) {
+    final ts = DateTime.now().toIso8601String().substring(11, 19);
+    diagnostics.value = [...diagnostics.value, '$ts  $line'];
+    AppLog.d('[PrayerDiag] $line');
+  }
+
+  Future<void> _tracePermissions() async {
+    if (!Platform.isAndroid) return;
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) {
+      _trace('perm: android impl == null');
+      return;
+    }
+    try {
+      final enabled = await android.areNotificationsEnabled();
+      final canExact = await android.canScheduleExactNotifications();
+      _trace('perm: notifEnabled=$enabled canExact=$canExact');
+    } catch (e) {
+      _trace('perm check failed: $e');
+    }
+  }
+
   /// One-shot setup: load the timezone database, tell `tz` which zone
   /// the device is in, pre-create the Android channel, and request the
   /// runtime permissions zonedSchedule needs (POST_NOTIFICATIONS on
@@ -74,8 +102,11 @@ class PrayerNotificationScheduler {
       await _ensureAndroidChannel();
       await _requestAndroidPermissions();
       _initialized = true;
+      _trace('init ok (tz=${tz.local.name})');
+      await _tracePermissions();
       AppLog.i('✅ Prayer scheduler initialized (tz=${tz.local.name})');
     } catch (e, s) {
+      _trace('init FAILED: $e');
       AppLog.e('❌ Prayer scheduler init failed', error: e, stackTrace: s);
       _recordToCrashlytics(e, s, reason: 'PrayerScheduler.init');
       // Mark initialized anyway — the fallback UTC zone keeps tz.local
@@ -203,23 +234,31 @@ class PrayerNotificationScheduler {
       await init();
     }
     try {
+      diagnostics.value = <String>[];
+      _trace('reschedule start');
+      await _tracePermissions();
       await _cancelAll();
 
       final today = _prayerTimesRepository.computeForToday();
       final tomorrow = _prayerTimesRepository
           .computeForDate(DateTime.now().add(const Duration(days: 1)));
       if (today == null) {
+        _trace('SKIPPED — today == null (no coords / compute failed)');
         AppLog.d(
             '⚠️ Reschedule skipped — no coordinates / computation failed');
         return;
       }
 
       final settings = _prayerNotificationPreferences.settings;
+      _trace('lead=${settings.leadTime.minutes}m tomorrow=${tomorrow != null}');
       final scheduled = <String>[];
 
       for (final prayer in PrayerName.values) {
         if (prayer == PrayerName.sunrise) continue;
-        if (!settings.isEnabled(prayer)) continue;
+        if (!settings.isEnabled(prayer)) {
+          _trace('${prayer.name}: disabled');
+          continue;
+        }
 
         await _scheduleFor(
           prayer: prayer,
@@ -239,8 +278,10 @@ class PrayerNotificationScheduler {
         }
       }
 
+      _trace('done — ${scheduled.length} scheduled');
       AppLog.i('✅ Prayer notifications scheduled: ${scheduled.join(', ')}');
     } catch (e, s) {
+      _trace('reschedule FAILED: $e');
       AppLog.e('❌ rescheduleAll failed', error: e, stackTrace: s);
       _recordToCrashlytics(e, s, reason: 'PrayerScheduler.rescheduleAll');
     }
@@ -256,7 +297,10 @@ class PrayerNotificationScheduler {
     final prayerTime = times.timeOf(prayer);
     final fireAt = prayerTime.subtract(Duration(minutes: leadTime.minutes));
     final now = DateTime.now();
-    if (!fireAt.isAfter(now)) return;
+    if (!fireAt.isAfter(now)) {
+      _trace('${prayer.name}+$dayOffset: past (${fireAt.toIso8601String()})');
+      return;
+    }
 
     final tzFireAt = tz.TZDateTime.from(fireAt, tz.local);
     final id = _notificationId(prayer, dayOffset);
@@ -281,7 +325,9 @@ class PrayerNotificationScheduler {
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: 'prayer:${prayer.name}',
       );
+      _trace('${prayer.name}+$dayOffset: EXACT @ ${tzFireAt.toIso8601String()}');
     } catch (e, s) {
+      _trace('${prayer.name}+$dayOffset: exact denied → inexact ($e)');
       AppLog.w(
         '⚠️ exactAllowWhileIdle denied — retrying with inexact mode',
         error: e,
@@ -298,8 +344,42 @@ class PrayerNotificationScheduler {
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: 'prayer:${prayer.name}',
       );
+      _trace('${prayer.name}+$dayOffset: INEXACT @ ${tzFireAt.toIso8601String()}');
     }
     scheduled.add('${prayer.name}+$dayOffset@${tzFireAt.toIso8601String()}');
+  }
+
+  // TEMP diagnostics — fires an immediate notification and one 10s out to
+  // separate "scheduling broken" from "delivery broken" in release.
+  Future<void> fireTestNotification() async {
+    await init();
+    try {
+      await _plugin.show(
+        99999,
+        'Test (now)',
+        'Immediate notification',
+        _platformDetails(),
+      );
+      _trace('test: show() called');
+    } catch (e) {
+      _trace('test show FAILED: $e');
+    }
+    try {
+      final at = tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10));
+      await _plugin.zonedSchedule(
+        99998,
+        'Test (+10s)',
+        'Scheduled notification',
+        at,
+        _platformDetails(),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+      _trace('test: scheduled +10s @ ${at.toIso8601String()}');
+    } catch (e) {
+      _trace('test schedule FAILED: $e');
+    }
   }
 
   Future<void> _cancelAll() async {

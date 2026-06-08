@@ -8,6 +8,7 @@ import 'package:koreaislam/data/datasource/preference/prayer_notification_prefer
 import 'package:koreaislam/domain/models/prayer/prayer_name.dart';
 import 'package:koreaislam/domain/models/prayer_notification/prayer_notification_lead_time.dart';
 import 'package:koreaislam/presentation/application/di/get_it_injection.dart';
+import 'package:koreaislam/presentation/application/services/prayer/prayer_notification_scheduler.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/noor_sheet.dart';
@@ -34,6 +35,8 @@ class NotificationSettingsSheet extends StatefulWidget {
 class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
   final PrayerNotificationPreferences _prefs =
       getIt<PrayerNotificationPreferences>();
+  final PrayerNotificationScheduler _scheduler =
+      getIt<PrayerNotificationScheduler>();
   bool _dailyWisdomOn = false;
 
   /// Display order matches the home prayer-times row.
@@ -142,9 +145,66 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                 ),
               ),
             ],
+            _buildDiagnostics(context),
           ],
         );
       },
+    );
+  }
+
+  // TEMP diagnostics — release-visible scheduler trail + test trigger.
+  Widget _buildDiagnostics(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Diagnostika', style: context.noor.tEyebrow),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _scheduler.rescheduleAll(),
+                  child: const Text('Qayta rejalashtir'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _scheduler.fireTestNotification(),
+                  child: const Text('Test (10s)'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ValueListenableBuilder<List<String>>(
+            valueListenable: _scheduler.diagnostics,
+            builder: (_, lines, __) {
+              return Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(maxHeight: 260),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.noor.surface,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SingleChildScrollView(
+                  child: SelectableText(
+                    lines.isEmpty ? '— hali yozuv yo\'q —' : lines.join('\n'),
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
