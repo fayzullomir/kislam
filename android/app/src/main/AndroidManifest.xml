@@ -9,8 +9,14 @@
     <!-- Notifications Required for Android 13+ (API 33+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Scheduled prayer-time notifications (flutter_local_notifications) -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- Scheduled prayer-time notifications (flutter_local_notifications).
+         USE_EXACT_ALARM (API 33+) is auto-granted for this reminder-class app,
+         so no runtime prompt is needed. SCHEDULE_EXACT_ALARM covers API 31-32
+         (Android 12/12L) where USE_EXACT_ALARM does not yet exist; capped at
+         maxSdkVersion=32 so it never applies on API 33+, which keeps it out of
+         Play's exact-alarm declaration requirement. API <=30 needs no permission. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 

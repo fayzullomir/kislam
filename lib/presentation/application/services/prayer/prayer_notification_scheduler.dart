@@ -87,10 +87,14 @@ class PrayerNotificationScheduler {
   }
 
   /// One-shot setup: load the timezone database, tell `tz` which zone
-  /// the device is in, pre-create the Android channel, and request the
-  /// runtime permissions zonedSchedule needs (POST_NOTIFICATIONS on
-  /// Android 13+, SCHEDULE_EXACT_ALARM on Android 14+). Must run before
+  /// the device is in, and pre-create the Android channel. Must run before
   /// any `zonedSchedule` call.
+  ///
+  /// Does not request any runtime permission: POST_NOTIFICATIONS is owned
+  /// by the onboarding `PermissionsPage`, and exact-alarm scheduling is
+  /// covered by the manifest (USE_EXACT_ALARM on API 33+, SCHEDULE_EXACT_ALARM
+  /// on API 31-32 — both granted without a runtime prompt). `zonedSchedule`
+  /// simply no-ops when notifications are still ungranted.
   ///
   /// Safe to call repeatedly — partial failures are isolated so a
   /// timezone hiccup doesn't block channel creation, and the listener
@@ -100,7 +104,6 @@ class PrayerNotificationScheduler {
     try {
       await _initializeTimezone();
       await _ensureAndroidChannel();
-      await _requestAndroidPermissions();
       _initialized = true;
       _trace('init ok (tz=${tz.local.name})');
       await _tracePermissions();
@@ -181,35 +184,6 @@ class PrayerNotificationScheduler {
           error: e, stackTrace: s);
       _recordToCrashlytics(e, s,
           reason: 'PrayerScheduler.createNotificationChannel');
-    }
-  }
-
-  /// Belt-and-braces permission request — the onboarding `PermissionsPage`
-  /// already asks for `Permission.notification`, but on Android 14+
-  /// `SCHEDULE_EXACT_ALARM` needs a separate runtime grant, and an
-  /// upgrade from an older app version may bypass the onboarding flow
-  /// entirely (so POST_NOTIFICATIONS is still ungranted). Asking again
-  /// here is a no-op when permission already exists.
-  Future<void> _requestAndroidPermissions() async {
-    if (!Platform.isAndroid) return;
-    final android = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
-    if (android == null) return;
-    try {
-      await android.requestNotificationsPermission();
-    } catch (e, s) {
-      AppLog.e('❌ requestNotificationsPermission failed',
-          error: e, stackTrace: s);
-      _recordToCrashlytics(e, s,
-          reason: 'PrayerScheduler.requestNotificationsPermission');
-    }
-    try {
-      await android.requestExactAlarmsPermission();
-    } catch (e, s) {
-      AppLog.e('❌ requestExactAlarmsPermission failed',
-          error: e, stackTrace: s);
-      _recordToCrashlytics(e, s,
-          reason: 'PrayerScheduler.requestExactAlarmsPermission');
     }
   }
 
