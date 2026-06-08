@@ -39,20 +39,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBnJD9zOBQu4BO0MAdWEJKE0E0z48-zsA8',
-    appId: '1:376270232647:android:d48620babebb2555d8a562',
-    messagingSenderId: '376270232647',
-    projectId: 'umra-link',
-    storageBucket: 'umra-link.firebasestorage.app',
+    apiKey: 'AIzaSyCtkKEaUb9jHK0_AQNdSpDptfIJVBbXkXI',
+    appId: '1:793244831536:android:89dd352020320b865bc2f5',
+    messagingSenderId: '793244831536',
+    projectId: 'korean-muslim-app',
+    storageBucket: 'korean-muslim-app.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD7CaVpFLF1eEio-Uu1dcvtmQFCizxRJhM',
-    appId: '1:376270232647:ios:834cc2d6963c764fd8a562',
-    messagingSenderId: '376270232647',
-    projectId: 'umra-link',
-    storageBucket: 'umra-link.firebasestorage.app',
+    apiKey: 'AIzaSyBieHp96FuNuzXomI_bD2xopXf1sI9IB-s',
+    appId: '1:793244831536:ios:a05d68d1a08a11a95bc2f5',
+    messagingSenderId: '793244831536',
+    projectId: 'korean-muslim-app',
+    storageBucket: 'korean-muslim-app.firebasestorage.app',
     iosBundleId: 'org.koreaislam.mobile',
   );
-
 }

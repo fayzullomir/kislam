@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "376270232647",
-    "project_id": "umra-link",
-    "storage_bucket": "umra-link.firebasestorage.app"
+    "project_number": "793244831536",
+    "project_id": "korean-muslim-app",
+    "storage_bucket": "korean-muslim-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:376270232647:android:d48620babebb2555d8a562",
+        "mobilesdk_app_id": "1:793244831536:android:89dd352020320b865bc2f5",
         "android_client_info": {
           "package_name": "org.koreaislam.mobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBnJD9zOBQu4BO0MAdWEJKE0E0z48-zsA8"
+          "current_key": "AIzaSyCtkKEaUb9jHK0_AQNdSpDptfIJVBbXkXI"
         }
       ],
       "services": {

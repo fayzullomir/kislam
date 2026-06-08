@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyD7CaVpFLF1eEio-Uu1dcvtmQFCizxRJhM</string>
+	<string>AIzaSyBieHp96FuNuzXomI_bD2xopXf1sI9IB-s</string>
 	<key>GCM_SENDER_ID</key>
-	<string>376270232647</string>
+	<string>793244831536</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>org.koreaislam.mobile</string>
 	<key>PROJECT_ID</key>
-	<string>umra-link</string>
+	<string>korean-muslim-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>umra-link.firebasestorage.app</string>
+	<string>korean-muslim-app.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:376270232647:ios:834cc2d6963c764fd8a562</string>
+	<string>1:793244831536:ios:a05d68d1a08a11a95bc2f5</string>
 </dict>
 </plist>
