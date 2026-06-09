@@ -8,6 +8,8 @@ import 'package:koreaislam/domain/models/gender/gender.dart';
 import 'package:koreaislam/domain/models/language/language.dart';
 import 'package:koreaislam/domain/models/madhab/madhab.dart';
 import 'package:koreaislam/domain/models/prayer/prayer_name.dart';
+import 'package:koreaislam/domain/models/prayer/prayer_log_status.dart';
+import 'package:koreaislam/domain/models/prayer/prayer_log_type.dart';
 import 'package:koreaislam/domain/models/prayer_notification/prayer_notification_lead_time.dart';
 import 'package:koreaislam/domain/models/service/service_type.dart';
 import 'package:koreaislam/domain/models/theme/app_theme_mode.dart';
@@ -76,6 +78,40 @@ extension PrayerNameResourceExtension on PrayerName {
         return Strings.prayerMaghrib;
       case PrayerName.isha:
         return Strings.prayerIsha;
+    }
+  }
+}
+
+extension PrayerLogTypeResourceExtension on PrayerLogType {
+  String get localizedName {
+    switch (this) {
+      case PrayerLogType.fajr:
+        return Strings.prayerFajr;
+      case PrayerLogType.dhuhr:
+        return Strings.prayerDhuhr;
+      case PrayerLogType.asr:
+        return Strings.prayerAsr;
+      case PrayerLogType.maghrib:
+        return Strings.prayerMaghrib;
+      case PrayerLogType.isha:
+        return Strings.prayerIsha;
+      case PrayerLogType.vitr:
+        return Strings.prayerVitr;
+    }
+  }
+}
+
+extension PrayerLogStatusResourceExtension on PrayerLogStatus {
+  String get localizedName {
+    switch (this) {
+      case PrayerLogStatus.jamoat:
+        return Strings.qadaTrackerStatusJamoat;
+      case PrayerLogStatus.onTime:
+        return Strings.qadaTrackerStatusOnTime;
+      case PrayerLogStatus.late:
+        return Strings.qadaTrackerStatusLate;
+      case PrayerLogStatus.missed:
+        return Strings.qadaTrackerStatusMissed;
     }
   }
 }

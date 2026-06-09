@@ -11,6 +11,7 @@ import 'package:koreaislam/data/repositories/notification/notification_repositor
 import 'package:koreaislam/data/repositories/file/file_upload_repository.dart';
 import 'package:koreaislam/data/repositories/language/language_repository.dart';
 import 'package:koreaislam/data/repositories/prayer_times/prayer_times_repository.dart';
+import 'package:koreaislam/data/repositories/prayer_log/prayer_log_repository.dart';
 import 'package:koreaislam/data/repositories/profile/profile_repository.dart';
 import 'package:koreaislam/data/repositories/region/region_repository.dart';
 import 'package:koreaislam/data/repositories/service/service_repository.dart';
@@ -35,6 +36,8 @@ extension GetItModuleExtension on GetIt {
     registerLazySingleton(() => PrayerTimesRepository(get(), get(), get()));
 
     registerLazySingleton(() => ProfileRepository(get(), get()));
+
+    registerLazySingleton(() => PrayerLogRepository(get()));
 
     registerLazySingleton(() => RegionRepository(get()));
 

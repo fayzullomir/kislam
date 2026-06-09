@@ -2,6 +2,7 @@ import 'package:koreaislam/data/datasource/floor/dao/attached_child_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/employee_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/group_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/parent_entity_dao.dart';
+import 'package:koreaislam/data/datasource/floor/dao/prayer_log_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/student_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/tenant_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/user_entity_dao.dart';
@@ -42,6 +43,11 @@ extension GetItModuleDatabase on GetIt {
 
     registerSingletonWithDependencies<EmployeeEntityDao>(
           () => get<AppDatabase>().employeeEntityDao,
+      dependsOn: [AppDatabase],
+    );
+
+    registerSingletonWithDependencies<PrayerLogDao>(
+      () => get<AppDatabase>().prayerLogDao,
       dependsOn: [AppDatabase],
     );
 

@@ -5,6 +5,7 @@ import 'package:koreaislam/data/datasource/floor/dao/attached_child_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/employee_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/group_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/parent_entity_dao.dart';
+import 'package:koreaislam/data/datasource/floor/dao/prayer_log_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/student_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/tenant_entity_dao.dart';
 import 'package:koreaislam/data/datasource/floor/dao/user_entity_dao.dart';
@@ -14,6 +15,7 @@ import 'package:koreaislam/data/datasource/floor/entities/attached_child_entity.
 import 'package:koreaislam/data/datasource/floor/entities/employee_entity.dart';
 import 'package:koreaislam/data/datasource/floor/entities/group_entity.dart';
 import 'package:koreaislam/data/datasource/floor/entities/parent_entity.dart';
+import 'package:koreaislam/data/datasource/floor/entities/prayer_log_entity.dart';
 import 'package:koreaislam/data/datasource/floor/entities/student_entity.dart';
 import 'package:koreaislam/data/datasource/floor/entities/tenant_entity.dart';
 import 'package:koreaislam/data/datasource/floor/entities/user_entity.dart';
@@ -32,11 +34,12 @@ part 'app_database.g.dart';
     ParentEntity,
     EmployeeEntity,
     AttachedChildEntity,
+    PrayerLogEntity,
   ],
   version: AppDatabase._schemaVersion,
 )
 abstract class AppDatabase extends FloorDatabase {
-  static const int _schemaVersion = 5;
+  static const int _schemaVersion = 8;
   static const String _databaseName = "app_database.db";
 
   GroupEntityDao get groupEntityDao;
@@ -46,13 +49,19 @@ abstract class AppDatabase extends FloorDatabase {
   UserEntityDao get userEntityDao;
   AttachedChildDao get attachedChildDao;
   EmployeeEntityDao get employeeEntityDao;
+  PrayerLogDao get prayerLogDao;
 
   static Future<AppDatabase> initializeDatabase() async {
     try {
       final database = await $FloorAppDatabase
           .databaseBuilder(_databaseName)
           .addCallback(databaseCallback)
-          .addMigrations([migration1to2])
+          .addMigrations([
+            migration1to2,
+            migration5to6,
+            migration6to7,
+            migration7to8,
+          ])
           .build();
 
       return database;

@@ -27,6 +27,7 @@ import 'package:koreaislam/presentation/features/media/photo/locale_image_viewer
 import 'package:koreaislam/presentation/features/notification/notification_list_page.dart';
 import 'package:koreaislam/presentation/features/permission/permissions_page.dart';
 import 'package:koreaislam/presentation/features/profile/edit/profile_edit_page.dart';
+import 'package:koreaislam/presentation/features/qada_tracker/qada_tracker_page.dart';
 import 'package:koreaislam/presentation/features/qibla/qibla_page.dart';
 import 'package:koreaislam/presentation/features/region/country/country_selection_page.dart';
 import 'package:koreaislam/presentation/features/region/district/district_selection_page.dart';
@@ -146,6 +147,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: QiblaRoute.page,
           path: '/qibla',
+        ),
+
+        /// Qazo (missed-prayer) tracker — opened from Home quick links.
+        AutoRoute(
+          page: QadaTrackerRoute.page,
+          path: '/qada-tracker',
         ),
 
         /// Book reader — full-screen, opened from a Kitoblar list card.

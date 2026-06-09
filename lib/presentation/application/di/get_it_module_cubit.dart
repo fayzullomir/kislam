@@ -12,6 +12,7 @@ import 'package:koreaislam/presentation/features/language/set/set_language_cubit
 import 'package:koreaislam/presentation/features/notification/notification_list_cubit.dart';
 import 'package:koreaislam/presentation/features/permission/permissions_cubit.dart';
 import 'package:koreaislam/presentation/features/profile/edit/profile_edit_cubit.dart';
+import 'package:koreaislam/presentation/features/qada_tracker/qada_tracker_cubit.dart';
 import 'package:koreaislam/presentation/features/qibla/qibla_cubit.dart';
 import 'package:koreaislam/presentation/features/region/country/country_selection_cubit.dart';
 import 'package:koreaislam/presentation/features/region/district/district_selection_cubit.dart';
@@ -53,6 +54,8 @@ extension GetItModuleApp on GetIt {
     registerFactory(() => PermissionsCubit());
     registerFactory(() => PublishedArticleListCubit(get()));
     registerFactory(() => ProfileEditCubit(get(), get()));
+
+    registerFactory(() => QazoCubit(get()));
     registerFactory(() => QiblaCubit());
 
     registerFactory(() => RegionSelectionCubit(get(), get()));
