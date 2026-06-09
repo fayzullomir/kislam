@@ -15,6 +15,7 @@ import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_launch_typ
 import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_page.dart';
 import 'package:koreaislam/presentation/features/auth/sign_up/sign_up_page.dart';
 import 'package:koreaislam/presentation/features/book_reader/book_reader_page.dart';
+import 'package:koreaislam/presentation/features/monthly_prayer_times/monthly_prayer_times_page.dart';
 import 'package:koreaislam/presentation/features/chat/chat_page.dart';
 import 'package:koreaislam/presentation/features/gender/gender_selection_page.dart';
 import 'package:koreaislam/presentation/features/location/location_selection_page.dart';
@@ -149,7 +150,13 @@ class AppRouter extends _$AppRouter {
           path: '/qibla',
         ),
 
-        /// Qazo (missed-prayer) tracker — opened from Home quick links.
+        /// Monthly prayer-time calendar — opened from Home quick links.
+        AutoRoute(
+          page: MonthlyPrayerTimesRoute.page,
+          path: '/monthly-prayer-times',
+        ),
+
+        /// Qada Tracker (missed-prayer) — opened from Home quick links.
         AutoRoute(
           page: QadaTrackerRoute.page,
           path: '/qada-tracker',
