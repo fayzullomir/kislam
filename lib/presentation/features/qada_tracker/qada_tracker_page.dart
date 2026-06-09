@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/domain/models/prayer/prayer_log_type.dart';
 import 'package:koreaislam/domain/models/prayer/prayer_log_status.dart';
-import 'package:koreaislam/presentation/features/calendar/calendar_localization.dart';
+import 'package:koreaislam/presentation/features/monthly_prayer_times/monthly_prayer_times_localization.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/qada_tracker/prayer_log_sheet.dart';
@@ -239,7 +239,7 @@ class _DayCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  CalendarLocalization.weekdayShort(day.weekday),
+                  MonthlyPrayerTimesLocalization.weekdayShort(day.weekday),
                   style: TextStyle(
                     fontFamily: IslamicDesignTokens.fontBody,
                     fontSize: 11,
@@ -392,7 +392,7 @@ class _SelectedDateRow extends StatelessWidget {
         state.selectedDate.month == now.month &&
         state.selectedDate.day == now.day;
     final dateLabel = '${state.selectedDate.day}-'
-        '${CalendarLocalization.monthName(state.selectedDate.month).toLowerCase()}';
+        '${MonthlyPrayerTimesLocalization.monthName(state.selectedDate.month).toLowerCase()}';
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

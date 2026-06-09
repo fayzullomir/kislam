@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
 import 'package:koreaislam/domain/models/prayer/prayer_name.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_design_tokens.dart';
+import 'package:koreaislam/presentation/features/main/features/_shared/library_mock_data.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/noor_tokens.dart';
 import 'package:koreaislam/presentation/features/main/features/_shared/islamic_mock_data.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
@@ -54,15 +55,23 @@ class HomePage extends BasePage<HomeCubit, HomeState, HomeEvent> {
       case HomeQuickLinkId.qibla:
         context.router.push(QiblaRoute());
         break;
+      case HomeQuickLinkId.monthlyPrayerTimes:
+        context.router.push(MonthlyPrayerTimesRoute());
+        break;
+      case HomeQuickLinkId.qadaTracker:
+        context.router.push(QadaTrackerRoute());
+        break;
       case HomeQuickLinkId.quran:
-        context.tabsRouter.setActiveIndex(1);
+        context.router.push(
+          BookReaderRoute(bookId: LibraryMockData.quranBookId),
+        );
         break;
       case HomeQuickLinkId.dua:
         // No dedicated route yet — surface inside Learn (Q&A) for now.
         context.tabsRouter.setActiveIndex(3);
         break;
       case HomeQuickLinkId.halalMap:
-        context.tabsRouter.setActiveIndex(3);
+        context.router.push(HalalMapRoute());
         break;
     }
   }

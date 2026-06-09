@@ -8,14 +8,17 @@ class PermissionsState with _$PermissionsState {
     //
     @Default(0) int currentPageIndex,
     //
+    @Default(false) bool isAutoStartAvailable,
+    //
   }) = _PermissionsState;
 
   /// Onboarding permission steps. The notification + location pair is
   /// shown on every platform; the battery-optimization and OEM-autostart
   /// steps are Android-only because their underlying APIs don't exist
-  /// on iOS. We always include the autostart step on Android — the
-  /// `auto_start_flutter` plugin internally falls back to a no-op /
-  /// generic app-info screen when the OEM isn't supported.
+  /// on iOS. The autostart step is only included when the device's OEM
+  /// actually exposes an autostart settings page ([isAutoStartAvailable],
+  /// resolved by the cubit); on stock Android and unsupported brands the
+  /// step is skipped entirely so the user never sees a dead-end screen.
   List<PermissionPageData> get permissions {
     final base = <PermissionPageData>[
       PermissionPageData(
@@ -34,7 +37,7 @@ class PermissionsState with _$PermissionsState {
       ),
     ];
     if (Platform.isAndroid) {
-      base.addAll([
+      base.add(
         PermissionPageData(
           permission: Permission.ignoreBatteryOptimizations,
           icon: Icons.battery_charging_full_rounded,
@@ -42,14 +45,18 @@ class PermissionsState with _$PermissionsState {
           title: Strings.permissionBatteryTitle,
           body: Strings.permissionBatteryBody,
         ),
-        PermissionPageData(
-          customAction: _openAutoStartSettings,
-          icon: Icons.power_settings_new_rounded,
-          eyebrow: Strings.permissionAutostartEyebrow,
-          title: Strings.permissionAutostartTitle,
-          body: Strings.permissionAutostartBody,
-        ),
-      ]);
+      );
+      if (this.isAutoStartAvailable) {
+        base.add(
+          PermissionPageData(
+            customAction: _openAutoStartSettings,
+            icon: Icons.power_settings_new_rounded,
+            eyebrow: Strings.permissionAutostartEyebrow,
+            title: Strings.permissionAutostartTitle,
+            body: Strings.permissionAutostartBody,
+          ),
+        );
+      }
     }
     return base;
   }
@@ -59,16 +66,13 @@ class PermissionsState with _$PermissionsState {
   bool get isLastPermissionShown => currentPageIndex == permissions.length - 1;
 }
 
-/// Opens the OEM-specific "auto-start" settings page when available
-/// (Xiaomi, Huawei, Oppo, Vivo, Honor, Letv, Asus). On other devices
-/// the plugin reports `isAutoStartAvailable = false` and we silently
-/// move on — there's nothing for the user to toggle there.
+/// Opens the OEM-specific "auto-start" settings page. Only reached on
+/// devices where the plugin reported `isAutoStartAvailable = true`
+/// (Xiaomi, Huawei, Oppo, Vivo, Honor, Letv, Asus); on other brands the
+/// step isn't added to the flow at all.
 Future<void> _openAutoStartSettings() async {
   try {
-    final available = await isAutoStartAvailable;
-    if (available == true) {
-      await getAutoStartPermission();
-    }
+    await getAutoStartPermission();
   } catch (e, s) {
     AppLog.e('❌ openAutoStartSettings failed', error: e, stackTrace: s);
   }

@@ -33,7 +33,7 @@ class IslamicDesignTokens {
 
   // ----- Type families -----
   static const String fontDisplay = 'Manrope';
-  static const String fontBody = 'Plus Jakarta Sans';
+  static const String fontBody = 'Inter';
   static const String fontArabic = 'Amiri Quran';
 
   // ----- Motion -----

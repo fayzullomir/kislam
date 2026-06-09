@@ -21,6 +21,62 @@ class PermissionsCubit extends BaseCubit<PermissionsState, PermissionsEvent> {
     updateState((state) => state.copyWith(currentPageIndex: pageIndex));
   }
 
+  /// Manufacturers that ship an aggressive OEM "autostart" manager which
+  /// kills background apps after reboot, so the dedicated autostart screen
+  /// is genuinely useful (this matches the screen copy: "Xiaomi, Huawei,
+  /// Oppo и подобных"). Samsung and Realme are deliberately excluded — the
+  /// plugin reports them as "available", but their intent only opens the
+  /// battery settings page, which the separate battery step already covers.
+  static const _autoStartBrands = {
+    'xiaomi',
+    'redmi',
+    'poco',
+    'huawei',
+    'honor',
+    'oppo',
+    'vivo',
+    'oneplus',
+    'meizu',
+    'asus',
+    'letv',
+    'infinix',
+    'tecno',
+    'itel',
+    'nokia',
+    'lenovo',
+    'zte',
+    'nubia',
+    'htc',
+  };
+
+  /// Resolves whether the autostart onboarding step should be shown. It is
+  /// shown only when the device is one of the aggressive OEM brands
+  /// ([_autoStartBrands]) AND the OEM's autostart settings page actually
+  /// resolves. On stock Android, Samsung, and unsupported brands the step
+  /// is skipped so users never see an irrelevant / dead-end screen.
+  /// Runs once when the page is created.
+  Future<void> checkAutoStartAvailability() async {
+    if (!Platform.isAndroid) return;
+    try {
+      final available = await isAutoStartAvailable;
+      final manufacturer =
+          (await getDeviceManufacturer())?.toLowerCase().trim();
+      final shouldShow =
+          available == true && _autoStartBrands.contains(manufacturer);
+      updateState(
+        (state) => state.copyWith(isAutoStartAvailable: shouldShow),
+      );
+    } catch (e, s) {
+      AppLog.e('❌ checkAutoStartAvailability failed', error: e, stackTrace: s);
+    }
+  }
+
+  /// Skips the current step without running its action (used by the
+  /// optional autostart screen) and moves on in the flow.
+  void skip() {
+    _emitNavigation(states.isLastPermissionShown);
+  }
+
   Future<void> tryRequestPermission() async {
     final data = states.currentPermission;
     final isLastPermission = states.isLastPermissionShown;

@@ -21,6 +21,11 @@ class PermissionsPage
   final PageController _pageController = PageController();
 
   @override
+  void onWidgetCreated(BuildContext context) {
+    cubit(context).checkAutoStartAvailability();
+  }
+
+  @override
   void onEventEmitted(BuildContext context, PermissionsEvent event) {
     switch (event.type) {
       case PermissionsEventType.onOpenNextPermission:
@@ -56,12 +61,27 @@ class PermissionsPage
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              child: _PrimaryButton(
-                label: Strings.commonContinue,
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  cubit(context).tryRequestPermission();
-                },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _PrimaryButton(
+                    label: Strings.commonContinue,
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      cubit(context).tryRequestPermission();
+                    },
+                  ),
+                  if (state.currentPermission.customAction != null) ...[
+                    const SizedBox(height: 8),
+                    _SkipButton(
+                      label: Strings.onboardingSkip,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        cubit(context).skip();
+                      },
+                    ),
+                  ],
+                ],
               ),
             ),
           ],
@@ -172,6 +192,42 @@ class _PrimaryButton extends StatelessWidget {
               fontSize: 17,
               fontWeight: FontWeight.w700,
               color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ===========================================================================
+// Skip button — muted text-only action under the primary CTA, shown only
+// on the optional autostart step so the user can move on without opening
+// the OEM settings page.
+// ===========================================================================
+
+class _SkipButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _SkipButton({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(IslamicDesignTokens.radiusBtn),
+        onTap: onTap,
+        child: Container(
+          height: 48,
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: context.noor.tBody.copyWith(
+              color: context.noor.inkMuted,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),

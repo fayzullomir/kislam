@@ -373,11 +373,14 @@ class _ValueRow extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
+              flex: 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontFamily: IslamicDesignTokens.fontDisplay,
                       fontSize: 16,
@@ -391,13 +394,19 @@ class _ValueRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Text(
-              value,
-              style: TextStyle(
-                fontFamily: IslamicDesignTokens.fontBody,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: context.noor.inkMuted,
+            Expanded(
+              flex: 1,
+              child: Text(
+                value,
+                textAlign: TextAlign.end,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: IslamicDesignTokens.fontBody,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: context.noor.inkMuted,
+                ),
               ),
             ),
             const SizedBox(width: 6),

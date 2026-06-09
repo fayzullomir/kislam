@@ -18,6 +18,7 @@ import 'package:koreaislam/presentation/features/book_reader/book_reader_page.da
 import 'package:koreaislam/presentation/features/monthly_prayer_times/monthly_prayer_times_page.dart';
 import 'package:koreaislam/presentation/features/chat/chat_page.dart';
 import 'package:koreaislam/presentation/features/gender/gender_selection_page.dart';
+import 'package:koreaislam/presentation/features/halal_map/halal_map_page.dart';
 import 'package:koreaislam/presentation/features/location/location_selection_page.dart';
 import 'package:koreaislam/presentation/features/madhab/madhab_selection_page.dart';
 import 'package:koreaislam/presentation/features/onboarding/onboarding_page.dart';
@@ -173,6 +174,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: NamazDetailRoute.page,
           path: '/namaz_detail',
+        ),
+
+        /// Halol xarita — full-screen, opened from a Home quick link.
+        AutoRoute(
+          page: HalalMapRoute.page,
+          path: '/halal_map',
         ),
 
         ///

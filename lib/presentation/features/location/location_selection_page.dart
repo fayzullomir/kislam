@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +29,13 @@ class LocationSelectionPage extends StatefulWidget {
 }
 
 enum _Mode { none, gps, manual }
+
+/// Carries an already-localized, user-facing message for failures we raise
+/// ourselves inside the GPS flow.
+class _GpsError implements Exception {
+  final String message;
+  const _GpsError(this.message);
+}
 
 class _LocationSelectionPageState extends State<LocationSelectionPage> {
   final LocationPreferences _prefs = getIt<LocationPreferences>();
@@ -170,7 +179,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     try {
       final servicesEnabled = await Geolocator.isLocationServiceEnabled();
       if (!servicesEnabled) {
-        throw Exception(Strings.locationGpsServiceDisabled);
+        throw _GpsError(Strings.locationGpsServiceDisabled);
       }
 
       var permission = await Geolocator.checkPermission();
@@ -179,10 +188,14 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       }
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        throw Exception(Strings.locationGpsPermissionDenied);
+        throw _GpsError(Strings.locationGpsPermissionDenied);
       }
 
-      final position = await Geolocator.getCurrentPosition();
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          timeLimit: Duration(seconds: 15),
+        ),
+      );
       final placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -206,9 +219,25 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       if (!mounted) return;
       setState(() {
         _isDetecting = false;
-        _gpsError = e.toString().replaceFirst('Exception: ', '');
+        _gpsError = _friendlyGpsError(e);
       });
     }
+  }
+
+  /// Maps any failure from the GPS flow onto a user-facing message. Our own
+  /// [_GpsError]s already carry a localized string; everything else (platform
+  /// channel errors, geocoding I/O failures, timeouts) is collapsed into a
+  /// generic notice so raw technical text never reaches the UI.
+  String _friendlyGpsError(Object error) {
+    if (error is _GpsError) return error.message;
+    if (error is TimeoutException) return Strings.locationGpsTimeout;
+    if (error is LocationServiceDisabledException) {
+      return Strings.locationGpsServiceDisabled;
+    }
+    if (error is PermissionDeniedException) {
+      return Strings.locationGpsPermissionDenied;
+    }
+    return Strings.locationGpsDetectFailed;
   }
 
   Future<void> _onContinue(BuildContext context) async {

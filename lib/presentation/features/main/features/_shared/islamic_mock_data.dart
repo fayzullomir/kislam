@@ -108,6 +108,18 @@ class IslamicMockData {
           icon: Icons.explore_outlined,
         ),
         HomeQuickLink(
+          id: HomeQuickLinkId.monthlyPrayerTimes,
+          title: Strings.homeQuickLinkMonthlyPrayerTimesTitle,
+          subtitle: Strings.homeQuickLinkMonthlyPrayerTimesSubtitle,
+          icon: Icons.calendar_today_outlined,
+        ),
+        HomeQuickLink(
+          id: HomeQuickLinkId.qadaTracker,
+          title: Strings.homeQuickLinkQadaTrackerTitle,
+          subtitle: Strings.homeQuickLinkQadaTrackerSubtitle,
+          icon: Icons.history_toggle_off_outlined,
+        ),
+        HomeQuickLink(
           id: HomeQuickLinkId.quran,
           title: Strings.homeQuickLinkQuranTitle,
           subtitle: Strings.homeQuickLinkQuranSubtitle,
@@ -444,7 +456,7 @@ class HomeQuickAction {
   });
 }
 
-enum HomeQuickLinkId { qibla, quran, dua, halalMap }
+enum HomeQuickLinkId { qibla, monthlyPrayerTimes, qadaTracker, quran, dua, halalMap }
 
 class HomeQuickLink {
   final HomeQuickLinkId id;
