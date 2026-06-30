@@ -30,6 +30,18 @@ dart lib/core/scripts/generate_strings_script.dart
 
 ------------------------------------------------------------------------
 
+## 🔄 Run Release and Debug
+
+```bash
+flutter run --release
+```
+
+```bash
+flutter run --debug
+```
+
+------------------------------------------------------------------------
+
 ## 🔄 Run After Version Upgraded
 
 ### Android Release
