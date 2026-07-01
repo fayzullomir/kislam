@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:koreaislam/core/log/logger/app_log.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:koreaislam/core/gen/localization/strings.dart';
+import 'package:koreaislam/data/datasource/preference/app_config_preferences.dart';
 import 'package:koreaislam/domain/models/permission/permission_page_data.dart';
 import 'package:koreaislam/presentation/support/cubit/base_cubit.dart';
 
@@ -15,7 +16,9 @@ part 'permissions_state.dart';
 
 @Injectable()
 class PermissionsCubit extends BaseCubit<PermissionsState, PermissionsEvent> {
-  PermissionsCubit() : super(PermissionsState());
+  PermissionsCubit(this._appConfigPreferences) : super(PermissionsState());
+
+  final AppConfigPreferences _appConfigPreferences;
 
   void setPageIndex(int pageIndex) {
     updateState((state) => state.copyWith(currentPageIndex: pageIndex));
@@ -93,8 +96,11 @@ class PermissionsCubit extends BaseCubit<PermissionsState, PermissionsEvent> {
     final permission = data.permission!;
     final status = await permission.status;
 
+    // A previously "don't allow (permanently)" choice makes request() a
+    // silent no-op — the only recovery is the OS app-settings page.
     if (status.isPermanentlyDenied) {
-      emitEvent(PermissionsEvent(PermissionsEventType.onOpenSystemSettings));
+      await openAppSettings();
+      _emitNavigation(isLastPermission);
       return;
     }
 
@@ -107,6 +113,7 @@ class PermissionsCubit extends BaseCubit<PermissionsState, PermissionsEvent> {
 
   void _emitNavigation(bool isLastPermission) {
     if (isLastPermission) {
+      _appConfigPreferences.setIsPermissionsShown(true);
       emitEvent(PermissionsEvent(PermissionsEventType.onOpenLoginPage));
     } else {
       emitEvent(PermissionsEvent(PermissionsEventType.onOpenNextPermission));

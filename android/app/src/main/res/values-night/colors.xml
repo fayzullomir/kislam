@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- prayer-times home widget (dark) -->
+    <color name="widget_bg">#1E1E1E</color>
+    <color name="widget_ink">#ECECEC</color>
+    <color name="widget_muted">#9AA09A</color>
+    <color name="widget_icon">#9AA09A</color>
+    <color name="widget_divider">#2A2A2A</color>
+    <color name="widget_active_bg">#4A9B6E</color>
+    <color name="widget_active_text">#FFFFFF</color>
+
+</resources>

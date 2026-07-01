@@ -29,7 +29,6 @@ class PermissionsPage
   void onEventEmitted(BuildContext context, PermissionsEvent event) {
     switch (event.type) {
       case PermissionsEventType.onOpenNextPermission:
-      case PermissionsEventType.onOpenSystemSettings:
         _pageController.nextPage(
           duration: IslamicDesignTokens.durBase,
           curve: IslamicDesignTokens.easeNoor,

@@ -53,7 +53,7 @@ extension GetItModuleApp on GetIt {
 
     registerFactory(() => OtpVerificationCubit(get()));
 
-    registerFactory(() => PermissionsCubit());
+    registerFactory(() => PermissionsCubit(get()));
     registerFactory(() => PublishedArticleListCubit(get()));
     registerFactory(() => ProfileEditCubit(get(), get()));
 

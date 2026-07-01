@@ -17,6 +17,7 @@ import 'package:koreaislam/data/repositories/region/region_repository.dart';
 import 'package:koreaislam/data/repositories/service/service_repository.dart';
 import 'package:koreaislam/data/repositories/theme_mode/theme_mode_repository.dart';
 import 'package:koreaislam/presentation/application/services/prayer/prayer_notification_scheduler.dart';
+import 'package:koreaislam/presentation/application/services/widget/widget_sync_service.dart';
 
 extension GetItModuleExtension on GetIt {
   Future<void> repositoryModule() async {
@@ -61,6 +62,11 @@ extension GetItModuleExtension on GetIt {
         madhabPreferences: get(),
         calculationMethodPreferences: get(),
       ),
+    );
+
+    // Home-screen widget sync — pushes prayer times to native widgets.
+    registerLazySingleton(
+      () => WidgetSyncService(get(), get(), get(), get(), get()),
     );
 
     await allReady();

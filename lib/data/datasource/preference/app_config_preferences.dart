@@ -10,6 +10,8 @@ class AppConfigPreferences {
 
   static const String _keyIsOnboardingShown = "bool_is_onboarding_shown";
 
+  static const String _keyIsPermissionsShown = "bool_is_permissions_shown";
+
   static const String _keyIsMadhabSelected = "bool_is_madhab_selected";
 
   static const String _keyLanguage = "string_language";
@@ -25,6 +27,11 @@ class AppConfigPreferences {
 
   bool get isOnboardingNotShown => !isOnboardingShown;
 
+  bool get isPermissionsShown =>
+      _preferences.getBool(_keyIsPermissionsShown) ?? false;
+
+  bool get isPermissionsNotShown => !isPermissionsShown;
+
   bool get isMadhabSelected =>
       _preferences.getBool(_keyIsMadhabSelected) ?? false;
 
@@ -39,6 +46,10 @@ class AppConfigPreferences {
 
   Future<void> setIsOnboardingShown(bool isOnboardingShown) async =>
       await _preferences.setOrRemove(_keyIsOnboardingShown, isOnboardingShown);
+
+  Future<void> setIsPermissionsShown(bool isPermissionsShown) async =>
+      await _preferences.setOrRemove(
+          _keyIsPermissionsShown, isPermissionsShown);
 
   Future<void> setIsMadhabSelected(bool isMadhabSelected) async =>
       await _preferences.setOrRemove(_keyIsMadhabSelected, isMadhabSelected);

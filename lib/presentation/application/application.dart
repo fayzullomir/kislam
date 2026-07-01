@@ -31,6 +31,7 @@ import 'package:koreaislam/presentation/application/di/get_it_injection.dart';
 import 'package:koreaislam/presentation/application/services/fcm/firebase_notification_handler.dart';
 import 'package:koreaislam/presentation/application/services/fcm/firebase_notification_service.dart';
 import 'package:koreaislam/presentation/application/services/prayer/prayer_notification_scheduler.dart';
+import 'package:koreaislam/presentation/application/services/widget/widget_sync_service.dart';
 import 'package:koreaislam/presentation/features/auth/sign_in/sign_in_launch_type.dart';
 import 'package:koreaislam/presentation/router/app_router.dart';
 import 'package:koreaislam/presentation/router/auto_router_extensions.dart';
@@ -51,7 +52,7 @@ class Application extends StatefulWidget {
   _ApplicationState createState() => _ApplicationState();
 }
 
-class _ApplicationState extends State<Application> {
+class _ApplicationState extends State<Application> with WidgetsBindingObserver {
   // Event channels
   final LoginEventChannel _loginEventChannel = getIt.get();
   final LogoutEventChannel _logoutEventChannel = getIt.get();
@@ -74,6 +75,7 @@ class _ApplicationState extends State<Application> {
   final _navigationHandler = FirebaseNotificationHandler();
   final PrayerNotificationScheduler _prayerScheduler =
       getIt<PrayerNotificationScheduler>();
+  final WidgetSyncService _widgetSyncService = getIt<WidgetSyncService>();
 
   // State
   late ThemeMode _themeMode;
@@ -86,6 +88,8 @@ class _ApplicationState extends State<Application> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     // Setup event listeners
     _setupStreamSubscriptions();
@@ -106,9 +110,17 @@ class _ApplicationState extends State<Application> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _streamSubscriptions.cancelAll();
 
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _widgetSyncService.refresh();
+    }
   }
 
   @override
@@ -199,6 +211,10 @@ class _ApplicationState extends State<Application> {
       await _prayerScheduler.init();
       await _prayerScheduler.rescheduleAll();
       AppLog.i("✅ Notifications initialized successfully");
+
+      // Push the first prayer-times payload to the home-screen widgets and
+      // start listening for preference changes.
+      await _widgetSyncService.init();
     } catch (e, s) {
       AppLog.e("❌ Error initializing notifications: $e", stackTrace: s);
     }
@@ -214,6 +230,14 @@ class _ApplicationState extends State<Application> {
     }
     if (_appConfigPreferences.isOnboardingNotShown) {
       return [OnboardingRoute()];
+    }
+    // Permissions live between onboarding and madhab in the forward flow.
+    // The madhab guard keeps already-set-up users (updating from an older
+    // build) from being pulled back here — only genuine mid-first-run
+    // sessions that never completed the permission step land on it.
+    if (_appConfigPreferences.isMadhabNotSelected &&
+        _appConfigPreferences.isPermissionsNotShown) {
+      return [PermissionsRoute()];
     }
     if (_appConfigPreferences.isMadhabNotSelected) {
       return [MadhabSelectionRoute()];

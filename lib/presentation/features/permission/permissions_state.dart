@@ -85,6 +85,5 @@ class PermissionsEvent with _$PermissionsEvent {
 
 enum PermissionsEventType {
   onOpenNextPermission,
-  onOpenSystemSettings,
   onOpenLoginPage,
 }

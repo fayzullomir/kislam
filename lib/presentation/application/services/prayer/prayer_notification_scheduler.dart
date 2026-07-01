@@ -86,6 +86,33 @@ class PrayerNotificationScheduler {
     }
   }
 
+  /// Dumps the OS-side notification state so we can tell "scheduled but
+  /// never delivered" apart from "never scheduled": [pending] is what the
+  /// OS has queued for future delivery, [active] is what's currently sitting
+  /// in the tray. If notifications don't appear on the device but pending
+  /// shows entries, the block is at the OS delivery layer (permission /
+  /// battery / channel), not our scheduling.
+  Future<void> _traceQueue() async {
+    try {
+      final pending = await _plugin.pendingNotificationRequests();
+      final ids = pending.map((p) => p.id).join(',');
+      _trace('pending: ${pending.length} [$ids]');
+    } catch (e) {
+      _trace('pending check failed: $e');
+    }
+    if (!Platform.isAndroid) return;
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) return;
+    try {
+      final active = await android.getActiveNotifications();
+      final ids = active.map((a) => a.id).join(',');
+      _trace('active: ${active.length} [$ids]');
+    } catch (e) {
+      _trace('active check failed: $e');
+    }
+  }
+
   /// One-shot setup: load the timezone database, tell `tz` which zone
   /// the device is in, and pre-create the Android channel. Must run before
   /// any `zonedSchedule` call.
@@ -253,6 +280,7 @@ class PrayerNotificationScheduler {
       }
 
       _trace('done — ${scheduled.length} scheduled');
+      await _traceQueue();
       AppLog.i('✅ Prayer notifications scheduled: ${scheduled.join(', ')}');
     } catch (e, s) {
       _trace('reschedule FAILED: $e');
@@ -324,9 +352,12 @@ class PrayerNotificationScheduler {
   }
 
   // TEMP diagnostics — fires an immediate notification and one 10s out to
-  // separate "scheduling broken" from "delivery broken" in release.
+  // separate "scheduling broken" from "delivery broken" in release. Wipes
+  // the trail first so the log shows only this run.
   Future<void> fireTestNotification() async {
+    diagnostics.value = <String>[];
     await init();
+    await _tracePermissions();
     try {
       await _plugin.show(
         99999,
@@ -335,6 +366,7 @@ class PrayerNotificationScheduler {
         _platformDetails(),
       );
       _trace('test: show() called');
+      await _traceQueue();
     } catch (e) {
       _trace('test show FAILED: $e');
     }

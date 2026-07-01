@@ -7,4 +7,13 @@
     <!-- splash screen colors -->
     <color name="splash_background">#1A282D</color>
 
+    <!-- prayer-times home widget (light) -->
+    <color name="widget_bg">#FFFFFF</color>
+    <color name="widget_ink">#1A1C1A</color>
+    <color name="widget_muted">#5A6159</color>
+    <color name="widget_icon">#5A6159</color>
+    <color name="widget_divider">#E8E3D6</color>
+    <color name="widget_active_bg">#0F5132</color>
+    <color name="widget_active_text">#FFFFFF</color>
+
 </resources>

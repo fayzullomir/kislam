@@ -121,6 +121,17 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                 onChanged: (v) => setState(() => _dailyWisdomOn = v),
               ),
             ),
+            // ----- Notification permission recovery (all platforms) -----
+            const SizedBox(height: 16),
+            Container(
+              color: context.noor.surface,
+              child: _ActionRow(
+                icon: Icons.notifications_active_rounded,
+                title: Strings.permissionNotificationTitle,
+                subtitle: Strings.permissionNotificationBody,
+                onTap: _openNotificationPermission,
+              ),
+            ),
             // ----- Reliability shortcuts (Android only) -----
             if (Platform.isAndroid) ...[
               const SizedBox(height: 16),
@@ -152,7 +163,9 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
     );
   }
 
-  // TEMP diagnostics — release-visible scheduler trail + test trigger.
+  // TEMP diagnostics — release-visible scheduler trail + test trigger. Both
+  // buttons wipe the previous trail before writing a fresh one so the log
+  // always reflects a single run.
   Widget _buildDiagnostics(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
@@ -206,6 +219,27 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
         ],
       ),
     );
+  }
+
+  /// Recovery path for a user who denied notifications during onboarding:
+  /// request again when possible, otherwise drop them on the OS settings
+  /// page. A fresh grant reschedules immediately so the previously no-op'd
+  /// prayer alarms actually land.
+  Future<void> _openNotificationPermission() async {
+    try {
+      final status = await Permission.notification.status;
+      if (!status.isGranted) {
+        final result = await Permission.notification.request();
+        if (result.isGranted) {
+          await _scheduler.rescheduleAll();
+          return;
+        }
+      }
+      await openAppSettings();
+    } catch (e, s) {
+      AppLog.e('❌ notification permission request failed',
+          error: e, stackTrace: s);
+    }
   }
 
   Future<void> _openBatteryOptimization() async {
