@@ -11,7 +11,7 @@ import 'package:koreaislam/presentation/support/cubit/base_page.dart';
 import 'permissions_cubit.dart';
 
 /// Permission flow — two pages (notifications, location). Same Noor styling
-/// as the surrounding onboarding / madhab / location pages: warm neutral
+/// as the surrounding madhab / location pages: warm neutral
 /// canvas, eyebrow → display title → muted body, primary green CTA.
 @RoutePage()
 class PermissionsPage
@@ -73,7 +73,7 @@ class PermissionsPage
                   if (state.currentPermission.customAction != null) ...[
                     const SizedBox(height: 8),
                     _SkipButton(
-                      label: Strings.onboardingSkip,
+                      label: Strings.permissionSkip,
                       onTap: () {
                         HapticFeedback.lightImpact();
                         cubit(context).skip();

@@ -221,17 +221,14 @@ class _ApplicationState extends State<Application> with WidgetsBindingObserver {
   }
 
   /// First-run flow:
-  /// Language → Onboarding (2-step) → Madhab → Location → Permissions → Main.
+  /// Language → Permissions → Madhab → Location → Main.
   /// Each step writes its own "done" flag so the user resumes where they left
   /// off if they kill the app mid-setup.
   List<PageRouteInfo> _buildInitialRoute() {
     if (_appConfigPreferences.isLanguageNotSelected) {
       return [SetLanguageRoute()];
     }
-    if (_appConfigPreferences.isOnboardingNotShown) {
-      return [OnboardingRoute()];
-    }
-    // Permissions live between onboarding and madhab in the forward flow.
+    // Permissions live between language and madhab in the forward flow.
     // The madhab guard keeps already-set-up users (updating from an older
     // build) from being pulled back here — only genuine mid-first-run
     // sessions that never completed the permission step land on it.

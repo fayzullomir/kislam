@@ -43,8 +43,8 @@ class SetLanguageCubit extends BaseCubit<SetLanguageState, SetLanguageEvent> {
     final language = states.language;
     _saveLanguage(language);
 
-    if (_appConfigPreferences.isOnboardingNotShown) {
-      emitEvent(SetLanguageEvent(SetLanguageEventType.onOpenOnboardingPage));
+    if (_appConfigPreferences.isPermissionsNotShown) {
+      emitEvent(SetLanguageEvent(SetLanguageEventType.onOpenPermissionsPage));
     } else {
       emitEvent(SetLanguageEvent(SetLanguageEventType.onOpenLoginPage));
     }

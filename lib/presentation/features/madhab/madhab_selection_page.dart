@@ -115,8 +115,8 @@ class _MadhabSelectionPageState extends State<MadhabSelectionPage> {
 
 // ---------------------------------------------------------------------------
 
-/// Local copy of the onboarding primary button — keeps this page free of
-/// dependencies on private widgets in `onboarding_page.dart`.
+/// First-run-flow primary button — matches the one used by
+/// [SetLanguagePage] / [LocationSelectionPage].
 class _PrimaryButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;

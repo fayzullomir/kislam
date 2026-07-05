@@ -26,8 +26,8 @@ class SetLanguagePage
   @override
   void onEventEmitted(BuildContext context, SetLanguageEvent event) {
     switch (event.type) {
-      case SetLanguageEventType.onOpenOnboardingPage:
-        context.router.replace(OnboardingRoute());
+      case SetLanguageEventType.onOpenPermissionsPage:
+        context.router.replace(PermissionsRoute());
         break;
       case SetLanguageEventType.onOpenLoginPage:
         context.router.replace(MainRoute());
@@ -115,7 +115,7 @@ class SetLanguagePage
 
 // ---------------------------------------------------------------------------
 
-/// Onboarding-flow primary button — matches the one used by
+/// First-run-flow primary button — matches the one used by
 /// [MadhabSelectionPage] / [LocationSelectionPage].
 class _PrimaryButton extends StatelessWidget {
   final String label;

@@ -7,7 +7,6 @@ import 'package:koreaislam/presentation/features/auth/sign_up/sign_up_cubit.dart
 import 'package:koreaislam/presentation/features/monthly_prayer_times/monthly_prayer_times_cubit.dart';
 import 'package:koreaislam/presentation/features/chat/chat_cubit.dart';
 import 'package:koreaislam/presentation/features/gender/gender_selection_cubit.dart';
-import 'package:koreaislam/presentation/features/onboarding/onboarding_cubit.dart';
 import 'package:koreaislam/presentation/features/language/change/change_language_cubit.dart';
 import 'package:koreaislam/presentation/features/language/set/set_language_cubit.dart';
 import 'package:koreaislam/presentation/features/notification/notification_list_cubit.dart';
@@ -47,9 +46,7 @@ extension GetItModuleApp on GetIt {
 
     registerFactory(() => GenderSelectionCubit(get()));
 
-    registerFactory(() => OnboardingCubit(get()));
-
-    registerFactory(() => NotificationListCubit(get()));
+registerFactory(() => NotificationListCubit(get()));
 
     registerFactory(() => OtpVerificationCubit(get()));
 
