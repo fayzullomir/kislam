@@ -42,13 +42,13 @@
 		<key>NSAppleMusicUsageDescription</key>
 		<string>Allows the app to access your music library to play audio.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>This app may request background location access to improve user experience in certain features.</string>
+		<string>Your location is used to show accurate prayer times for your area, the qibla direction and nearby mosques.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
-		<string>Allows the app to access your location even when not in use to provide background location updates.</string>
+		<string>Your location is used to show accurate prayer times for your area, the qibla direction and nearby mosques.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>Used to determine your location when using the app to provide location-based services like address lookup.</string>
+		<string>Your location is used to show accurate prayer times for your area, the qibla direction and nearby mosques.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Allows the app to access your photo library to select images for ads.</string>
+		<string>Your photo library is used to choose a profile picture.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>

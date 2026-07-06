@@ -14,10 +14,10 @@ class TermsMockData {
           uz: TermLocalization(
             name: 'Farz',
             short: 'Majburiy amal',
-            long: "Alloh tomonidan qat'iy buyurilgan amallar. "
+            long: "Alloh tomonidan qatʼiy buyurilgan amallar. "
                 'Bajarmaslik gunoh hisoblanadi va inkor qilish kufrga '
                 'olib boradi. Misol: kunlik besh vaqt namoz, Ramazon '
-                "ro'zasi, zakot, haj.",
+                "roʻzasi, zakot, haj.",
           ),
           ko: TermLocalization(
             name: '파르드',
@@ -35,7 +35,7 @@ class TermsMockData {
             name: 'Vojib',
             short: 'Yarim majburiy',
             long: 'Hanafiy fiqhida farzga yaqin, lekin dalili biroz '
-                "zaifroq bo'lgan buyruqlar. Bajarmaslik gunoh, ammo "
+                "zaifroq boʻlgan buyruqlar. Bajarmaslik gunoh, ammo "
                 'inkor kufr emas. Misol: vitr namozi, Hayit namozi, '
                 'qurbonlik.',
           ),
@@ -53,8 +53,8 @@ class TermsMockData {
           category: TermCategory.fiqh,
           uz: TermLocalization(
             name: 'Sunnat',
-            short: "Payg'ambar amallari",
-            long: "Payg'ambarimiz Muhammad (s.a.v.)ning so'zlari, amallari "
+            short: "Paygʻambar amallari",
+            long: "Paygʻambarimiz Muhammad (s.a.v.)ning soʻzlari, amallari "
                 'va taqdirlangan ishlari. Bajarish savobli, lekin tark '
                 'qilish gunoh emas. Misol: misvok ishlatish, peshindan '
                 'oldin 4 rakat sunnat, ehson.',
@@ -74,9 +74,9 @@ class TermsMockData {
           uz: TermLocalization(
             name: 'Mustahab',
             short: 'Tavsiya etilgan',
-            long: "Sevimli ko'rilgan, ammo majburiy bo'lmagan amallar. "
+            long: "Sevimli koʻrilgan, ammo majburiy boʻlmagan amallar. "
                 'Bajaruvchi savob oladi, tark qiluvchi gunohkor emas. '
-                "Misol: ortiqcha nafl namozlar, sadaqa, Qur'on yodlash.",
+                "Misol: ortiqcha nafl namozlar, sadaqa, Qurʼon yodlash.",
           ),
           ko: TermLocalization(
             name: '무스타함브',
@@ -94,8 +94,8 @@ class TermsMockData {
             name: 'Mubah',
             short: 'Ruxsat etilgan',
             long: 'Bajarish ham tark qilish ham bir xil — savob ham gunoh '
-                "ham yo'q. Bularning aksariyati kundalik dunyoviy "
-                "ishlardir: ovqat, kiyim, ko'ngilochar mashg'ulotlar "
+                "ham yoʻq. Bularning aksariyati kundalik dunyoviy "
+                "ishlardir: ovqat, kiyim, koʻngilochar mashgʻulotlar "
                 '(taqiqlanmagan).',
           ),
           ko: TermLocalization(
@@ -114,8 +114,8 @@ class TermsMockData {
             short: 'Yoqimsiz',
             long: 'Taqiqlangan emas, lekin Allohga yoqmaydigan amallar. '
                 'Tark qilish savobli, qilish ozgina gunoh keltirishi '
-                "mumkin. Misol: chap qo'l bilan ovqatlanish, masjidda "
-                "ovoz ko'tarish.",
+                "mumkin. Misol: chap qoʻl bilan ovqatlanish, masjidda "
+                "ovoz koʻtarish.",
           ),
           ko: TermLocalization(
             name: '마크루흐',
@@ -132,8 +132,8 @@ class TermsMockData {
           uz: TermLocalization(
             name: 'Haram',
             short: 'Taqiqlangan',
-            long: "Allohning qat'iy taqiqi. Bajarish katta gunoh, halol deb "
-                "hisoblash kufrga olib keladi. Misol: cho'chqa go'shti, "
+            long: "Allohning qatʼiy taqiqi. Bajarish katta gunoh, halol deb "
+                "hisoblash kufrga olib keladi. Misol: choʻchqa goʻshti, "
                 'alkogol, zino, ribo (foiz).',
           ),
           ko: TermLocalization(
@@ -153,8 +153,8 @@ class TermsMockData {
             name: 'Taxorat',
             short: 'Tahorat — ibodatga tayyorgarlik',
             long: 'Namoz va boshqa ibodatlar oldidan badan va kiyim toza '
-                "bo'lishini ta'minlash. Tahoratning ikki turi: kichik "
-                "(vuzu') va katta (g'usl). Suv bo'lmasa tayammum "
+                "boʻlishini taʼminlash. Tahoratning ikki turi: kichik "
+                "(vuzuʼ) va katta (gʻusl). Suv boʻlmasa tayammum "
                 '(tuproq bilan) qilinadi.',
           ),
           ko: TermLocalization(
@@ -170,11 +170,11 @@ class TermsMockData {
           arabic: 'وضوء',
           category: TermCategory.ibodat,
           uz: TermLocalization(
-            name: "Vuzu'",
+            name: "Vuzuʼ",
             short: 'Kichik tahorat',
-            long: "Yuz, qo'llar (tirsakgacha), boshning bir qismi va "
-                "oyoqlarni (to'pig'gacha) belgilangan tartibda yuvish. "
-                "Har namoz oldidan, agar buzilgan bo'lsa, qaytarish "
+            long: "Yuz, qoʻllar (tirsakgacha), boshning bir qismi va "
+                "oyoqlarni (toʻpigʻgacha) belgilangan tartibda yuvish. "
+                "Har namoz oldidan, agar buzilgan boʻlsa, qaytarish "
                 'kerak.',
           ),
           ko: TermLocalization(
@@ -190,7 +190,7 @@ class TermsMockData {
           arabic: 'غسل',
           category: TermCategory.ibodat,
           uz: TermLocalization(
-            name: "G'usl",
+            name: "Gʻusl",
             short: 'Katta tahorat',
             long: 'Butun badanni suv bilan yuvib chiqish. Janoba '
                 '(jinsiy nopoklik), hayz va nifosdan keyin majburiy. '
@@ -212,7 +212,7 @@ class TermsMockData {
             name: 'Niyat',
             short: 'Ichki maqsad',
             long: 'Har bir ibodatning qalbidagi ichki niyati. '
-                "Payg'ambar (s.a.v.) aytdilar: “Amallar niyatlarga qarab "
+                "Paygʻambar (s.a.v.) aytdilar: “Amallar niyatlarga qarab "
                 'baholanadi.” Ovoz chiqarib aytish shart emas — '
                 'qalbingizdagi maqsad muhim.',
           ),
@@ -235,7 +235,7 @@ class TermsMockData {
                 'ovozli chaqiriq. “Allohu Akbar” bilan boshlanadi. '
                 'Koreyada masjidlar tashqi azonni kamdan-kam '
                 'chiqarsa-da, ilovaning azon bildirishnomasini yoqib '
-                "qo'yishingiz mumkin.",
+                "qoʻyishingiz mumkin.",
           ),
           ko: TermLocalization(
             name: '아단',
@@ -254,7 +254,7 @@ class TermsMockData {
             name: 'Rakat',
             short: 'Namoz birligi',
             long: 'Bir takbir, qiyom (tik turish), ruku (egilish), '
-                "sajda (yer o'pish) va o'tirishdan iborat namoz "
+                "sajda (yer oʻpish) va oʻtirishdan iborat namoz "
                 'birligi. Bomdod 2 rakat, peshin 4, asr 4, shom 3, '
                 'xufton 4 rakatdan iborat.',
           ),
@@ -272,10 +272,10 @@ class TermsMockData {
           category: TermCategory.ibodat,
           uz: TermLocalization(
             name: 'Kibla',
-            short: "Namoz yo'nalishi",
-            long: "Makkadagi Ka'ba tomon yo'nalish. Har bir musulmon shu "
-                "yo'nalishga qarab namoz o'qiydi. Koreya O'zbekistondan "
-                "janub-g'arbda — kompas bilan yoki K-Islam ilovasi "
+            short: "Namoz yoʻnalishi",
+            long: "Makkadagi Kaʼba tomon yoʻnalish. Har bir musulmon shu "
+                "yoʻnalishga qarab namoz oʻqiydi. Koreya Oʻzbekistondan "
+                "janub-gʻarbda — kompas bilan yoki K-Islam ilovasi "
                 'yordamida aniqlanadi.',
           ),
           ko: TermLocalization(
@@ -293,10 +293,10 @@ class TermsMockData {
           uz: TermLocalization(
             name: 'Zakot',
             short: 'Majburiy sadaqa',
-            long: "Islom ustunlaridan biri. Yiliga bir marta to'plangan "
+            long: "Islom ustunlaridan biri. Yiliga bir marta toʻplangan "
                 'mol-mulkning 2.5 foizini muhtojlarga berish. Sof '
                 'boylik nisab (taxminan 87.5 g oltin qiymati)dan '
-                "oshganda majburiy bo'ladi.",
+                "oshganda majburiy boʻladi.",
           ),
           ko: TermLocalization(
             name: '자카트',
@@ -311,11 +311,11 @@ class TermsMockData {
           arabic: 'صوم',
           category: TermCategory.ibodat,
           uz: TermLocalization(
-            name: "Ro'za",
-            short: "Saum — Ramazon ro'zasi",
+            name: "Roʻza",
+            short: "Saum — Ramazon roʻzasi",
             long: 'Tongdan kun botgunga qadar ovqat, ichimlik va boshqa '
                 'cheklangan amallardan saqlanish. Ramazon oyida farz, '
-                "boshqa kunlarda nafl (ixtiyoriy) bo'ladi.",
+                "boshqa kunlarda nafl (ixtiyoriy) boʻladi.",
           ),
           ko: TermLocalization(
             name: '로자',

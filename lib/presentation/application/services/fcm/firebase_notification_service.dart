@@ -70,9 +70,9 @@ class FirebaseNotificationService {
       // iOS settings
       const DarwinInitializationSettings iosSettings =
       DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false,
       );
 
       const InitializationSettings initSettings = InitializationSettings(

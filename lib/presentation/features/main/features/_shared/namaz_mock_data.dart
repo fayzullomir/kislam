@@ -379,7 +379,7 @@ class NamazStepCopy {
           title: 'Niyat',
           body:
               "$prayerName ning $variantName ini ado qilishni niyat qildim. "
-              "Allohim, O'zingning roziliging uchun.",
+              "Allohim, Oʻzingning roziliging uchun.",
           pose: NamazPose.standing,
           hasMoreLink: true,
         );
@@ -387,7 +387,7 @@ class NamazStepCopy {
         return const NamazStepContent(
           title: 'Takbir',
           body: '«Allohu akbar» — ikki '
-              "qo'lingni quloqlarga teng ko'tar va belingga tushir.",
+              "qoʻlingni quloqlarga teng koʻtar va belingga tushir.",
           pose: NamazPose.takbir,
         );
       case NamazStepKey.qiyom:
@@ -405,7 +405,7 @@ class NamazStepCopy {
         );
       case NamazStepKey.iqomat:
         return const NamazStepContent(
-          title: "Qaddini ko'tarish",
+          title: "Qaddini koʻtarish",
           body: '«Samiallohu liman hamidah» deb tik turib '
               '«Robbana lakal hamd» ayt.',
           pose: NamazPose.standing,
@@ -413,16 +413,16 @@ class NamazStepCopy {
       case NamazStepKey.sajda:
         return const NamazStepContent(
           title: 'Sajda',
-          body: "«Allohu akbar» deb yerga — peshana, burun, ikki qo'l, "
+          body: "«Allohu akbar» deb yerga — peshana, burun, ikki qoʻl, "
               'ikki tizza, ikki oyoq uchi yerga. '
-              "«Subhana Robbiyal A'la» 3 marta.",
+              "«Subhana Robbiyal Aʼla» 3 marta.",
           pose: NamazPose.sajda,
         );
       case NamazStepKey.jalsa:
         return const NamazStepContent(
           title: 'Sajdadan turish',
-          body: "«Allohu akbar» deb chap oyoq ustiga o'tirib bir muddat "
-              "tinch o'tir.",
+          body: "«Allohu akbar» deb chap oyoq ustiga oʻtirib bir muddat "
+              "tinch oʻtir.",
           pose: NamazPose.jalsa,
         );
       case NamazStepKey.rakat2:
@@ -435,28 +435,28 @@ class NamazStepCopy {
       case NamazStepKey.tashahhud:
         return const NamazStepContent(
           title: 'Tashahhud',
-          body: "Tashahhud (Attahiyatu...) o'qiladi. "
-              "Ko'rsatkich barmoq Shahodatda ko'tariladi.",
+          body: "Tashahhud (Attahiyatu...) oʻqiladi. "
+              "Koʻrsatkich barmoq Shahodatda koʻtariladi.",
           pose: NamazPose.tashahhud,
         );
       case NamazStepKey.durud:
         return const NamazStepContent(
-          title: "Durud va Du'o",
-          body: "Salovat (Allohumma salli...) va istalgan du'o.",
+          title: "Durud va Duo",
+          body: "Salovat (Allohumma salli...) va istalgan duo.",
           pose: NamazPose.tashahhud,
         );
       case NamazStepKey.salom:
         return const NamazStepContent(
           title: 'Salom',
           body: '«Assalamu alaykum va rohmatulloh» — boshni avval '
-              "o'ngga, keyin chapga burib salom ber.",
+              "oʻngga, keyin chapga burib salom ber.",
           pose: NamazPose.salom,
         );
       case NamazStepKey.janazaTakbir:
         return const NamazStepContent(
           title: '4 Takbir',
           body: 'Imom 4 marta «Allohu akbar» aytadi. Har takbirdan '
-              "keyin tilovat, salovat, vafot etganga du'o, oxirida salom.",
+              "keyin tilovat, salovat, vafot etganga duo, oxirida salom.",
           pose: NamazPose.qiyom,
         );
     }

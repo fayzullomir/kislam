@@ -17,7 +17,7 @@ class LibraryMockData {
           read: 187,
           langs: ['UZ', 'AR'],
           uz: BookLocalization(
-            title: "Qur'oni Karim",
+            title: "Qurʼoni Karim",
             subtitle: 'القرآن',
             author: '114 sura',
             lastRead: 'Al-Baqara · 153-oyat',
@@ -36,7 +36,7 @@ class LibraryMockData {
           read: 86,
           langs: ['UZ', 'KO'],
           uz: BookLocalization(
-            title: "Namoz qo'llanmasi",
+            title: "Namoz qoʻllanmasi",
             subtitle: '예배 입문',
             author: 'Korea Muslim Federation',
             lastRead: 'Kecha · 86-bet',
@@ -131,7 +131,7 @@ class LibraryMockData {
           read: 64,
           langs: ['UZ', 'KO'],
           uz: BookLocalization(
-            title: "Islomga qisqa yo'riq",
+            title: "Islomga qisqa yoʻriq",
             subtitle: '이슬람의 이해를 돕는 안내서',
             author: 'I. A. Ibrahim',
             lastRead: null,
@@ -155,15 +155,15 @@ class LibraryMockData {
   static const BookReadingChapter sampleChapterUz = BookReadingChapter(
     title: 'IV bob · Islom ustunlari',
     paragraphs: [
-      "Islom besh ustunga asoslanadi: shahodat, namoz, zakot, ro'za, va haj. "
-          "Bular iymoning tashqi ifodasi va e'tirofni hayotga aylantiruvchi "
+      "Islom besh ustunga asoslanadi: shahodat, namoz, zakot, roʻza, va haj. "
+          "Bular iymoning tashqi ifodasi va eʼtirofni hayotga aylantiruvchi "
           'amaliy ramka hisoblanadi.',
-      "Birinchi ustun — shahodat. “Allohdan boshqa iloh yo'q va Muhammad "
-          "Uning elchisidir” deb chin yurakdan e'tirof etish. Ushbu bir gap — "
+      "Birinchi ustun — shahodat. “Allohdan boshqa iloh yoʻq va Muhammad "
+          "Uning elchisidir” deb chin yurakdan eʼtirof etish. Ushbu bir gap — "
           'musulmonlik hayotining ochiluvchi eshigidir.',
-      "Mazkur e'tirof orqali musulmon insoniy hayotini abadiy o'zakka "
-          "bog'lab, vaqtinchalik narsalardan haqiqiy manbaga yuzlanadi. "
-          "Qolgan to'rt ustun esa shu iymonga ko'rinarli shakl beradi.",
+      "Mazkur eʼtirof orqali musulmon insoniy hayotini abadiy oʻzakka "
+          "bogʻlab, vaqtinchalik narsalardan haqiqiy manbaga yuzlanadi. "
+          "Qolgan toʻrt ustun esa shu iymonga koʻrinarli shakl beradi.",
     ],
   );
 
@@ -196,7 +196,7 @@ class LibraryMockData {
         arabic:
             'يَاأَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ ، إِنَّ اللَّهَ مَعَ الصَّابِرِينَ',
         translationUz:
-            "Ey iymon keltirganlar! Sabr va namoz orqali yordam so'rang. "
+            "Ey iymon keltirganlar! Sabr va namoz orqali yordam soʻrang. "
             'Albatta, Alloh sabrlilar bilandir.',
         translationKo:
             '믿는 자들이여, 인내와 예배를 통해 도움을 구하라. 실로 '
@@ -207,8 +207,8 @@ class LibraryMockData {
         arabic:
             'وَلَا تَقُولُوا لِمَنْ يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ، بَلْ أَحْيَاءٌ وَلَاكِنْ لَا تَشْعُرُونَ',
         translationUz:
-            "Allohning yo'lida o'ldirilganlarni “o'liklar” demang. "
-            "Yo'q, ular tiriklar, lekin siz buni sezmaysiz.",
+            "Allohning yoʻlida oʻldirilganlarni “oʻliklar” demang. "
+            "Yoʻq, ular tiriklar, lekin siz buni sezmaysiz.",
         translationKo:
             '알라의 길에서 살해된 자들을 “죽은 자”라고 말하지 말라. '
             '그들은 살아있다, 그러나 너희는 그것을 깨닫지 못한다.',
@@ -218,7 +218,7 @@ class LibraryMockData {
         arabic:
             'وَلَنَبْلُوَنَّكُمْ بِشَلْءٍ مِنَ الْخَوْفِ وَالْجُوعِ وَنَقْصٍ مِنَ الْأَمْوَالِ وَالْأَنْفُسِ وَالثَّمَرَاتِ ، وَبَشِّرِ الصَّابِرِينَ',
         translationUz:
-            "Sizlarni qo'rquv, ochlik, mol-mulk, jonlar va mevalardan "
+            "Sizlarni qoʻrquv, ochlik, mol-mulk, jonlar va mevalardan "
             'ozaytirish bilan albatta sinaymiz. Sabr qiluvchilarga '
             'xushxabar ber.',
         translationKo:
